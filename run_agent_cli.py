@@ -12,8 +12,10 @@ def main():
     # Group for generation related arguments
     generation_group = parser.add_argument_group('Generation Options')
     generation_group.add_argument("description", type=str, nargs='?', default=None, help="The physics process description for TikZ generation (e.g., 'an electron emits a photon'). If not provided and --search is not used, will prompt interactively.")
-    generation_group.add_argument("--output", "-o", type=str, help="Optional: Path to save the full .tex document for generated TikZ code.")
+    generation_group.add_argument("--output", "-o", type=str, help="Optional: Path to save the full .tex document for generated TikZ code. If --wrap-document is also used, this file will contain the wrapped document.")
     generation_group.add_argument("--model", type=str, help="Optional: Specify the Gemini model name to use for generation, overriding .env or agent default.")
+    generation_group.add_argument("--strict", action='store_true', help="Enable strict mode. If generation validation fails, no code is output.")
+    generation_group.add_argument("--wrap-document", action='store_true', help="Wrap the generated TikZ code in a complete standalone LaTeX document.")
 
     # Group for search related arguments
     search_group = parser.add_argument_group('Search Options')
@@ -80,11 +82,46 @@ def main():
              print(f"\n代码生成失败或返回错误：\n{tikz_code_segment}")
              return
 
-        print("\n生成的 TikZ 代码片段：")
-        print(tikz_code_segment)
+        if args.strict:
+            print("严格模式已启用：正在验证生成的代码...")
+            # We need to access the _validate_tikz_code method.
+            # It's conventionally private, but for this CLI interaction, it's acceptable.
+            # Alternatively, generate_tikz_code could return a tuple (code, is_valid)
+            # but that changes its primary API.
+            if not agent._validate_tikz_code(tikz_code_segment):
+                print("\n生成的代码未通过严格模式验证。")
+                print("可能缺少关键的 TikZ-Feynman 样式 (例如 [fermion], [photon])。")
+                print("建议：请检查您的描述或尝试在非严格模式下生成。")
+                return # Exit without printing or saving
 
-        if args.output:
-            full_tex_document = f"""\\documentclass{{article}}
+        if args.wrap_document:
+            full_tex_document = f"""\\documentclass{{standalone}}
+\\usepackage[compat=1.1.0]{{tikz-feynman}}
+
+\\begin{{document}}
+{tikz_code_segment}
+\\end{{document}}"""
+            if args.output:
+                try:
+                    with open(args.output, "w", encoding="utf-8") as f:
+                        f.write(full_tex_document)
+                    print(f"\n完整的 standalone LaTeX 文档已保存到: {args.output}")
+                except IOError as e:
+                    print(f"\n错误：无法写入文件 {args.output}。错误信息: {e}")
+            else:
+                print("\n生成的完整 standalone LaTeX 文档：")
+                print(full_tex_document)
+        
+        else: # Original behavior if --wrap-document is not used
+            print("\n生成的 TikZ 代码片段：")
+            print(tikz_code_segment)
+
+            if args.output:
+                # Default wrapping if --output is used without --wrap-document
+                # (using article class as before, for consistency if someone relied on it)
+                # Or, we could decide that --output without --wrap-document saves only the fragment.
+                # For now, keeping the previous --output behavior when --wrap-document is absent.
+                article_wrapped_tex_document = f"""\\documentclass{{article}}
 \\usepackage[compat=1.1.0]{{tikz-feynman}}
 
 \\begin{{document}}
@@ -95,14 +132,14 @@ def main():
 
 \\end{{document}}
 """
-            try:
-                with open(args.output, "w", encoding="utf-8") as f:
-                    f.write(full_tex_document)
-                print(f"\n完整的 .tex 文档已保存到: {args.output}")
-            except IOError as e:
-                print(f"\n错误：无法写入文件 {args.output}。错误信息: {e}")
-        else:
-            print("\n提示：您可以使用 --output <文件名.tex> 参数将完整文档保存到文件。")
+                try:
+                    with open(args.output, "w", encoding="utf-8") as f:
+                        f.write(article_wrapped_tex_document)
+                    print(f"\n完整的 .tex 文档 (article class) 已保存到: {args.output}")
+                except IOError as e:
+                    print(f"\n错误：无法写入文件 {args.output}。错误信息: {e}")
+            else:
+                print("\n提示：您可以使用 --output <文件名.tex> 参数将完整文档保存到文件，或使用 --wrap-document 直接输出完整 standalone 文档。")
 
     except Exception as e:
         print(f"生成过程中发生严重错误: {e}")

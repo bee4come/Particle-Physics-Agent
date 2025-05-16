@@ -62,11 +62,32 @@
 *   **任务：** 在 Agent 生成 TikZ 代码后，加入一个验证步骤。通过解析 TikZ 字符串，检查是否缺少关键样式（如 `[fermion]`, `[photon]` 等）。
 *   **任务：** 如果验证失败（例如，样式缺失），Agent 可以自动尝试重新生成一次（可能使用不同的内部参数或微调后的提示）。
     *   **负责人：** Cline (bee)
+    *   **状态：** 初步完成 (Agent 已实现验证和重试逻辑)。
 
 ### 4.3. CLI `--strict` 模式
 *   **任务：** 为 `run_agent_cli.py` 添加一个 `--strict` 模式开关。
 *   **任务：** 在此模式下，Agent 生成的 TikZ 代码如果未通过上述“自动验证”，则不输出生成的代码，而是提示用户“生成不合格，已回退（或建议）使用标准模板/或提示用户检查输入”。
     *   **负责人：** Cline (bee)
+    *   **状态：** 初步完成 (CLI `--strict` 模式已添加)。
+
+### 4.4. KB 自学习 (增量更新机制)
+*   **目标：** 实现知识库的即时增量学习能力，允许通过验证的、由 CLI 生成的新 TikZ 片段自动更新知识库（DuckDB 和 Annoy 索引），并通过异步机制定期将增量数据落盘到用户特定的 JSON 文件。
+*   **方案 (B-1)：** 即时增量写库 + 周期性 JSON 落盘。
+    *   **核心组件：**
+        *   `kb/annoy_index.py`: 封装 Annoy 索引的加载、增量记录添加 (`add_record_to_index`) 和搜索。增量添加涉及内存中索引的重建和即时保存。
+        *   `kb/autosave.py`: 实现待处理记录的队列 (`queue_record_for_autosave`) 和通过 `atexit` 及守护线程定期将队列中记录刷新到 `data/feynman_kb_user.json` 的逻辑。
+        *   `run_agent_cli.py`: 在成功生成并通过验证后，调用 `kb.db.upsert_record` (写入 DuckDB)，`kb.annoy_index.add_record_to_index` (更新 Annoy 索引)，以及 `kb.autosave.queue_record_for_autosave` (排队等待 JSON 落盘)。
+    *   **数据文件：**
+        *   `data/feynman_kb_base.json`: 基础知识库，只读。
+        *   `data/feynman_kb_user.json`: 用户生成的、通过验证的增量记录，由 `kb/autosave.py` 维护。
+        *   `data/feynman_kb.duckdb`: 实时通过 `upsert_record` 更新。
+        *   `data/feynman_kb.ann`, `data/feynman_kb_id_map.json`: 实时通过 `add_record_to_index` 更新和保存。
+    *   **负责人：** Cline (bee)
+    *   **状态：** 进行中。`kb/annoy_index.py` 和 `kb/autosave.py` 初稿已完成。下一步是集成到 `run_agent_cli.py`。
+*   **后续任务 (根据用户建议)：**
+    *   **CLI `--wrap-document` 选项：** (已完成) 在 `run_agent_cli.py` 中添加选项，输出包含 TikZ 代码的完整 standalone LaTeX 文档。
+    *   **README 更新：** 说明增量学习机制、安全写策略和定期合并的流程。
+    *   **CI Nightly Job：** 配置 GitHub Actions 定时任务，用于合并 `feynman_kb_user.json` 到 `feynman_kb_base.json`（或新的基线版本），并完全重建知识库（DuckDB, Annoy 索引）。
 
 ## 阶段五：图片转 TikZ (费曼图 OCR) - 长期研发
 

@@ -39,8 +39,10 @@ Example format (content for \\feynmandiagram{{...}}):
         )
 
 
+import re # For validation regex
+
 class TikzFeynmanAgent:
-    def __init__(self, api_key: str = None, model_name: str = None, use_kb: bool = True, num_examples_from_kb: int = 3):
+    def __init__(self, api_key: str = None, model_name: str = None, use_kb: bool = True, num_examples_from_kb: int = 3, max_retries: int = 1):
         resolved_api_key = api_key if api_key else os.getenv("GOOGLE_API_KEY")
         # Use GEMINI_MODEL_NAME for the generative agent, not GEMINI_EMBEDDING_MODEL_NAME
         default_generative_model = "gemini-1.5-pro-latest" # Or another suitable generative model
@@ -56,7 +58,37 @@ class TikzFeynmanAgent:
         self.model = genai.GenerativeModel(resolved_model_name)
         self.use_kb = KB_ENABLED and use_kb # KB can only be used if components loaded and user wants to use it
         self.num_examples_from_kb = num_examples_from_kb
-        print(f"TikzFeynmanAgent initialized with model: {resolved_model_name}. Knowledge Base enabled: {self.use_kb}")
+        self.max_retries = max_retries
+        print(f"TikzFeynmanAgent initialized with model: {resolved_model_name}. Knowledge Base enabled: {self.use_kb}. Max retries: {self.max_retries}")
+
+    def _validate_tikz_code(self, tikz_code: str) -> bool:
+        """
+        Validates the generated TikZ code for essential styles.
+        Checks for the presence of [fermion], [photon], [boson], [gluon], or [ghost].
+        """
+        # Regex to find common particle lines. This can be expanded.
+        # It looks for patterns like "-- [fermion]", "-- [photon]", etc.
+        # Allows for optional spaces around the brackets and inside.
+        # Also checks for particle labels like [particle=...]
+        required_styles = [
+            r"\[\s*fermion\s*\]",
+            r"\[\s*photon\s*\]",
+            r"\[\s*boson\s*\]",
+            r"\[\s*gluon\s*\]",
+            r"\[\s*ghost\s*\]",
+            # It's also good to ensure particle labels are present for external lines,
+            # but the core styles above are more critical for the diagram structure itself.
+            # r"\[\s*particle\s*=\s*.*?\s*\]" # This might be too strict if not all diagrams need it.
+        ]
+        # Check if at least one of the required styles is present.
+        # This is a basic check; more sophisticated parsing might be needed for complex rules.
+        for style_pattern in required_styles:
+            if re.search(style_pattern, tikz_code):
+                print(f"Validation: Found style matching '{style_pattern}' in generated code.")
+                return True
+        
+        print("Validation: No essential TikZ-Feynman styles (e.g., [fermion], [photon]) found in the generated code.")
+        return False
 
     def generate_tikz_code(self, description: str) -> str:
         examples = []
@@ -96,36 +128,60 @@ class TikzFeynmanAgent:
         # Just return the code."""
         # Note: Escaped curly braces for f-string: {{{{ and }}}}
 
-        try:
-            # Set temperature to 0.0 for deterministic and consistent output
-            generation_config = genai.types.GenerationConfig(temperature=0.0)
-            # Consider adding safety_settings if needed
-            # safety_settings=[
-            #     {
-            #         "category": "HARM_CATEGORY_HARASSMENT",
-            #         "threshold": "BLOCK_NONE",
-            #     },
-            #     # ... other categories
-            # ]
-            response = self.model.generate_content(
-                prompt,
-                generation_config=generation_config
-                # safety_settings=safety_settings 
-            )
-            # It's good practice to check if parts exist before accessing,
-            if response.parts:
-                return response.text.strip()
-            else:
-                # Fallback or error handling if response.text is not available as expected
-                # This might happen if the generation was blocked or failed.
-                # For now, returning the prompt to indicate an issue, or could raise an error.
-                # Or check response.prompt_feedback for blocking reasons
-                if response.prompt_feedback and response.prompt_feedback.block_reason:
-                    return f"Generation failed due to: {response.prompt_feedback.block_reason_message}"
-                return "Error: No content generated. The prompt might have been blocked or an unknown error occurred."
-        except Exception as e:
-            # Handle potential API errors or other exceptions
-            return f"An error occurred: {str(e)}"
+        generated_code = ""
+        for attempt in range(self.max_retries + 1): # Initial attempt + retries
+            print(f"Generation attempt {attempt + 1}/{self.max_retries + 1}")
+            try:
+                # Set temperature to 0.0 for deterministic and consistent output
+                generation_config = genai.types.GenerationConfig(temperature=0.0)
+                # Consider adding safety_settings if needed
+                # safety_settings=[
+                #     {
+                #         "category": "HARM_CATEGORY_HARASSMENT",
+                #         "threshold": "BLOCK_NONE",
+                #     },
+                #     # ... other categories
+                # ]
+                response = self.model.generate_content(
+                    prompt,
+                    generation_config=generation_config
+                    # safety_settings=safety_settings 
+                )
+                
+                if response.parts:
+                    generated_code = response.text.strip()
+                    print("Code generated. Validating...")
+                    if self._validate_tikz_code(generated_code):
+                        print("Validation successful.")
+                        return generated_code
+                    else:
+                        print(f"Validation failed for attempt {attempt + 1}.")
+                        if attempt < self.max_retries:
+                            print("Retrying...")
+                        else:
+                            print("Max retries reached. Returning last generated code despite validation failure.")
+                            return generated_code # Or a specific error message / fallback
+                else:
+                    # Fallback or error handling if response.text is not available as expected
+                    if response.prompt_feedback and response.prompt_feedback.block_reason:
+                        error_message = f"Generation failed due to: {response.prompt_feedback.block_reason_message}"
+                        print(error_message)
+                        if attempt == self.max_retries: return error_message # Return error on last attempt
+                    else:
+                        error_message = "Error: No content generated. The prompt might have been blocked or an unknown error occurred."
+                        print(error_message)
+                        if attempt == self.max_retries: return error_message # Return error on last attempt
+                    
+                    if attempt == self.max_retries: # If it's the last attempt and it failed to produce parts
+                        return generated_code if generated_code else error_message # Return whatever was last generated or the error
+
+            except Exception as e:
+                # Handle potential API errors or other exceptions
+                print(f"An error occurred during generation attempt {attempt + 1}: {str(e)}")
+                if attempt == self.max_retries:
+                    return f"An error occurred after {self.max_retries + 1} attempts: {str(e)}"
+        
+        return generated_code # Should be unreachable if logic is correct, but as a fallback.
 
 if __name__ == '__main__':
     # This is a simple test block.
