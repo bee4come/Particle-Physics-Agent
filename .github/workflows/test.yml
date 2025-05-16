@@ -1,0 +1,35 @@
+name: Knowledge Base CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11' # As per user's plan for CI
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run data migration and embedding
+      # GOOGLE_API_KEY will likely not be available in public PRs for forks.
+      # The script should fall back to local BGE model.
+      # This step will also download the BGE model if not cached.
+      # For actual secrets, GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }} could be used if the repo has it set.
+      # For now, assume it tests the BGE fallback.
+      run: python -m kb.migrate_json
+
+    - name: Run basic search test
+      run: |
+        python -c "from kb.db import query_records_by_description; import os; print('Running search test...'); results = query_records_by_description('electron', k=1); print(f'Search results for \"electron\": {results}'); assert results, 'Search for \"electron\" failed to return any records'"
+        
+    - name: Check embedding coverage
+      run: python scripts/ci_check_embeddings.py
