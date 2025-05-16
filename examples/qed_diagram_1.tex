@@ -1,1 +1,13 @@
-% 示例 TikZ 源码 
+\documentclass{article}
+\usepackage[compat=1.1.0]{tikz-feynman}
+
+\begin{document}
+
+\begin{figure}
+\feynmandiagram [horizontal=a to b] {
+  a [particle=e⁻] -- [fermion] b -- [fermion] c [particle=e⁻],
+  b -- [photon] d [particle=γ],
+};
+\end{figure}
+
+\end{document}
