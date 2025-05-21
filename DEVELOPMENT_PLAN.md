@@ -45,7 +45,7 @@
 ### 3.1. GitHub Actions CI
 *   **任务：** 配置 CI 流程 (`.github/workflows/test.yml`)，包括依赖安装、数据迁移、基本搜索测试、向量嵌入覆盖率检查。 (已创建配置文件)
     *   **负责人：** Cline (bee)
-*   **目标：** CI 流程通过（“绿灯”）。
+*   **目标：** CI 流程通过（"绿灯"）。
 
 ### 3.2. 文档完善与版本发布 (v0.2 Tag)
 *   **任务：** 更新 `README.md`、`WORKLOG.md`、`DEVELOPMENT_PLAN.md` 等文档。
@@ -55,7 +55,7 @@
 ## 阶段四：后续加固与质量提升 (用户建议)
 
 ### 4.1. 知识库内容优化
-*   **任务：** 更新知识库（`feynman_kb_enhanced.json` 或直接操作数据库）中的示例，确保其 TikZ 代码风格统一且符合“出版级”标准（例如，使用边样式 `[fermion]/[photon]`，规范节点命名等）。
+*   **任务：** 更新知识库（`feynman_kb_enhanced.json` 或直接操作数据库）中的示例，确保其 TikZ 代码风格统一且符合"出版级"标准（例如，使用边样式 `[fermion]/[photon]`，规范节点命名等）。
     *   **负责人：** JYEU, 用户
 
 ### 4.2. 生成后自动验证与重试
@@ -66,7 +66,7 @@
 
 ### 4.3. CLI `--strict` 模式
 *   **任务：** 为 `run_agent_cli.py` 添加一个 `--strict` 模式开关。
-*   **任务：** 在此模式下，Agent 生成的 TikZ 代码如果未通过上述“自动验证”，则不输出生成的代码，而是提示用户“生成不合格，已回退（或建议）使用标准模板/或提示用户检查输入”。
+*   **任务：** 在此模式下，Agent 生成的 TikZ 代码如果未通过上述"自动验证"，则不输出生成的代码，而是提示用户"生成不合格，已回退（或建议）使用标准模板/或提示用户检查输入"。
     *   **负责人：** Cline (bee)
     *   **状态：** 初步完成 (CLI `--strict` 模式已添加)。
 
@@ -88,6 +88,40 @@
     *   **CLI `--wrap-document` 选项：** (已完成) 在 `run_agent_cli.py` 中添加选项，输出包含 TikZ 代码的完整 standalone LaTeX 文档。
     *   **README 更新：** 说明增量学习机制、安全写策略和定期合并的流程。
     *   **CI Nightly Job：** 配置 GitHub Actions 定时任务，用于合并 `feynman_kb_user.json` 到 `feynman_kb_base.json`（或新的基线版本），并完全重建知识库（DuckDB, Annoy 索引）。
+
+### 4.5. 引入基于LLM的物理过程预解析与验证 (新)
+*   **目标：** 在主LLM生成TikZ代码之前，通过LLM Function Calling机制辅助解析用户输入的自然语言描述，提取结构化的反应物和生成物信息。结合PDG（Particle Data Group）API获取的权威粒子数据和本地物理规则库（如电荷、轻子数、重子数守恒），对解析出的反应进行预验证，并将此增强上下文提供给主TikZ生成LLM。
+*   **核心价值：**
+    *   **提升首次生成准确性：** 为TikZ生成LLM提供更准确、经过物理规则初步校验的上下文信息，引导其生成更符合物理原理的费曼图。
+    *   **减少无效调用：** 对于明显违反物理守恒定律的用户描述，可以在早期阶段识别，并考虑直接向用户反馈或引导其修正，从而避免不必要的LLM计算资源消耗。
+    *   **增强鲁棒性：** 提高对模糊、不规范用户输入的理解和处理能力。
+*   **涉及模块与核心功能实现：**
+    *   **1. LLM辅助解析用户描述 (`agents/tikz_feynman_agent.py` 或新模块 `agents/llm_particle_parser.py`)**
+        *   **函数模式定义 (`Tool Schema`):** 设计名为 `extract_particle_reaction_components` 的函数模式 (JSON Schema)，包含 `user_description` (输入), `incoming_particles` (输出列表), `outgoing_particles` (输出列表), `process_type` (可选输出) 等参数。此模式将提供给LLM。
+        *   **LLM交互方法 (例如在 `TikzFeynmanAgent` 中新增 `_invoke_llm_for_reaction_parsing(description: str) -> Optional[Dict]`)**: 此方法负责：
+            *   构建包含上述函数模式的请求，调用LLM（如Gemini API）处理用户输入的 `description`。
+            *   接收并解析LLM返回的Function Calling结果（一个包含提取出的粒子列表的JSON对象）。
+            *   初步处理LLM返回的原始粒子名列表。
+    *   **2. 粒子信息标准化与物理验证 (`alpha/physics_validator.py`)**
+        *   **本地粒子属性与映射 (`PARTICLE_PHYSICS_PROPERTIES`, `CANONICAL_NAME_MAP`):** 维护和扩展现有的本地数据库，包含粒子规范名称、别名、电荷、轻子数 (Le, Lmu, Ltau)、重子数 (B) 等守恒量。
+        *   **PDG API 集成 (`alpha/particle_interactions.py` 中的 `get_particles_from_pdg` 或 `physics_validator.py` 中的新辅助函数):** 确保可以根据粒子名称从PDG数据库获取权威数据 (如质量、标准LaTeX符号、PDG确认的量子数等)。
+        *   **核心验证函数 (例如 `validate_reaction_with_llm_parsed_data(llm_parsed_output: Dict, pdg_api_instance) -> Tuple[bool, List[str], Dict]`)**: 此新函数将负责：
+            *   接收来自LLM解析的原始粒子列表 (`llm_parsed_output`)。
+            *   使用 `CANONICAL_NAME_MAP` 和PDG查询对粒子名称进行标准化和属性填充，形成包含完整物理属性的结构化反应表示 (`structured_reaction_with_properties`)。
+            *   调用 `check_conservation_laws(structured_reaction_with_properties)` (可能需要增强) 来检查电荷、轻子数、重子数等是否守恒。
+            *   返回验证结果 (布尔值)、反馈信息列表、以及包含所有标准化和补充后粒子信息的字典。
+    *   **3. Agent主流程修改 (`agents/tikz_feynman_agent.py`)**
+        *   **修改 `generate_tikz_code(original_description: str)` 方法：**
+            *   **步骤A (预处理):** 调用 `_invoke_llm_for_reaction_parsing(original_description)` 获取LLM对用户描述的结构化解析。
+            *   **步骤B (验证与信息整合):** 如果步骤A成功，则调用 `alpha.physics_validator.validate_reaction_with_llm_parsed_data()` 对LLM的解析结果进行标准化、PDG数据补充和物理守恒检查。
+            *   **步骤C (构建增强上下文):** 将原始用户描述、LLM的结构化解析结果、PDG粒子数据摘要、物理验证结果（成功信息或具体的冲突警告）整合成一个详细的上下文块 (`enhanced_context_for_tikz_llm`)。
+            *   **步骤D (RAG检索):** （可选，需评估）考虑是基于 `original_description` 还是基于LLM解析/标准化后的粒子信息进行RAG知识库的向量检索，以获取更相关的TikZ示例。
+            *   **步骤E (最终提示组合):** 调用 `kb.prompt.compose_prompt(rag_examples, enhanced_context_for_tikz_llm)` (可能需要调整`compose_prompt`以适应更复杂的上下文输入) 来构建最终发送给TikZ生成LLM的提示。
+            *   **步骤F (TikZ生成与后处理):** 调用主LLM生成TikZ代码。如果预验证发现问题，可以在生成的代码前添加注释警告。
+*   **数据流概要：**
+    `User Input` -> `TikzFeynmanAgent._invoke_llm_for_reaction_parsing` (LLM Function Call) -> `LLM Parsed Particles (JSON)` -> `alpha.physics_validator.validate_reaction_with_llm_parsed_data` (Standardization, PDG Query, Conservation Check) -> `Validated Reaction Info & Feedback` -> `TikzFeynmanAgent.generate_tikz_code` (Context Augmentation & RAG) -> `Enhanced Prompt` -> `TikZ Generation LLM` -> `TikZ Code Output`.
+*   **负责人：** (待定)
+*   **状态：** 计划中。
 
 ## 阶段五：图片转 TikZ (费曼图 OCR) - 长期研发
 
