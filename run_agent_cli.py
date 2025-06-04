@@ -13,7 +13,8 @@ def main():
     generation_group = parser.add_argument_group('Generation Options')
     generation_group.add_argument("description", type=str, nargs='?', default=None, help="The physics process description for TikZ generation (e.g., 'an electron emits a photon'). If not provided and --search is not used, will prompt interactively.")
     generation_group.add_argument("--output", "-o", type=str, help="Optional: Path to save the full .tex document for generated TikZ code. If --wrap-document is also used, this file will contain the wrapped document.")
-    generation_group.add_argument("--model", type=str, help="Optional: Specify the Gemini model name to use for generation, overriding .env or agent default.")
+    generation_group.add_argument("--model", type=str, help="Optional: Specify the model name to use. For Gemini provider, overrides .env or agent default.")
+    generation_group.add_argument("--provider", choices=["gemini", "deepseek"], default="gemini", help="LLM provider to use (default: gemini)")
     generation_group.add_argument("--strict", action='store_true', help="Enable strict mode. If generation validation fails, no code is output.")
     generation_group.add_argument("--wrap-document", action='store_true', help="Wrap the generated TikZ code in a complete standalone LaTeX document.")
 
@@ -45,17 +46,21 @@ def main():
         return # Exit after search
 
     # If not searching, proceed with generation
-    # Check for API key after loading .env, before agent instantiation
-    # The agent will also check, but this provides a CLI-level early exit.
-    if not os.getenv("GOOGLE_API_KEY"):
+    # Early check for required API key based on provider
+    if args.provider == "gemini" and not os.getenv("GOOGLE_API_KEY"):
         print("错误：GOOGLE_API_KEY 未在环境变量中设置，并且未在 .env 文件中找到。")
         print("请创建 .env 文件并加入 GOOGLE_API_KEY=\"YOUR_KEY\", 或设置环境变量。")
         print("参考 .env.example 文件。")
         return
+    if args.provider == "deepseek" and not os.getenv("DEEPSEEK_API_KEY"):
+        print("错误：DEEPSEEK_API_KEY 未在环境变量中设置，并且未在 .env 文件中找到。")
+        print("请在 .env 中设置 DEEPSEEK_API_KEY 或使用环境变量。")
+        return
 
     try:
-        # Pass model from CLI args if provided, otherwise agent uses its logic (env var or default)
-        agent = TikzFeynmanAgent(model_name=args.model if args.model else None)
+        # Pass model and provider from CLI args if provided
+        agent = TikzFeynmanAgent(model_name=args.model if args.model else None,
+                                 provider=args.provider)
     except ValueError as e:
         print(f"Agent 初始化错误: {e}")
         return
