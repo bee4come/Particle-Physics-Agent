@@ -42,24 +42,37 @@ Example format (content for \\feynmandiagram{{...}}):
 import re # For validation regex
 
 class TikzFeynmanAgent:
-    def __init__(self, api_key: str = None, model_name: str = None, use_kb: bool = True, num_examples_from_kb: int = 3, max_retries: int = 1):
-        resolved_api_key = api_key if api_key else os.getenv("GOOGLE_API_KEY")
-        # Use GEMINI_MODEL_NAME for the generative agent, not GEMINI_EMBEDDING_MODEL_NAME
-        default_generative_model = "gemini-1.5-pro-latest" # Or another suitable generative model
-        resolved_model_name = model_name if model_name else os.getenv("GEMINI_MODEL_NAME", default_generative_model)
+    def __init__(self, api_key: str = None, model_name: str = None, use_kb: bool = True,
+                 num_examples_from_kb: int = 3, max_retries: int = 1, provider: str = "gemini"):
+        self.provider = provider
+        if provider == "gemini":
+            resolved_api_key = api_key if api_key else os.getenv("GOOGLE_API_KEY")
+            default_generative_model = "gemini-1.5-pro-latest"
+            resolved_model_name = model_name if model_name else os.getenv("GEMINI_MODEL_NAME", default_generative_model)
+        else:  # deepseek
+            resolved_api_key = api_key if api_key else os.getenv("DEEPSEEK_API_KEY")
+            default_generative_model = "deepseek-chat"
+            resolved_model_name = model_name if model_name else os.getenv("DEEPSEEK_MODEL_NAME", default_generative_model)
 
 
         if not resolved_api_key:
-            raise ValueError("Google API Key not provided or found in environment variables (GOOGLE_API_KEY).")
-        
-        # Configure genai globally. This is used by genai.GenerativeModel and also by kb.embedding if it uses genai.embed_content
-        genai.configure(api_key=resolved_api_key)
-        
-        self.model = genai.GenerativeModel(resolved_model_name)
+            raise ValueError(
+                "API key not provided. Set GOOGLE_API_KEY or DEEPSEEK_API_KEY as appropriate." )
+
+        if self.provider == "gemini":
+            genai.configure(api_key=resolved_api_key)
+            self.model = genai.GenerativeModel(resolved_model_name)
+        else:
+            self.deepseek_api_key = resolved_api_key
+            self.deepseek_model = resolved_model_name
+            # Default DeepSeek API base mirrors official endpoints
+            self.deepseek_base = os.getenv("DEEPSEEK_API_BASE", "https://api.deepseek.com")
         self.use_kb = KB_ENABLED and use_kb # KB can only be used if components loaded and user wants to use it
         self.num_examples_from_kb = num_examples_from_kb
         self.max_retries = max_retries
-        print(f"TikzFeynmanAgent initialized with model: {resolved_model_name}. Knowledge Base enabled: {self.use_kb}. Max retries: {self.max_retries}")
+        print(
+            f"TikzFeynmanAgent initialized with provider: {self.provider}, model: {resolved_model_name}. "
+            f"Knowledge Base enabled: {self.use_kb}. Max retries: {self.max_retries}")
 
     def _validate_tikz_code(self, tikz_code: str) -> bool:
         """
@@ -129,51 +142,44 @@ class TikzFeynmanAgent:
         # Note: Escaped curly braces for f-string: {{{{ and }}}}
 
         generated_code = ""
-        for attempt in range(self.max_retries + 1): # Initial attempt + retries
+        for attempt in range(self.max_retries + 1):
             print(f"Generation attempt {attempt + 1}/{self.max_retries + 1}")
             try:
-                # Set temperature to 0.0 for deterministic and consistent output
-                generation_config = genai.types.GenerationConfig(temperature=0.0)
-                # Consider adding safety_settings if needed
-                # safety_settings=[
-                #     {
-                #         "category": "HARM_CATEGORY_HARASSMENT",
-                #         "threshold": "BLOCK_NONE",
-                #     },
-                #     # ... other categories
-                # ]
-                response = self.model.generate_content(
-                    prompt,
-                    generation_config=generation_config
-                    # safety_settings=safety_settings 
-                )
-                
-                if response.parts:
-                    generated_code = response.text.strip()
-                    print("Code generated. Validating...")
-                    if self._validate_tikz_code(generated_code):
-                        print("Validation successful.")
-                        return generated_code
-                    else:
-                        print(f"Validation failed for attempt {attempt + 1}.")
-                        if attempt < self.max_retries:
-                            print("Retrying...")
-                        else:
-                            print("Max retries reached. Returning last generated code despite validation failure.")
-                            return generated_code # Or a specific error message / fallback
+                if self.provider == "gemini":
+                    generation_config = genai.types.GenerationConfig(temperature=0.0)
+                    response = self.model.generate_content(
+                        prompt,
+                        generation_config=generation_config
+                    )
+                    generated_code = response.text.strip() if response.parts else ""
                 else:
-                    # Fallback or error handling if response.text is not available as expected
-                    if response.prompt_feedback and response.prompt_feedback.block_reason:
-                        error_message = f"Generation failed due to: {response.prompt_feedback.block_reason_message}"
-                        print(error_message)
-                        if attempt == self.max_retries: return error_message # Return error on last attempt
+                    import requests
+                    payload = {
+                        "model": self.deepseek_model,
+                        "messages": [{"role": "user", "content": prompt}],
+                        "temperature": 0.0,
+                    }
+                    headers = {
+                        "Authorization": f"Bearer {self.deepseek_api_key}",
+                        "Content-Type": "application/json",
+                    }
+                    url = f"{self.deepseek_base}/chat/completions"
+                    r = requests.post(url, json=payload, headers=headers, timeout=60)
+                    r.raise_for_status()
+                    data = r.json()
+                    generated_code = data.get("choices", [{}])[0].get("message", {}).get("content", "").strip()
+
+                print("Code generated. Validating...")
+                if self._validate_tikz_code(generated_code):
+                    print("Validation successful.")
+                    return generated_code
+                else:
+                    print(f"Validation failed for attempt {attempt + 1}.")
+                    if attempt < self.max_retries:
+                        print("Retrying...")
                     else:
-                        error_message = "Error: No content generated. The prompt might have been blocked or an unknown error occurred."
-                        print(error_message)
-                        if attempt == self.max_retries: return error_message # Return error on last attempt
-                    
-                    if attempt == self.max_retries: # If it's the last attempt and it failed to produce parts
-                        return generated_code if generated_code else error_message # Return whatever was last generated or the error
+                        print("Max retries reached. Returning last generated code despite validation failure.")
+                        return generated_code
 
             except Exception as e:
                 # Handle potential API errors or other exceptions

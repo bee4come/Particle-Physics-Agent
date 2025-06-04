@@ -243,17 +243,23 @@ def main():
     load_dotenv()
 
     parser = argparse.ArgumentParser(description="Run test suite for TikZFeynmanAgent.")
-    parser.add_argument("--model", type=str, help="Optional: Specify the Gemini model name to use.")
+    parser.add_argument("--model", type=str, help="Optional: Specify the model name to use.")
+    parser.add_argument("--provider", choices=["gemini", "deepseek"], default="gemini", help="LLM provider to use (default: gemini)")
     parser.add_argument("--tests", type=str, help="Optional: Comma-separated list of test case numbers to run (e.g., 1,3,5). Runs all if not specified.")
     args = parser.parse_args()
 
-    if not os.getenv("GOOGLE_API_KEY"):
+    if args.provider == "gemini" and not os.getenv("GOOGLE_API_KEY"):
         print("错误：GOOGLE_API_KEY 未在环境变量中设置，并且未在 .env 文件中找到。")
         print("请创建 .env 文件并加入 GOOGLE_API_KEY=\"YOUR_KEY\", 或设置环境变量。")
         return
+    if args.provider == "deepseek" and not os.getenv("DEEPSEEK_API_KEY"):
+        print("错误：DEEPSEEK_API_KEY 未在环境变量中设置，并且未在 .env 文件中找到。")
+        print("请在 .env 中设置 DEEPSEEK_API_KEY 或使用环境变量。")
+        return
 
     try:
-        agent = TikzFeynmanAgent(model_name=args.model if args.model else None)
+        agent = TikzFeynmanAgent(model_name=args.model if args.model else None,
+                                 provider=args.provider)
     except ValueError as e:
         print(f"Agent 初始化错误: {e}")
         return
