@@ -25,11 +25,11 @@
 
 ## 阶段二：知识库与检索增强 (S-1 & S-2 from Action Plan 0->1)
 
-**状态：核心组件已实现，包括数据迁移、向量嵌入（Gemini + BGE备选）、Annoy索引构建、向量检索、Few-shot Prompt组装、CLI文本搜索。**
+**状态：核心组件已实现，包括数据迁移、向量嵌入（Gemini）、Annoy索引构建、向量检索、Few-shot Prompt组装、CLI文本搜索。**
 
 ### 2.1. 知识库构建 (`kb` 模块)
 *   **数据迁移**: `feynman_kb_enhanced.json` -> DuckDB (`data/feynman_kb.duckdb`) (已完成)
-*   **向量嵌入**: 使用 Gemini API (主) 和 BAAI/bge-base-zh-v1.5 (备选) 为记录生成768维向量。 (已完成)
+*   **向量嵌入**: 使用 Gemini API 为记录生成768维向量。 (已完成)
 *   **Annoy 索引**: 构建并保存 Annoy 索引 (`data/feynman_kb.ann`) 和 ID 映射。 (已完成)
 
 ### 2.2. 检索与 Prompt 增强
@@ -142,10 +142,9 @@
 ## 技术栈 (当前)
 *   **LLM API (生成)：** Google Gemini (例如 `gemini-1.5-pro-latest`)
 *   **LLM API (嵌入)：** Google Gemini (例如 `text-embedding-004`)
-*   **本地嵌入备选：** `BAAI/bge-base-zh-v1.5` (SentenceTransformer)
 *   **Agent 逻辑：** Python (`agents/tikz_feynman_agent.py`)
 *   **知识库存储：** DuckDB (`data/feynman_kb.duckdb`)
 *   **向量索引：** Annoy (`data/feynman_kb.ann`)
 *   **CLI 工具：** Python + argparse (`run_agent_cli.py`)
 *   **运行环境：** Conda (`tikz_mcp_env`)
-*   **核心依赖：** `google-generativeai`, `python-dotenv`, `pydantic`, `duckdb`, `sentence-transformers`, `annoy`, `requests`, `tqdm`
+*   **核心依赖：** `google-generativeai`, `python-dotenv`, `pydantic`, `duckdb`, `annoy`, `requests`, `tqdm`

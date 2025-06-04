@@ -40,13 +40,18 @@
 
 4.  **设置 API 密钥与配置 (.env 文件)：**
     *   复制项目根目录下的 `.env.example` 文件，并将其重命名为 `.env`。
-    *   编辑 `.env` 文件，至少填入您的 `GOOGLE_API_KEY`。
+    *   编辑 `.env` 文件，至少填入您的 `GOOGLE_API_KEY`，或者填写 `DEEPSEEK_API_KEY` 以使用 DeepSeek 模型。
         ```dotenv
         # .env 文件示例
         GOOGLE_API_KEY="YOUR_GOOGLE_API_KEY_HERE"
+
+        # 若使用 DeepSeek，可设置
+        #DEEPSEEK_API_KEY="YOUR_DEEPSEEK_API_KEY_HERE"
+        #DEEPSEEK_MODEL_NAME="deepseek-chat"
+        #DEEPSEEK_API_BASE="https://api.deepseek.com"
         
         # 用于 Agent 生成 TikZ 代码的 Gemini 模型 (可选, 默认: gemini-1.5-pro-latest)
-        GEMINI_MODEL_NAME="gemini-1.5-pro-latest" 
+        GEMINI_MODEL_NAME="gemini-1.5-pro-latest"
         
         # 用于生成向量嵌入的 Gemini 模型 (可选, 默认: text-embedding-004)
         GEMINI_EMBEDDING_MODEL_NAME="text-embedding-004"
@@ -65,7 +70,7 @@
         此脚本会：
         *   初始化 `data/feynman_kb.duckdb` 数据库。
         *   读取 `feynman_kb_enhanced.json`。
-        *   为每条记录生成向量嵌入（优先使用 Gemini API，若失败或未配置API密钥则使用本地 BAAI/bge-base-zh-v1.5 模型）。
+        *   为每条记录生成向量嵌入（通过 Gemini API）。
         *   将记录及其嵌入存入数据库。
         请注意此步骤（尤其是首次运行本地模型时）可能需要一些时间下载模型和处理数据。
 
@@ -94,6 +99,8 @@
         python run_agent_cli.py "一个电子发射一个光子并继续作为电子存在"
         # 指定输出文件和生成模型
         python run_agent_cli.py "一个μ子衰变" --model gemini-1.5-pro-latest -o muon_decay.tex
+        # 使用 DeepSeek 模型示例
+        python run_agent_cli.py "一个电子发射一个光子" --provider deepseek
         ```
     *   **搜索本地知识库** (基于文本描述)：
         ```bash
