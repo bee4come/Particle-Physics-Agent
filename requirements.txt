@@ -4,6 +4,5 @@ pydantic>=2
 duckdb==0.10.*
 sqlite-utils>=3.36
 tqdm
-sentence-transformers>=2.3 # Re-enabled for local BGE fallback
 annoy
 requests

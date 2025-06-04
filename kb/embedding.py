@@ -1,27 +1,14 @@
-# Embedding generation logic (local and remote)
+# Embedding generation logic using Gemini
 import os
 from typing import List, Optional
-import google.generativeai as genai # Using standard import
-from sentence_transformers import SentenceTransformer # Re-added for BGE fallback
-from dotenv import load_dotenv # For the __main__ block
+import google.generativeai as genai
+from dotenv import load_dotenv
 
 from .schema import FeynmanRecord # Relative import
 
 # Unified Embedding Dimension
 EMB_DIM = 768
 
-# Initialize local model (BAAI/bge-base-zh-v1.5 is 768 dimensions)
-# This will print initialization messages when the module is imported.
-_LOCAL_MODEL = None
-_LOCAL_MODEL_NAME = "BAAI/bge-base-zh-v1.5"
-try:
-    print(f"Initializing local embedding model {_LOCAL_MODEL_NAME}...")
-    _LOCAL_MODEL = SentenceTransformer(_LOCAL_MODEL_NAME) 
-    print(f"Local embedding model {_LOCAL_MODEL_NAME} initialized.")
-except Exception as e:
-    print(f"Warning: Could not initialize local SentenceTransformer model {_LOCAL_MODEL_NAME}: {e}")
-    print("Local embedding fallback will not be available if this fails.")
-    # _LOCAL_MODEL remains None if initialization fails
 
 # Default Gemini embedding model to be used if not overridden by .env
 # User confirmed text-embedding-004 works and is 768d.
@@ -65,59 +52,20 @@ def embed_with_gemini(text: str, api_key: str, model_name: Optional[str] = None)
         print(f"[WARN] Gemini embedding with model '{api_model_name}' failed: {e}")
         return None
 
-def embed_with_bge(text: str) -> Optional[List[float]]:
-    """Generates embedding using the local BAAI/bge-base-zh-v1.5 model."""
-    global _LOCAL_MODEL # Ensure we are referring to the module-level variable
-    if _LOCAL_MODEL is None: # Attempt to initialize if not already
-        try:
-            print(f"Re-attempting lazy initialization of local embedding model {_LOCAL_MODEL_NAME}...")
-            _LOCAL_MODEL = SentenceTransformer(_LOCAL_MODEL_NAME)
-            print(f"Local embedding model {_LOCAL_MODEL_NAME} initialized successfully.")
-        except Exception as e:
-            print(f"Warning: Failed to lazy-initialize local SentenceTransformer model {_LOCAL_MODEL_NAME}: {e}")
-            return None # Cannot proceed if model isn't initialized
-
-    if _LOCAL_MODEL: # Check again after potential lazy init
-        try:
-            print(f"Attempting local BGE embedding for: \"{text[:50]}...\"")
-            embedding = _LOCAL_MODEL.encode(text).tolist()
-            if len(embedding) == EMB_DIM:
-                return embedding
-            else:
-                print(f"[WARN] Local BGE model {_LOCAL_MODEL_NAME} embedding dimension mismatch. Expected {EMB_DIM}, got {len(embedding)}.")
-                return None
-        except Exception as e:
-            print(f"[WARN] Local BGE embedding with {_LOCAL_MODEL_NAME} failed: {e}")
-            return None
-    else:
-        print("[WARN] Local BGE model not available. Cannot generate local embedding.")
-    return None
-
 def get_embedding(text: str) -> Optional[List[float]]:
-    """
-    Tries to get embedding from Gemini, falls back to local BGE model.
-    Returns None if all methods fail.
-    """
+    """Generates an embedding using Gemini API."""
     if not text:
         return None
 
-    vec: Optional[List[float]] = None
-    google_api_key = os.getenv("GOOGLE_API_KEY")
-    gemini_model_to_use = os.getenv("GEMINI_EMBEDDING_MODEL_NAME", DEFAULT_GEMINI_EMBEDDING_MODEL)
+    api_key = os.getenv("GOOGLE_API_KEY")
+    model_to_use = os.getenv("GEMINI_EMBEDDING_MODEL_NAME", DEFAULT_GEMINI_EMBEDDING_MODEL)
+    if not api_key:
+        print("GOOGLE_API_KEY not found. Cannot generate embedding.")
+        return None
 
-    if google_api_key:
-        vec = embed_with_gemini(text, google_api_key, model_name=gemini_model_to_use)
-    
-    if vec is None: 
-        if google_api_key:
-            print(f"Gemini embedding failed (model: {gemini_model_to_use}). Falling back to local BGE model for: \"{text[:50]}...\"")
-        else:
-            print(f"GOOGLE_API_KEY not found. Attempting local BGE model for: \"{text[:50]}...\"")
-        vec = embed_with_bge(text)
-    
+    vec = embed_with_gemini(text, api_key, model_name=model_to_use)
     if vec is None:
-        print(f"[ERROR] All embedding methods failed for text: \"{text[:50]}...\"")
-            
+        print(f"[ERROR] Gemini embedding failed for text: \"{text[:50]}...\"")
     return vec
 
 def enrich_record_with_embedding(record: FeynmanRecord) -> FeynmanRecord:
@@ -135,7 +83,7 @@ def enrich_record_with_embedding(record: FeynmanRecord) -> FeynmanRecord:
 
 if __name__ == "__main__":
     load_dotenv() 
-    print("Testing embedding functions (using genai.embed_content and BGE fallback)...")
+    print("Testing embedding functions with Gemini API...")
     
     sample_text_for_test = "An electron and a positron annihilate to produce two photons."
     
@@ -143,21 +91,14 @@ if __name__ == "__main__":
 
     if api_key_present:
         print(f"\nTesting Gemini embedding (model from env or default '{DEFAULT_GEMINI_EMBEDDING_MODEL}'):")
-        gemini_emb_test = get_embedding(sample_text_for_test) 
+        gemini_emb_test = get_embedding(sample_text_for_test)
         if gemini_emb_test:
             print(f"  Gemini Embedding (first 5 dims): {gemini_emb_test[:5]}")
             print(f"  Gemini Embedding dimension: {len(gemini_emb_test)}")
         else:
-            print(f"  Gemini embedding test failed or API key not configured properly (used model: {os.getenv('GEMINI_EMBEDDING_MODEL_NAME', DEFAULT_GEMINI_EMBEDDING_MODEL)}). Fallback to BGE might have occurred if enabled and successful.")
+            print("  Gemini embedding test failed or API key not configured properly.")
     else:
-        print("\nGOOGLE_API_KEY not found in .env. Will test BGE fallback directly if GOOGLE_API_KEY is missing.")
-        # Test BGE directly by ensuring get_embedding falls back
-        bge_emb_test_direct = get_embedding(sample_text_for_test)
-        if bge_emb_test_direct:
-            print(f"  Local BGE Embedding (first 5 dims): {bge_emb_test_direct[:5]}")
-            print(f"  Local BGE Embedding dimension: {len(bge_emb_test_direct)}")
-        else:
-            print("  Local BGE embedding test failed or model not initialized.")
+        print("\nGOOGLE_API_KEY not found in .env. Skipping embedding test.")
 
 
     print("\nTesting enrich_record_with_embedding:")
