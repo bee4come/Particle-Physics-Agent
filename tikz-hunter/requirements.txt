@@ -1,0 +1,31 @@
+# Common
+google-generativeai
+python-dotenv
+pydantic>=2
+requests
+beautifulsoup4
+lxml
+
+# Database
+psycopg2-binary
+SQLAlchemy
+
+# A2A Communication
+grpcio
+grpcio-tools
+protobuf
+
+# Web API
+fastapi
+uvicorn[standard]
+websockets
+
+# Task Orchestration (Celery)
+celery
+redis
+
+# TikZ parsing/validation related
+# (We might add more specific libraries here later)
+
+# For Harvester Agent (GitHub)
+PyGithub

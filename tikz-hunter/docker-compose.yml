@@ -1,1 +1,116 @@
-THIS SHOULD BE A LINTER ERROR
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: tikz-hunter-postgres
+    environment:
+      POSTGRES_DB: tikz_hunter
+      POSTGRES_USER: tikz_user
+      POSTGRES_PASSWORD: tikz_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tikz_user -d tikz_hunter"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  broker:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    container_name: tikz-hunter-broker
+    command: python -m agents.broker
+    environment:
+      - POSTGRES_URL=postgresql://tikz_user:tikz_password@postgres:5432/tikz_hunter
+    volumes:
+      - ./agents:/app/agents
+      - ./proto:/app/proto
+    ports:
+      - "50051:50051"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: on-failure
+
+  harvester:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    container_name: tikz-hunter-harvester
+    command: python -m agents.harvester_agent
+    environment:
+      - BROKER_ADDRESS=broker:50051
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+    volumes:
+      - ./agents:/app/agents
+      - ./proto:/app/proto
+    depends_on:
+      - broker
+    restart: on-failure
+
+  parser:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    container_name: tikz-hunter-parser
+    command: python -m agents.parser_agent
+    environment:
+      - BROKER_ADDRESS=broker:50051
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+    volumes:
+      - ./agents:/app/agents
+      - ./proto:/app/proto
+    depends_on:
+      - broker
+    restart: on-failure
+
+  validator:
+    build:
+      context: .
+      dockerfile: agents/Dockerfile
+    container_name: tikz-hunter-validator
+    command: python -m agents.validator_agent
+    environment:
+      - BROKER_ADDRESS=broker:50051
+    volumes:
+      - ./agents:/app/agents
+      - ./proto:/app/proto
+    depends_on:
+      - broker
+    restart: on-failure
+
+  api:
+    build:
+      context: .
+      dockerfile: ./web/api/Dockerfile
+    container_name: tikz-hunter-api
+    environment:
+      - DATABASE_URL=postgresql://tikz_user:tikz_password@postgres:5432/tikz_hunter
+      - BROKER_ADDRESS=broker:50051
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      broker:
+        condition: service_started
+    restart: always
+
+  ui:
+    build:
+      context: ./web/ui
+    container_name: tikz-hunter-ui
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
+    restart: always
+
+volumes:
+  postgres_data:

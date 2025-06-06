@@ -1,0 +1,68 @@
+// tikz-hunter/proto/a2a.proto
+syntax = "proto3";
+
+package a2a;
+
+// The message structure for a raw TikZ snippet found by the Harvester
+message HarvestJob {
+    string source_url = 1;
+    string tikz_code = 2;
+    string harvester_id = 3; // e.g., "github-feynman-diagram"
+}
+
+// The message structure for a parsed snippet from ParserAgent
+message ParsedSnippet {
+    string topic = 1;
+    string reaction = 2;
+    repeated string particles = 3;
+    string description = 4;
+    string tikz_code = 5;
+    string source_url = 6;
+    string process_type = 7; // e.g., decay | scattering | production | loop
+    string source_type = 8; // e.g., github | web | arxiv
+}
+
+// The message for a validated and hashed snippet, ready for database insertion
+message ValidatedSnippet {
+    string hash = 1;
+    ParsedSnippet snippet = 2;
+}
+
+
+// The service definition for the A2A Broker
+service A2ABroker {
+    // Harvester sends a job to the broker
+    rpc SubmitHarvestJob(HarvestJob) returns (BrokerResponse);
+
+    // Parser requests a job from the broker
+    rpc GetHarvestJob(GetJobRequest) returns (HarvestJob);
+
+    // Parser sends a parsed snippet to the broker
+    rpc SubmitParsedSnippet(ParsedSnippet) returns (BrokerResponse);
+
+    // Validator requests a parsed snippet from the broker
+    rpc GetParsedSnippet(GetJobRequest) returns (ParsedSnippet);
+
+    // Validator sends a validated snippet to be stored/broadcasted
+    rpc SubmitValidatedSnippet(ValidatedSnippet) returns (BrokerResponse);
+
+    // A client (e.g., WebApp) can stream validated snippets
+    rpc StreamValidatedSnippets(StreamRequest) returns (stream ValidatedSnippet);
+}
+
+// Generic response from the broker
+message BrokerResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+// Request to get a job from a queue
+message GetJobRequest {
+    string agent_id = 1; // ID of the agent requesting the job
+}
+
+// Request to stream updates
+message StreamRequest {
+    // Can be empty, or have filters in the future
+    string client_id = 1;
+}
