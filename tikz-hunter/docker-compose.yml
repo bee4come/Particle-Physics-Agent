@@ -36,7 +36,12 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    restart: on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "grpcurl -plaintext broker:50051 list"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+    restart: always
 
   harvester:
     build:
@@ -51,8 +56,9 @@ services:
       - ./agents:/app/agents
       - ./proto:/app/proto
     depends_on:
-      - broker
-    restart: on-failure
+      broker:
+        condition: service_healthy
+    restart: always
 
   parser:
     build:
@@ -67,8 +73,9 @@ services:
       - ./agents:/app/agents
       - ./proto:/app/proto
     depends_on:
-      - broker
-    restart: on-failure
+      broker:
+        condition: service_healthy
+    restart: always
 
   validator:
     build:
@@ -82,13 +89,14 @@ services:
       - ./agents:/app/agents
       - ./proto:/app/proto
     depends_on:
-      - broker
-    restart: on-failure
+      broker:
+        condition: service_healthy
+    restart: always
 
   api:
     build:
       context: .
-      dockerfile: ./web/api/Dockerfile
+      dockerfile: web/api/Dockerfile
     container_name: tikz-hunter-api
     environment:
       - DATABASE_URL=postgresql://tikz_user:tikz_password@postgres:5432/tikz_hunter
@@ -99,7 +107,12 @@ services:
       postgres:
         condition: service_healthy
       broker:
-        condition: service_started
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/api/snippets || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
     restart: always
 
   ui:
@@ -109,7 +122,8 @@ services:
     ports:
       - "3000:80"
     depends_on:
-      - api
+      api:
+        condition: service_healthy
     restart: always
 
 volumes:

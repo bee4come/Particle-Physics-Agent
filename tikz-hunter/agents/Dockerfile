@@ -3,8 +3,8 @@ FROM python:3.9-slim
 
 WORKDIR /app
 
-# Install git for github access if needed byHarvester
-RUN apt-get update && apt-get install -y git
+# Install git for github access and grpcurl for healthchecks
+RUN apt-get update && apt-get install -y git grpcurl
 
 COPY requirements.txt .
 

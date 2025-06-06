@@ -5,9 +5,19 @@ import grpc
 import hashlib
 from pydantic import BaseModel, ValidationError, Field
 from typing import List
+from enum import Enum
 
 from proto import a2a_pb2, a2a_pb2_grpc
 from google.protobuf.json_format import MessageToDict
+
+# Enum for allowed process types for stricter validation
+class ProcessType(str, Enum):
+    DECAY = "decay"
+    SCATTERING = "scattering"
+    PRODUCTION = "production"
+    LOOP = "loop"
+    ANNIHILATION = "annihilation"
+    OTHER = "other"
 
 # Pydantic model for robust validation of a parsed snippet's structure
 class SnippetValidator(BaseModel):
@@ -17,7 +27,7 @@ class SnippetValidator(BaseModel):
     description: str = Field(..., min_length=10)
     tikz_code: str = Field(..., min_length=20)
     source_url: str = Field(..., min_length=10)
-    process_type: str
+    process_type: ProcessType
     source_type: str
 
 class ValidatorAgent:

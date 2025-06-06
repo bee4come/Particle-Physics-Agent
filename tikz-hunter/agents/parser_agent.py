@@ -84,11 +84,17 @@ Your output MUST be a valid JSON object. Do not add any text before or after the
                 )
             )
             
-            parsed_json = response.text
-            print(f"LLM response received:\n{parsed_json}")
+            # Clean up the response from the LLM before parsing
+            cleaned_json_str = response.text.strip()
+            if cleaned_json_str.startswith("```json"):
+                cleaned_json_str = cleaned_json_str[7:]
+            if cleaned_json_str.endswith("```"):
+                cleaned_json_str = cleaned_json_str[:-3]
+            
+            print(f"LLM response received and cleaned:\n{cleaned_json_str}")
             
             # Parse the JSON string from LLM into a dictionary
-            data = json.loads(parsed_json)
+            data = json.loads(cleaned_json_str)
             
             # Add the fields that are not from the LLM
             data['tikz_code'] = harvest_job.tikz_code
