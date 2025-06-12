@@ -1,0 +1,43 @@
+# FeynmanCraft-ADK Requirements
+# Core ADK Framework and Google AI
+google-adk
+google-generativeai
+
+# Data Models and Validation
+pydantic
+
+# Environment Configuration
+python-dotenv
+
+# Physics Data and Particle Information
+pdg  # For particle data from Particle Data Group
+
+# HTTP Requests
+requests
+
+# Type Hints (for Python < 3.9 compatibility)
+typing-extensions
+
+# Optional: Additional dependencies from legacy projects
+# (These may be needed if we integrate more features from legacy code)
+
+# Database support (from MCP-for-Tikz legacy)
+# duckdb==0.10.*
+# sqlite-utils>=3.36
+# annoy
+# tqdm
+
+# GitHub integration (from tikz-hunter legacy)
+# PyGithub
+# aiohttp
+# redis
+
+# Web scraping (if needed later)
+# beautifulsoup4
+# lxml
+
+# Development and Testing (optional)
+# pytest
+# pytest-asyncio
+# black
+# flake8 
