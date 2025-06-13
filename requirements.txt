@@ -18,6 +18,13 @@ requests
 # Type Hints (for Python < 3.9 compatibility)
 typing-extensions
 
+# --- Added for KB, Harvesting, and Web Search ---
+google-cloud-bigquery
+PyGithub
+beautifulsoup4
+lxml
+# --- End Added ---
+
 # Optional: Additional dependencies from legacy projects
 # (These may be needed if we integrate more features from legacy code)
 
@@ -28,13 +35,12 @@ typing-extensions
 # tqdm
 
 # GitHub integration (from tikz-hunter legacy)
-# PyGithub
+# Already added PyGithub above
 # aiohttp
 # redis
 
 # Web scraping (if needed later)
-# beautifulsoup4
-# lxml
+# Already uncommented beautifulsoup4 and lxml above
 
 # Development and Testing (optional)
 # pytest

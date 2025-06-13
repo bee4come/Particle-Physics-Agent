@@ -171,11 +171,38 @@ async def test_with_adk_runner():
         import traceback
         traceback.print_exc()
 
+def test_orchestrator_smoke():
+    """A simple smoke test for the OrchestratorAgent."""
+    print("\\n💨 Testing OrchestratorAgent smoke test...")
+    try:
+        from feynmancraft_adk.agents import OrchestratorAgent
+        from google.adk.messages import JSONMessage
+        
+        agent = OrchestratorAgent()
+        # This will only test instantiation. Running requires the ADK environment.
+        print(f"✅ {agent.name} instantiated successfully.")
+        
+        # The following is a conceptual test and will fail without the ADK runner
+        # but it illustrates the intended usage.
+        # msg = JSONMessage(body={"user_prompt": "e+ e- -> μ+ μ-"})
+        # out = agent.run(msg)
+        # assert "tikz" in out.body
+        # assert "code" in out.body["tikz"]
+        print("✅ OrchestratorAgent smoke test passed (instantiation).")
+
+    except Exception as e:
+        print(f"❌ OrchestratorAgent smoke test failed: {e}")
+        import traceback
+        traceback.print_exc()
+
 def main():
     """Main test function."""
     print("🔬 FeynmanCraft ADK Agent Test Runner")
     print("=" * 50)
     
+    # Test 0: Smoke test for Orchestrator
+    test_orchestrator_smoke()
+
     # Test 1: Individual agents
     test_individual_agents()
     

@@ -21,6 +21,7 @@ class PlanStep(str, Enum):
 
 class Plan(BaseModel):
     steps: List[PlanStep] = Field(default_factory=list)
+    original_prompt: str
 
 class TikzSnippet(BaseModel):
     code: str
@@ -29,8 +30,19 @@ class TikzSnippet(BaseModel):
 class ValidationReport(BaseModel):
     ok: bool
     errors: List[str] = Field(default_factory=list)
+    warnings: List[str] = Field(default_factory=list)
 
 class FinalAnswer(BaseModel):
     tikz: TikzSnippet
+    physics_report: ValidationReport
+    compile_report: ValidationReport
+
+class DiagramGenerationInput(BaseModel):
+    user_prompt: str
+    style_hint: Optional[str] = None
+    examples: Optional[List[TikzSnippet]] = Field(default_factory=list)
+
+class FeedbackAgentInput(BaseModel):
+    generated_snippet: TikzSnippet
     physics_report: ValidationReport
     compile_report: ValidationReport 
