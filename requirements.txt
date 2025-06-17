@@ -3,6 +3,10 @@
 google-adk
 google-generativeai
 
+# Google Cloud Services
+google-cloud-bigquery
+google-cloud-aiplatform
+
 # Data Models and Validation
 pydantic
 
@@ -18,12 +22,18 @@ requests
 # Type Hints (for Python < 3.9 compatibility)
 typing-extensions
 
+# Scientific Computing
+numpy
+
+# Vector Search
+annoy  # For local vector similarity search
+
 # --- Added for KB, Harvesting, and Web Search ---
-google-cloud-bigquery
 PyGithub
 beautifulsoup4
 lxml
 # --- End Added ---
+arxiv
 
 # Optional: Additional dependencies from legacy projects
 # (These may be needed if we integrate more features from legacy code)
@@ -46,4 +56,22 @@ lxml
 # pytest
 # pytest-asyncio
 # black
-# flake8 
+# flake8
+
+# New additions from the code block
+google-cloud-storage
+google-cloud-aiplatform
+uv
+fastapi
+uvicorn
+
+# Added from the code block
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
+google-i18n-address
+googleapis-common-protos
+numpy
+
+# For building the web server to run ADK
+fastapi 

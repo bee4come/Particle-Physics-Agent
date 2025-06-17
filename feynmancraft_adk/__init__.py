@@ -29,6 +29,11 @@ if not MODEL:
     MODEL = "gemini-2.0-flash"
 
 # MODEL needs to be defined before this import
-from . import agent  # pylint: disable=wrong-import-position
+try:
+    from . import agent  # pylint: disable=wrong-import-position
+except ImportError as e:
+    # Allow package to be imported even without google dependencies
+    logger.warning(f"Could not import agent module: {e}")
+    agent = None
 
 # ADK Application Package 

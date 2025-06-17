@@ -32,9 +32,25 @@ class ValidationReport(BaseModel):
     errors: List[str] = Field(default_factory=list)
     warnings: List[str] = Field(default_factory=list)
 
+# --- New Schemas for Physics Validation ---
+
+class RuleValidationReport(BaseModel):
+    """Report for a single physics rule validation."""
+    rule_number: int
+    title: str
+    validation_type: str = Field(description="Either 'text' or 'computational'.")
+    passed: bool
+    pass_fail_reason: str = Field(description="Explanation of why the rule passed or failed.")
+
+class PhysicsValidationReport(BaseModel):
+    """A comprehensive report from the PhysicsValidatorAgent."""
+    user_process: str
+    validation_report: List[RuleValidationReport]
+    overall_conclusion: str
+
 class FinalAnswer(BaseModel):
     tikz: TikzSnippet
-    physics_report: ValidationReport
+    physics_report: PhysicsValidationReport
     compile_report: ValidationReport
 
 class DiagramGenerationInput(BaseModel):
@@ -44,5 +60,5 @@ class DiagramGenerationInput(BaseModel):
 
 class FeedbackAgentInput(BaseModel):
     generated_snippet: TikzSnippet
-    physics_report: ValidationReport
+    physics_report: PhysicsValidationReport
     compile_report: ValidationReport 

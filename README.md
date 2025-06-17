@@ -2,10 +2,11 @@
 
 **智能多代理TikZ费曼图生成系统** - 基于Google Agent Development Kit (ADK) v1.0.0
 
+![Version](https://img.shields.io/badge/version-0.2.0-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT%2FApache--2.0-blue)
 ![ADK](https://img.shields.io/badge/ADK-1.0.0-green)
 ![Python](https://img.shields.io/badge/python-3.9%2B-blue)
-![Status](https://img.shields.io/badge/status-开发中-orange)
+![Status](https://img.shields.io/badge/status-Beta-yellow)
 
 ## 🎯 项目简介
 
@@ -87,7 +88,7 @@ Layer 3: 智能生成 (DiagramGeneratorAgent) ← 创新合成
 
 2. **创建Conda环境**
    ```bash
-   conda create --name fey python=3.9 -y
+   conda create --name fey python=3.11 -y
    conda activate fey
    ```
 
@@ -258,6 +259,17 @@ feynmancraft-adk/
 - 智能缓存和学习机制
 - 全面测试和性能优化
 - 文档完善和交付准备
+
+## 📦 最新版本
+
+### v0.2.0 (2025-01-17)
+- 🎯 **双模式知识库系统**：BigQuery（生产）+ 本地（开发）
+- 🔍 **向量搜索**：基于 Annoy 的高性能相似度搜索
+- 🔄 **智能切换**：自动故障转移和混合搜索策略
+- 📊 **多种搜索方式**：语义搜索、关键词搜索、粒子搜索
+- ⚙️ **灵活配置**：通过环境变量控制系统行为
+
+详见 [CHANGELOG.md](CHANGELOG.md)
 
 ## 🏆 创新亮点
 
