@@ -46,7 +46,7 @@ Run the upload script to create the dataset, table, and populate it with data:
 
 ```bash
 cd feynmancraft-adk
-python scripts/upload_to_bigquery.py
+python feynmancraft_adk/scripts/upload_to_bigquery.py
 ```
 
 The script will:

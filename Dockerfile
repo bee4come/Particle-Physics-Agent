@@ -25,7 +25,7 @@ RUN pip install --no-cache-dir google-labs-adk
 
 # Copy application code
 COPY feynmancraft_adk/ ./feynmancraft_adk/
-COPY scripts/ ./scripts/
+COPY feynmancraft_adk/scripts/ ./feynmancraft_adk/scripts/
 COPY VERSION ./
 COPY .env.example ./.env
 

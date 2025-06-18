@@ -2,7 +2,7 @@
 
 **智能多代理TikZ费曼图生成系统** - 基于Google Agent Development Kit (ADK) v1.0.0
 
-![Version](https://img.shields.io/badge/version-0.3.1-brightgreen)
+![Version](https://img.shields.io/badge/version-0.3.2-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT%2FApache--2.0-blue)
 ![ADK](https://img.shields.io/badge/ADK-1.0.0-green)
 ![Python](https://img.shields.io/badge/python-3.9%2B-blue)
@@ -152,8 +152,9 @@ feynmancraft-adk/
 ├── feyncore/                  # 核心功能库
 │   ├── compilation/           # LaTeX编译器
 │   └── tikz_utils/           # TikZ工具函数
-├── docs/                     # 项目文档
-├── scripts/                  # 部署和管理脚本
+├── feynmancraft_adk/         # 主要应用包
+│   ├── docs/                 # 项目文档
+│   ├── scripts/              # 部署和管理脚本
 └── README.md                 # 本文档
 ```
 
@@ -246,6 +247,12 @@ feynmancraft-adk/
 
 ## 📦 最新版本
 
+### v0.3.2 (2025-01-18) - 项目重构版本
+- 📁 **项目结构优化**：将`docs/`和`scripts/`移入`feynmancraft_adk/`目录
+- 📄 **许可证合并**：将MIT和Apache 2.0双许可证合并为单一LICENSE文件
+- 🔧 **ADK兼容性修复**：修复ADK Web UI中的代理检测问题
+- 📝 **文档更新**：更新所有文档中的路径引用
+
 ### v0.3.1 (2025-01-17) - 项目优化版本
 - 🗑️ **代码清理**：移除未使用的OrchestratorAgent和HarvestAgent
 - ⚡ **架构精简**：聚焦6个核心代理的生产级工作流
@@ -307,11 +314,9 @@ isort feynmancraft_adk/
 
 ## 📄 许可证
 
-本项目采用双许可证：
-- [MIT License](LICENSE-MIT)
-- [Apache License 2.0](LICENSE-APACHE)
+本项目采用双许可证：MIT License 和 Apache License 2.0。
 
-您可以选择其中任一许可证使用本项目。
+请查看 [LICENSE](LICENSE) 文件了解详细信息。您可以选择其中任一许可证使用本项目。
 
 ## 🙏 致谢
 

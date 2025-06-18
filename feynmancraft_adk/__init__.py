@@ -31,9 +31,11 @@ if not MODEL:
 # MODEL needs to be defined before this import
 try:
     from . import agent  # pylint: disable=wrong-import-position
+    from .agent import root_agent  # Export root_agent for ADK
 except ImportError as e:
     # Allow package to be imported even without google dependencies
     logger.warning(f"Could not import agent module: {e}")
     agent = None
+    root_agent = None
 
 # ADK Application Package 

@@ -5,6 +5,36 @@ All notable changes to FeynmanCraft ADK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.2] - Project Restructuring
+
+### Changed
+- **Project Structure**: Moved `docs/` and `scripts/` directories inside `feynmancraft_adk/` for better organization
+  - All documentation now under `feynmancraft_adk/docs/`
+  - All scripts now under `feynmancraft_adk/scripts/`
+  - Updated all references in documentation and configuration files
+- **License Files**: Merged dual licenses (MIT and Apache 2.0) into a single `LICENSE` file
+  - Removed separate `LICENSE-MIT` and `LICENSE-APACHE` files
+  - Clearer dual-license presentation in single file
+  - Updated README.md license section
+
+### Fixed
+- **ADK Web UI**: Fixed agent detection in ADK web interface
+  - Added `root_agent` export in `feynmancraft_adk/__init__.py`
+  - Web UI now properly recognizes and loads the FeynmanCraft agent
+
+### Updated
+- **Documentation**: Updated all paths in:
+  - README.md
+  - QUICKSTART.md
+  - CHANGELOG.md
+  - Dockerfile
+  - bigquery_setup.md
+
+### Technical Details
+- Better encapsulation with all project files under the main package
+- Cleaner root directory structure
+- Improved ADK compatibility with proper agent exports
+
 ## [0.3.1] - Project Optimization
 
 ### Removed
@@ -71,8 +101,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Vector Search**: Implemented semantic search using text-embedding-004
 - **Configuration System**: Flexible configuration via environment variables
 - **Scripts**:
-  - `scripts/upload_to_bigquery.py`: Upload knowledge base to BigQuery
-  - `scripts/build_local_index.py`: Build local vector search index
+  - `feynmancraft_adk/scripts/upload_to_bigquery.py`: Upload knowledge base to BigQuery
+- `feynmancraft_adk/scripts/build_local_index.py`: Build local vector search index
 - **Tools**:
   - `bigquery_kb_tool.py`: BigQuery operations and queries
   - `local_kb_tool.py`: Local KB with vector and keyword search

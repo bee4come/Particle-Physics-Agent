@@ -37,7 +37,7 @@ cp .env.example .env
 KB_MODE=local
 
 # 构建本地索引（可选，用于向量搜索）
-python scripts/build_local_index.py
+python feynmancraft_adk/scripts/build_local_index.py
 ```
 
 #### 选项 B: BigQuery 模式（生产环境）
@@ -47,7 +47,7 @@ KB_MODE=bigquery
 GOOGLE_CLOUD_PROJECT=your-project-id
 
 # 上传数据到 BigQuery
-python scripts/upload_to_bigquery.py
+python feynmancraft_adk/scripts/upload_to_bigquery.py
 ```
 
 #### 选项 C: 混合模式（默认）
@@ -97,7 +97,7 @@ gcloud auth application-default login
 ls feynmancraft_adk/data/feynman_kb.json
 
 # 重建本地索引
-python scripts/build_local_index.py
+python feynmancraft_adk/scripts/build_local_index.py
 ```
 
 ## 📊 系统状态检查
@@ -112,7 +112,7 @@ python test_system.py
 ## 🎯 下一步
 
 1. 阅读 [README.md](README.md) 了解完整功能
-2. 查看 [docs/bigquery_setup.md](docs/bigquery_setup.md) 设置生产环境
+2. 查看 [feynmancraft_adk/docs/bigquery_setup.md](feynmancraft_adk/docs/bigquery_setup.md) 设置生产环境
 3. 探索 `feynmancraft_adk/sub_agents/` 了解各个代理的功能
 4. 尝试修改提示词优化生成效果
 
