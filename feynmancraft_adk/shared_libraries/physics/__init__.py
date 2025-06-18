@@ -1,28 +1,11 @@
 """
-Physics utilities for FeynmanCraft ADK.
+Physics Shared Libraries for FeynmanCraft ADK
 
-This module provides physics calculations, particle data, and validation tools.
+This module only contains the natural language physics parser.
+All particle data comes from the ParticlePhysics MCP Server.
 """
 
-from .particle_data import particle_db, ParticleDatabase
-from .physics_tools import (
-    search_particle,
-    get_particle_properties,
-    validate_quantum_numbers,
-    get_branching_fractions,
-    compare_particles,
-    convert_units,
-    check_particle_properties
-)
+# The shared libraries physics module is now minimal since we use MCP for particle data
+# Only export what's truly shared across the application
 
-__all__ = [
-    'particle_db',
-    'ParticleDatabase',
-    'search_particle',
-    'get_particle_properties',
-    'validate_quantum_numbers',
-    'get_branching_fractions',
-    'compare_particles',
-    'convert_units',
-    'check_particle_properties'
-] 
+__all__ = [] 

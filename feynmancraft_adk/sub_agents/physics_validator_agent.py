@@ -57,8 +57,8 @@ from ..tools.physics.physics_tools import (
     parse_natural_language_physics
 )
 
-# Import MCP tools for comprehensive particle physics validation
-from ..tools.integrations import (
+# Import MCP tools for comprehensive particle physics validation (external server)
+from ..integrations.mcp import (
     search_particle_mcp,
     get_particle_properties_mcp,
     validate_quantum_numbers_mcp,
@@ -171,6 +171,74 @@ def parse_natural_language_physics_wrapper(query: str) -> Dict[str, Any]:
         }
 
 
+# --- MCP Tool Wrappers ---
+# These wrappers handle async calls for MCP tools
+
+async def search_particle_mcp_wrapper(query: str, max_results: int = 5) -> Dict[str, Any]:
+    """Wrapper for MCP particle search."""
+    try:
+        return await search_particle_mcp(query, max_results=max_results)
+    except Exception as e:
+        logger.error(f"MCP search_particle failed: {e}")
+        return {"error": str(e), "status": "failed"}
+
+
+async def get_particle_properties_mcp_wrapper(particle_name: str, units_preference: str = "GeV") -> Dict[str, Any]:
+    """Wrapper for MCP particle properties."""
+    try:
+        return await get_particle_properties_mcp(particle_name, units_preference=units_preference)
+    except Exception as e:
+        logger.error(f"MCP get_particle_properties failed: {e}")
+        return {"error": str(e), "status": "failed"}
+
+
+async def validate_quantum_numbers_mcp_wrapper(particle_name: str) -> Dict[str, Any]:
+    """Wrapper for MCP quantum number validation."""
+    try:
+        return await validate_quantum_numbers_mcp(particle_name)
+    except Exception as e:
+        logger.error(f"MCP validate_quantum_numbers failed: {e}")
+        return {"error": str(e), "status": "failed"}
+
+
+async def get_branching_fractions_mcp_wrapper(particle_name: str, limit: int = 10) -> Dict[str, Any]:
+    """Wrapper for MCP branching fractions."""
+    try:
+        return await get_branching_fractions_mcp(particle_name, limit=limit)
+    except Exception as e:
+        logger.error(f"MCP get_branching_fractions failed: {e}")
+        return {"error": str(e), "status": "failed"}
+
+
+async def compare_particles_mcp_wrapper(particle_names: str, properties: str = "mass,charge,spin") -> Dict[str, Any]:
+    """Wrapper for MCP particle comparison."""
+    try:
+        particle_list = [p.strip() for p in particle_names.split(',')]
+        properties_list = [p.strip() for p in properties.split(',')]
+        return await compare_particles_mcp(particle_list, properties=properties_list)
+    except Exception as e:
+        logger.error(f"MCP compare_particles failed: {e}")
+        return {"error": str(e), "status": "failed"}
+
+
+async def convert_units_mcp_wrapper(value: float, from_units: str, to_units: str) -> Dict[str, Any]:
+    """Wrapper for MCP unit conversion."""
+    try:
+        return await convert_units_mcp(value, from_units, to_units)
+    except Exception as e:
+        logger.error(f"MCP convert_units failed: {e}")
+        return {"error": str(e), "status": "failed"}
+
+
+async def check_particle_properties_mcp_wrapper(particle_name: str) -> Dict[str, Any]:
+    """Wrapper for MCP particle property check."""
+    try:
+        return await check_particle_properties_mcp(particle_name)
+    except Exception as e:
+        logger.error(f"MCP check_particle_properties failed: {e}")
+        return {"error": str(e), "status": "failed"}
+
+
 # --- Agent Definition ---
 
 PhysicsValidatorAgent = Agent(
@@ -186,7 +254,7 @@ PhysicsValidatorAgent = Agent(
         search_rules_by_process_wrapper,
         validate_process_wrapper,
         
-        # Internal physics tools
+        # Internal physics tools (these already use MCP internally)
         search_particle,
         get_particle_properties,
         validate_quantum_numbers,
@@ -195,14 +263,14 @@ PhysicsValidatorAgent = Agent(
         convert_units,
         check_particle_properties,
         
-        # MCP physics tools for comprehensive validation
-        search_particle_mcp,
-        get_particle_properties_mcp,
-        validate_quantum_numbers_mcp,
-        get_branching_fractions_mcp,
-        compare_particles_mcp,
-        convert_units_mcp,
-        check_particle_properties_mcp,
+        # MCP physics tools with proper wrappers
+        search_particle_mcp_wrapper,
+        get_particle_properties_mcp_wrapper,
+        validate_quantum_numbers_mcp_wrapper,
+        get_branching_fractions_mcp_wrapper,
+        compare_particles_mcp_wrapper,
+        convert_units_mcp_wrapper,
+        check_particle_properties_mcp_wrapper,
         
         # Natural language processing tools
         parse_natural_language_physics_wrapper,

@@ -1,248 +1,59 @@
 """
 Physics Tools for FeynmanCraft ADK.
 
-This module provides physics calculations and validation functions.
-Separated from external integrations for clean architecture.
+This module provides physics calculations and validation functions using the ParticlePhysics MCP Server.
+All particle data comes from the external MCP server.
 """
 
 import asyncio
 from typing import Dict, Any, List, Optional
-from .particle_data import particle_db
+from ..integrations.mcp import (
+    search_particle_mcp,
+    get_particle_properties_mcp,
+    validate_quantum_numbers_mcp,
+    get_branching_fractions_mcp,
+    compare_particles_mcp,
+    convert_units_mcp,
+    check_particle_properties_mcp
+)
 
 
 async def search_particle(query: str, max_results: int = 5) -> Dict[str, Any]:
-    """Search for particles in the database."""
-    try:
-        particles = particle_db.search_particles(query, max_results)
-        return {
-            'status': 'success',
-            'particles': particles,
-            'query': query,
-            'count': len(particles)
-        }
-    except Exception as e:
-        return {
-            'status': 'error',
-            'message': str(e),
-            'query': query
-        }
+    """Search for particles using MCP server."""
+    return await search_particle_mcp(query, max_results=max_results)
 
 
 async def get_particle_properties(particle_name: str, units_preference: str = "GeV") -> Dict[str, Any]:
-    """Get comprehensive particle properties."""
-    try:
-        particle = particle_db.get_particle(particle_name)
-        if not particle:
-            return {
-                'status': 'error',
-                'message': f'Particle {particle_name} not found'
-            }
-        
-        # Unit conversion if needed
-        particle_copy = particle.copy()
-        if units_preference == "GeV" and particle.get('mass', {}).get('unit') == 'MeV':
-            mass_data = particle['mass'].copy()
-            mass_data['value'] = mass_data['value'] / 1000
-            mass_data['unit'] = 'GeV'
-            particle_copy['mass'] = mass_data
-        
-        return {
-            'status': 'success',
-            'particle': particle_copy,
-            'units': units_preference
-        }
-    except Exception as e:
-        return {
-            'status': 'error',
-            'message': str(e),
-            'particle_name': particle_name
-        }
+    """Get comprehensive particle properties from MCP server."""
+    return await get_particle_properties_mcp(particle_name, units_preference=units_preference)
 
 
 async def validate_quantum_numbers(particle_name: str) -> Dict[str, Any]:
-    """Validate quantum number consistency for a particle."""
-    try:
-        particle = particle_db.get_particle(particle_name)
-        if not particle:
-            return {
-                'status': 'error',
-                'message': f'Particle {particle_name} not found'
-            }
-        
-        quantum_numbers = particle.get('quantum_numbers', {})
-        
-        # Basic validation checks
-        validations = {
-            'has_quantum_numbers': bool(quantum_numbers),
-            'spin_parity_consistent': True,  # Simplified for now
-            'charge_conjugation_valid': True,  # Simplified for now
-            'overall_validity': bool(quantum_numbers)
-        }
-        
-        return {
-            'status': 'success',
-            'particle': particle_name,
-            'quantum_numbers': quantum_numbers,
-            'validations': validations,
-            'overall_validity': validations['overall_validity']
-        }
-    except Exception as e:
-        return {
-            'status': 'error',
-            'message': str(e),
-            'particle_name': particle_name
-        }
+    """Validate quantum number consistency using MCP server."""
+    return await validate_quantum_numbers_mcp(particle_name)
 
 
 async def get_branching_fractions(particle_name: str, limit: int = 10) -> Dict[str, Any]:
-    """Get decay modes and branching fractions (simplified implementation)."""
-    try:
-        particle = particle_db.get_particle(particle_name)
-        if not particle:
-            return {
-                'status': 'error',
-                'message': f'Particle {particle_name} not found'
-            }
-        
-        # Simplified decay modes based on particle type
-        decay_modes = []
-        particle_type = particle.get('type', '')
-        
-        if particle_name == 'muon':
-            decay_modes = [
-                {'products': ['electron', 'electron_neutrino', 'muon_antineutrino'], 
-                 'branching_fraction': 1.0, 'type': 'weak'}
-            ]
-        elif particle_name == 'tau':
-            decay_modes = [
-                {'products': ['muon', 'muon_antineutrino', 'tau_neutrino'], 
-                 'branching_fraction': 0.1739, 'type': 'weak'},
-                {'products': ['electron', 'electron_antineutrino', 'tau_neutrino'], 
-                 'branching_fraction': 0.1782, 'type': 'weak'}
-            ]
-        elif 'pion' in particle_name:
-            if particle_name == 'pion_plus':
-                decay_modes = [
-                    {'products': ['muon', 'muon_neutrino'], 
-                     'branching_fraction': 0.9998, 'type': 'weak'}
-                ]
-        
-        return {
-            'status': 'success',
-            'particle': particle_name,
-            'decay_modes': decay_modes[:limit],
-            'total_modes': len(decay_modes)
-        }
-    except Exception as e:
-        return {
-            'status': 'error',
-            'message': str(e),
-            'particle_name': particle_name
-        }
+    """Get decay modes and branching fractions from MCP server."""
+    return await get_branching_fractions_mcp(particle_name, limit=limit)
 
 
 async def compare_particles(particle_names: str, properties: str = "mass,charge,spin") -> Dict[str, Any]:
-    """Compare properties of multiple particles."""
-    try:
-        # Parse inputs
-        particle_list = [p.strip() for p in particle_names.split(',')]
-        properties_list = [p.strip() for p in properties.split(',')]
-        
-        comparison_data = {}
-        for particle_name in particle_list:
-            particle = particle_db.get_particle(particle_name)
-            if particle:
-                comparison_data[particle_name] = particle
-        
-        # Build comparison matrix
-        property_comparison = {}
-        for prop in properties_list:
-            property_comparison[prop] = {}
-            for particle_name, data in comparison_data.items():
-                if prop == 'mass':
-                    mass_data = data.get('mass', {})
-                    property_comparison[prop][particle_name] = mass_data
-                else:
-                    property_comparison[prop][particle_name] = data.get(prop)
-        
-        return {
-            'status': 'success',
-            'particles': list(comparison_data.keys()),
-            'properties': properties_list,
-            'property_comparison': property_comparison
-        }
-    except Exception as e:
-        return {
-            'status': 'error',
-            'message': str(e),
-            'input': {'particles': particle_names, 'properties': properties}
-        }
+    """Compare properties of multiple particles using MCP server."""
+    # Convert comma-separated string to list
+    particle_list = [p.strip() for p in particle_names.split(',')]
+    properties_list = [p.strip() for p in properties.split(',')]
+    return await compare_particles_mcp(particle_list, properties=properties_list)
 
 
 async def convert_units(value: float, from_units: str, to_units: str) -> Dict[str, Any]:
-    """Convert between physics units."""
-    try:
-        conversion_factors = {
-            ('MeV', 'GeV'): 0.001,
-            ('GeV', 'MeV'): 1000,
-            ('s', 'ns'): 1e9,
-            ('ns', 's'): 1e-9,
-            ('eV', 'MeV'): 1e-6,
-            ('MeV', 'eV'): 1e6
-        }
-        
-        factor = conversion_factors.get((from_units, to_units), 1.0)
-        converted_value = value * factor
-        
-        return {
-            'status': 'success',
-            'original': {'value': value, 'unit': from_units},
-            'converted': {'value': converted_value, 'unit': to_units},
-            'conversion_factor': factor
-        }
-    except Exception as e:
-        return {
-            'status': 'error',
-            'message': str(e),
-            'conversion': f'{value} {from_units} -> {to_units}'
-        }
+    """Convert between physics units using MCP server."""
+    return await convert_units_mcp(value, from_units, to_units)
 
 
 async def check_particle_properties(particle_name: str) -> Dict[str, Any]:
-    """Comprehensive particle property checking."""
-    try:
-        particle = particle_db.get_particle(particle_name)
-        if not particle:
-            return {
-                'status': 'error',
-                'message': f'Particle {particle_name} not found'
-            }
-        
-        # Comprehensive checks
-        checks = {
-            'has_mass': 'mass' in particle,
-            'has_charge': 'charge' in particle,
-            'has_spin': 'spin' in particle,
-            'has_quantum_numbers': 'quantum_numbers' in particle,
-            'has_pdg_id': 'pdg_id' in particle,
-            'lifetime_defined': 'lifetime' in particle
-        }
-        
-        overall_completeness = sum(checks.values()) / len(checks)
-        
-        return {
-            'status': 'success',
-            'particle': particle_name,
-            'property_checks': checks,
-            'completeness_score': overall_completeness,
-            'particle_data': particle
-        }
-    except Exception as e:
-        return {
-            'status': 'error',
-            'message': str(e),
-            'particle_name': particle_name
-        }
+    """Comprehensive particle property checking using MCP server."""
+    return await check_particle_properties_mcp(particle_name)
 
 
 def parse_natural_language_physics(query: str) -> Dict[str, Any]:
