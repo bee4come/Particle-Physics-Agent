@@ -9,6 +9,7 @@ PlannerAgent = Agent(
     name="planner_agent",
     description="Parses user prompt into a list of execution steps.",
     instruction=PLANNER_AGENT_PROMPT,
+    output_key="plan",  # State management: outputs to state.plan
 )
 
 if __name__ == '__main__':
@@ -28,14 +29,13 @@ if __name__ == '__main__':
     
     print("Conceptual local test for PlannerAgent (ADK 1.x compliant style):")
     try:
-        planner = PlannerAgent()
-        print(f"PlannerAgent instance created: {planner.name}")
+        print(f"PlannerAgent definition created: {PlannerAgent.name}")
+        print(f"Output key: {PlannerAgent.output_key}")
         
         sample_request_data = DiagramRequest(user_prompt="e+ e- to Z gamma")
         print(f"Sample request for run(): {sample_request_data.model_dump_json(indent=2)}")
         
-        output_plan = planner.run(sample_request_data)
-        print(f"PlannerAgent output: {output_plan.model_dump_json(indent=2)}")
+        print("PlannerAgent configured for state-based communication.")
         print("Local test conceptually finished.")
 
     except Exception as e:

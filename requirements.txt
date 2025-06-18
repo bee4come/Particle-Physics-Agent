@@ -1,77 +1,52 @@
-# FeynmanCraft-ADK Requirements
-# Core ADK Framework and Google AI
-google-adk
-google-generativeai
+# FeynmanCraft ADK Requirements
+# Enhanced multi-agent system with MCP integration for particle physics diagram generation
 
-# Google Cloud Services
-google-cloud-bigquery
-google-cloud-aiplatform
+# Core ADK Framework and Google AI
+google-adk>=1.0.0
+google-generativeai>=0.8.0
+
+# Google Cloud Services for BigQuery KB
+google-cloud-bigquery>=3.25.0
+google-cloud-aiplatform>=1.55.0
 
 # Data Models and Validation
-pydantic
+pydantic>=2.7.0
 
 # Environment Configuration
-python-dotenv
-
-# Physics Data and Particle Information
-pdg  # For particle data from Particle Data Group
-
-# HTTP Requests
-requests
-
-# Type Hints (for Python < 3.9 compatibility)
-typing-extensions
+python-dotenv>=1.0.0
 
 # Scientific Computing
-numpy
+numpy>=1.24.0
 
-# Vector Search
-annoy  # For local vector similarity search
+# Vector Search and Embeddings
+annoy>=1.17.0
 
-# --- Added for KB, Harvesting, and Web Search ---
-PyGithub
-beautifulsoup4
-lxml
-# --- End Added ---
-arxiv
+# MCP (Model Context Protocol) Support
+mcp>=1.0.0
+httpx>=0.27.0
+websockets>=12.0
 
-# Optional: Additional dependencies from legacy projects
-# (These may be needed if we integrate more features from legacy code)
+# Physics and Data Processing
+arxiv>=2.1.0
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
 
-# Database support (from MCP-for-Tikz legacy)
-# duckdb==0.10.*
-# sqlite-utils>=3.36
-# annoy
-# tqdm
+# Web Framework (for production deployment)
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
 
-# GitHub integration (from tikz-hunter legacy)
-# Already added PyGithub above
-# aiohttp
-# redis
+# GitHub Integration (for knowledge harvesting)
+PyGithub>=2.3.0
 
-# Web scraping (if needed later)
-# Already uncommented beautifulsoup4 and lxml above
+# Type Hints Support
+typing-extensions>=4.11.0
 
 # Development and Testing (optional)
-# pytest
-# pytest-asyncio
-# black
-# flake8
+pytest>=8.2.0
+pytest-asyncio>=0.23.0
+black>=24.4.0
+flake8>=7.0.0
 
-# New additions from the code block
-google-cloud-storage
-google-cloud-aiplatform
-uv
-fastapi
-uvicorn
-
-# Added from the code block
-google-api-python-client
-google-auth-httplib2
-google-auth-oauthlib
-google-i18n-address
-googleapis-common-protos
-numpy
-
-# For building the web server to run ADK
-fastapi 
+# Production deployment
+gunicorn>=22.0.0 

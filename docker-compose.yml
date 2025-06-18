@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  feynmancraft:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - KB_MODE=local
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - MODEL_TEMPERATURE=0.7
+      - DEFAULT_SEARCH_K=5
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./data:/app/data:ro
+      - ./logs:/app/logs
+      - ./tmp:/app/tmp
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Development mode with hot reload
+  feynmancraft-dev:
+    build: .
+    ports:
+      - "40000:40000"
+    environment:
+      - KB_MODE=local
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - ADK_PORT=40000
+      - LOG_LEVEL=DEBUG
+    volumes:
+      - .:/app
+      - ./logs:/app/logs
+    command: ["adk", "run", "feynmancraft_adk", "--host", "0.0.0.0", "--port", "40000"]
+    profiles:
+      - dev
+
+networks:
+  default:
+    name: feynmancraft-network 

@@ -24,4 +24,5 @@ DiagramGeneratorAgent = Agent(
     name="diagram_generator_agent",
     description="Generates TikZ Feynman diagrams from natural language descriptions.",
     instruction=DIAGRAM_GENERATOR_AGENT_PROMPT,
+    output_key="tikz_code",  # State management: outputs to state.tikz_code
 ) 

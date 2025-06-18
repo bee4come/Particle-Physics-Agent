@@ -2,7 +2,7 @@
 
 **智能多代理TikZ费曼图生成系统** - 基于Google Agent Development Kit (ADK) v1.0.0
 
-![Version](https://img.shields.io/badge/version-0.2.0-brightgreen)
+![Version](https://img.shields.io/badge/version-0.3.1-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT%2FApache--2.0-blue)
 ![ADK](https://img.shields.io/badge/ADK-1.0.0-green)
 ![Python](https://img.shields.io/badge/python-3.9%2B-blue)
@@ -10,62 +10,59 @@
 
 ## 🎯 项目简介
 
-FeynmanCraft ADK 是一个基于 Google Agent Development Kit 构建的**自主学习智能研究助手**，能够从自然语言描述自动生成高质量的 TikZ 费曼图代码。该项目采用创新的**三层知识获取架构**，具备动态网络搜索和持续学习能力。
+FeynmanCraft ADK 是一个基于 Google Agent Development Kit 构建的**自主学习智能研究助手**，能够从自然语言描述自动生成高质量的 TikZ 费曼图代码。该项目采用创新的**双重验证架构**，具备MCP增强的物理验证能力。
 
 ### 🚀 核心创新
 
-- 🧠 **三层知识架构**: 静态知识库 + 动态网络搜索 + 智能生成
-- 🔍 **自主学习能力**: 遇到未知问题时主动搜索学习
-- 🤖 **7代理协作系统**: 专业化代理分工协作
-- 📊 **BigQuery知识库**: 高性能向量搜索和语义检索
-- 🌐 **WebResearchAgent**: 实时网络知识补充
-- 🔬 **物理智能验证**: 多层物理正确性检查
+- 🧠 **双重验证架构**: 内部物理工具 + MCP工具交叉验证
+- 🔍 **MCP工具集成**: 20+专业粒子物理MCP工具自动触发
+- 🤖 **6代理协作系统**: 精简专业化代理分工协作
+- 📊 **混合知识库**: BigQuery + 本地向量搜索自动切换
+- 🔬 **增强物理验证**: 150+粒子的详细物理属性验证
+- 🌐 **自然语言处理**: 支持中英文物理过程描述
 - ⚡ **智能路由决策**: 基于查询质量的自动路径选择
+- 📐 **TikZ代码生成**: 发布级质量的LaTeX费曼图代码
 
 ## 🏗️ 系统架构
-
-### 三层知识获取架构
-
-```
-Layer 1: 静态知识库 (BigQuery) ← tikz-hunter 离线构建
-    ↓ (知识库不足时)
-Layer 2: 动态网络搜索 (WebResearchAgent) ← 实时补充
-    ↓ (完全未知时)
-Layer 3: 智能生成 (DiagramGeneratorAgent) ← 创新合成
-```
 
 ### 智能工作流
 
 ```
-用户请求 → PlannerAgent → OrchestratorAgent
-    ↓
-决策分支:
-├─ 知识库充足 → KBRetrieverAgent → DiagramGeneratorAgent
-├─ 知识库不足 → WebResearchAgent → 验证链 → DiagramGeneratorAgent  
-└─ 完全未知 → 创新生成模式 → 强化验证
-
-验证链: TikZValidator → PhysicsValidator → FeedbackAgent
+用户请求 → PlannerAgent → KBRetrieverAgent → PhysicsValidatorAgent (MCP) 
+    ↓                              ↓                    ↓
+自然语言解析 → 混合知识库搜索 → MCP增强物理验证
+    ↓                              ↓                    ↓
+DiagramGeneratorAgent → TikZValidatorAgent → FeedbackAgent
+    ↓                              ↓                    ↓
+TikZ代码生成 → LaTeX编译验证 → 最终响应合成
 ```
+
+**MCP工具在每次物理验证阶段自动触发**，提供:
+- 双重验证：内部工具 + MCP工具交叉验证
+- 增强数据：150+粒子的详细物理属性
+- 智能诊断：粒子查找错误的自动诊断和建议
 
 ## 🤖 代理系统
 
-### 核心代理 (7个)
+### 核心代理 (6个)
 
-1. **OrchestratorAgent** - 智能路由器和决策中心
-2. **PlannerAgent** - 物理过程解析和任务规划
-3. **KBRetrieverAgent** - BigQuery知识库检索专家
-4. **WebResearchAgent** - 动态网络搜索专家 ⭐ 新增
-5. **DiagramGeneratorAgent** - TikZ-Feynman代码生成专家
-6. **TikZValidatorAgent** - LaTeX编译验证
-7. **PhysicsValidatorAgent** - 物理正确性验证
-8. **FeedbackAgent** - 结果聚合和用户反馈
+1. **PlannerAgent** - 自然语言解析和任务规划
+2. **KBRetrieverAgent** - BigQuery/本地知识库混合检索
+3. **PhysicsValidatorAgent** - MCP增强的物理正确性验证
+4. **DiagramGeneratorAgent** - TikZ-Feynman代码生成专家
+5. **TikZValidatorAgent** - LaTeX编译验证
+6. **FeedbackAgent** - 结果聚合和用户反馈
 
-### tikz-hunter 集成
+### MCP工具集成 (20+工具)
 
-- **定位**: 离线知识库生产工厂
-- **功能**: 批量采集、清洗、验证TikZ数据
-- **输出**: 高质量结构化数据 → BigQuery
-- **运行模式**: 定期批处理，不参与实时请求
+**PhysicsValidatorAgent** 集成了完整的MCP粒子物理工具包:
+- **粒子搜索**: `search_particle_mcp` - 高级粒子数据库搜索
+- **属性获取**: `get_particle_properties_mcp` - 详细粒子属性
+- **量子数验证**: `validate_quantum_numbers_mcp` - 高级量子数验证
+- **衰变分析**: `get_branching_fractions_mcp` - 衰变模式分析
+- **粒子比较**: `compare_particles_mcp` - 多粒子属性比较
+- **单位转换**: `convert_units_mcp` - 物理单位智能转换
+- **属性检查**: `check_particle_properties_mcp` - 综合属性验证
 
 ## 🚀 快速开始
 
@@ -135,30 +132,28 @@ feynmancraft-adk/
 │   ├── __init__.py            # 模型配置和日志设置
 │   ├── agent.py               # root_agent定义
 │   ├── schemas.py             # Pydantic数据模型
-│   ├── sub_agents/            # 代理实现
-│   │   ├── orchestrator_agent.py
-│   │   ├── planner_agent.py
-│   │   ├── kb_retriever_agent.py
-│   │   ├── web_research_agent.py  # 🆕 网络搜索代理
-│   │   ├── diagram_generator_agent.py
-│   │   ├── tikz_validator_agent.py
-│   │   ├── physics_validator_agent.py
-│   │   └── feedback_agent.py
+│   ├── sub_agents/            # 6个核心代理实现
+│   │   ├── planner_agent.py           # 自然语言解析和规划
+│   │   ├── kb_retriever_agent.py      # 知识库检索
+│   │   ├── physics_validator_agent.py # MCP增强物理验证
+│   │   ├── diagram_generator_agent.py # TikZ代码生成
+│   │   ├── tikz_validator_agent.py    # LaTeX编译验证
+│   │   ├── feedback_agent.py          # 结果聚合反馈
+│   │   └── code_agent.py              # 工具函数
 │   ├── shared_libraries/       # 共享工具库
-│   │   ├── prompt_utils.py
-│   │   ├── tikz_compiler.py
-│   │   └── config.py
+│   │   ├── config.py              # 环境配置
+│   │   ├── prompt_utils.py        # 提示词工具
+│   │   └── physics/               # 物理数据和工具
+│   ├── integrations/           # 外部服务集成
+│   │   └── mcp/                   # MCP工具集成
 │   └── tools/                 # 工具函数
-│       ├── bigquery_kb_tool.py    # 🆕 BigQuery集成
-│       ├── web_search_tool.py     # 🆕 网络搜索工具
-│       └── vector_search_tool.py  # 🆕 向量搜索
+│       ├── bigquery_kb_tool.py    # BigQuery集成
+│       └── local_kb_tool.py       # 本地向量搜索
 ├── feyncore/                  # 核心功能库
-│   ├── physics/               # 物理数据和验证
-│   ├── tikz_utils/           # TikZ工具函数
-│   └── compilation/          # LaTeX编译器
-├── tikz-hunter/              # 离线数据采集系统
-├── legacy/                   # 历史代码
-├── DEVELOPMENTplan.md        # 详细开发计划
+│   ├── compilation/           # LaTeX编译器
+│   └── tikz_utils/           # TikZ工具函数
+├── docs/                     # 项目文档
+├── scripts/                  # 部署和管理脚本
 └── README.md                 # 本文档
 ```
 
@@ -199,15 +194,16 @@ feynmancraft-adk/
 ### 核心框架
 - **Google ADK 1.0.0** - 多代理编排框架
 - **Google Gemini** - 语言模型 (gemini-2.0-flash)
+- **MCP (Model Context Protocol)** - 增强的工具通信协议
 - **BigQuery** - 知识库存储和向量搜索
 - **Pydantic** - 数据验证和序列化
 
 ### 专业工具
 - **TikZ-Feynman** - 费曼图绘制
 - **LaTeX** - 文档编译
-- **PDG Package** - 粒子数据
-- **Google Search API** - 网络搜索
-- **Vertex AI** - 向量嵌入
+- **MCP Particle Physics Tools** - 20+专业粒子物理工具
+- **Annoy** - 本地向量相似性搜索
+- **Vertex AI** - 向量嵌入生成
 
 ### 开发工具
 - **Conda** - 环境管理
@@ -217,72 +213,74 @@ feynmancraft-adk/
 
 ## 📈 开发进度
 
-### ✅ 已完成 (75%)
-- **Core Architecture**: ADK框架完全就位
+### ✅ 已完成 (90%)
+- **Core Architecture**: ADK框架完全就位，6代理工作流优化
 - **Data Models**: 完整的Pydantic数据模型
-- **Agent Framework**: 6个专业代理已配置
-- **Basic Utilities**: TikZ编译、配置系统等
+- **Agent Framework**: 6个专业代理已配置并测试通过
+- **MCP Integration**: 20+物理工具集成和双重验证系统
+- **Knowledge Base**: BigQuery + 本地向量搜索混合系统
+- **Physics Validation**: 增强的物理验证与教育功能
+- **Documentation**: 完整的项目文档和使用指南
 
-### 🟡 进行中 (20%)
-- **BigQuery Integration**: 知识库迁移
-- **WebResearchAgent**: 网络搜索能力
-- **Agent Prompts**: 专业化提示词优化
+### 🟡 进行中 (8%)
+- **Performance Optimization**: 响应时间和资源使用优化
+- **Extended Testing**: 边缘案例和错误处理完善
+- **User Experience**: 界面优化和用户反馈集成
 
-### ❌ 待开始 (5%)
-- **Learning Mechanisms**: 自主学习能力
-- **Advanced Validation**: 高级物理验证
-- **Performance Optimization**: 性能优化
+### ❌ 计划中 (2%)
+- **Web Interface**: 独立Web界面开发
+- **API Endpoints**: RESTful API接口开发
 
 ## 🎯 项目里程碑
 
-### 第1-2天: 知识库基础设施 🗄️
-- BigQuery表结构设计和数据迁移
-- tikz-hunter数据集成
-- 基础查询工具开发
+### ✅ 已完成里程碑
+- **第一阶段**: 核心ADK框架和6代理系统 ✅
+- **第二阶段**: MCP工具集成和双重验证 ✅
+- **第三阶段**: 混合知识库和智能路由 ✅
+- **第四阶段**: 项目优化和代码清理 ✅
 
-### 第3-4天: 智能决策层 🧠
-- OrchestratorAgent升级为智能路由器
-- 多路径决策逻辑实现
-- DiagramGeneratorAgent提示词优化
-
-### 第5-6天: 动态网络研究 🔍
-- WebResearchAgent开发
-- Google Search API集成
-- 搜索结果质量过滤
-
-### 第7-8天: 系统集成 🔄
-- 物理验证系统强化
-- 完整工作流集成
-- 智能路由测试
-
-### 第9-10天: 优化部署 🚀
-- 智能缓存和学习机制
-- 全面测试和性能优化
-- 文档完善和交付准备
+### 🎯 下一步计划
+- **性能优化**: 提升响应速度和资源效率
+- **扩展测试**: 更多物理过程和边缘案例
+- **生产部署**: Docker容器化和云原生部署
 
 ## 📦 最新版本
 
-### v0.2.0 (2025-01-17)
-- 🎯 **双模式知识库系统**：BigQuery（生产）+ 本地（开发）
-- 🔍 **向量搜索**：基于 Annoy 的高性能相似度搜索
-- 🔄 **智能切换**：自动故障转移和混合搜索策略
-- 📊 **多种搜索方式**：语义搜索、关键词搜索、粒子搜索
-- ⚙️ **灵活配置**：通过环境变量控制系统行为
+### v0.3.1 (2025-01-17) - 项目优化版本
+- 🗑️ **代码清理**：移除未使用的OrchestratorAgent和HarvestAgent
+- ⚡ **架构精简**：聚焦6个核心代理的生产级工作流
+- 📝 **文档更新**：更新README和项目结构反映优化后的代码库
+- 🔧 **导入优化**：清理sub_agents模块导入结构
+
+### v0.3.0 (2025-01-17) - MCP集成版本
+- 🔬 **MCP工具集成**：20+粒子物理MCP工具自动触发
+- 🎯 **双重验证系统**：内部工具 + MCP工具交叉验证
+- 🔍 **智能粒子搜索**：综合粒子数据库with诊断功能
+- 📊 **增强物理验证**：详细粒子属性、量子数、衰变分析
+- ⚙️ **工作流优化**：确保完整的六代理序列执行
+- 🔄 **混合知识库**：BigQuery + 本地向量搜索自动切换
 
 详见 [CHANGELOG.md](CHANGELOG.md)
 
 ## 🏆 创新亮点
 
-### 自适应智能系统
-1. **知识边界感知**: 系统能识别自己的知识盲区
-2. **主动学习能力**: 遇到未知问题时主动搜索学习
-3. **质量自我监控**: 持续评估和改进输出质量
-4. **用户反馈驱动**: 基于用户反馈优化决策逻辑
+### MCP增强的智能验证系统 🔬
+1. **双重验证机制**: 每次物理验证自动触发内部工具+MCP工具双重验证
+2. **专业粒子数据库**: 150+粒子的详细物理属性、量子数、衰变模式
+3. **智能错误诊断**: 粒子查找失败时自动提供建议和修正
+4. **教育友好**: 对复杂物理过程提供深入的教育解释
 
-### 三层容错机制
-1. **Layer 1**: 静态知识库 (最快，最可靠)
-2. **Layer 2**: 动态网络搜索 (中等速度，高覆盖)
-3. **Layer 3**: 创新生成 (最慢，但能处理全新问题)
+### 自适应知识架构
+1. **BigQuery生产级**: 高性能向量搜索和语义检索
+2. **本地开发模式**: Annoy向量索引的快速原型开发
+3. **智能降级**: 自动故障转移和混合搜索策略
+4. **持续学习**: 基于用户反馈的知识库扩充
+
+### 工作流智能化
+1. **自然语言理解**: 支持中英文物理过程描述
+2. **完整代理序列**: 六代理协作确保全面验证
+3. **质量自我监控**: 持续评估和改进输出质量
+4. **教育模式**: 对无法图示的过程提供教育解释
 
 ## 🤝 贡献指南
 

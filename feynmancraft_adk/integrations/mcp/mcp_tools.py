@@ -1042,4 +1042,37 @@ class MCPParticlePhysicsTools:
 
 
 # Create global instance for easy access
-mcp_tools = MCPParticlePhysicsTools() 
+mcp_tools = MCPParticlePhysicsTools()
+
+# ==================== ADK AGENT TOOL WRAPPERS ====================
+
+async def search_particle_mcp(query: str, max_results: int = 5) -> Dict[str, Any]:
+    """Wrapper for particle search - compatible with ADK agent tools."""
+    return await mcp_tools.search_particle(query, max_results)
+
+async def get_particle_properties_mcp(particle_name: str, units_preference: str = "GeV") -> Dict[str, Any]:
+    """Wrapper for getting particle properties - compatible with ADK agent tools."""
+    return await mcp_tools.get_particle_properties(particle_name, units_preference=units_preference)
+
+async def validate_quantum_numbers_mcp(particle_name: str) -> Dict[str, Any]:
+    """Wrapper for quantum number validation - compatible with ADK agent tools."""
+    return await mcp_tools.validate_quantum_numbers(particle_name)
+
+async def get_branching_fractions_mcp(particle_name: str, limit: int = 10) -> Dict[str, Any]:
+    """Wrapper for getting branching fractions - compatible with ADK agent tools."""
+    return await mcp_tools.get_branching_fractions(particle_name, limit=limit)
+
+async def compare_particles_mcp(particle_names: str, properties: str = "mass,charge,spin") -> Dict[str, Any]:
+    """Wrapper for particle comparison - compatible with ADK agent tools."""
+    # Convert string inputs to lists for the underlying function
+    particle_list = [p.strip() for p in particle_names.split(',')]
+    properties_list = [p.strip() for p in properties.split(',')]
+    return await mcp_tools.compare_particles(particle_list, properties_list)
+
+async def convert_units_mcp(value: float, from_units: str, to_units: str) -> Dict[str, Any]:
+    """Wrapper for unit conversion - compatible with ADK agent tools."""
+    return await mcp_tools.convert_units(value, from_units, to_units)
+
+async def check_particle_properties_mcp(particle_name: str) -> Dict[str, Any]:
+    """Wrapper for comprehensive particle property checking - compatible with ADK agent tools."""
+    return await mcp_tools.check_particle_properties(particle_name) 

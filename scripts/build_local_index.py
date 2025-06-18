@@ -7,7 +7,7 @@ from pathlib import Path
 # Add project root to Python path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from feynmancraft_adk.tools.local_kb_tool import LocalKBTool
+from feynmancraft_adk.tools.kb import LocalKBTool
 
 
 def main():

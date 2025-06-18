@@ -24,4 +24,5 @@ FeedbackAgent = Agent(
     name="feedback_agent",
     description="Aggregates feedback and generates final answers.",
     instruction=FEEDBACK_AGENT_PROMPT,
+    output_key="final_response",  # State management: outputs to state.final_response
 ) 

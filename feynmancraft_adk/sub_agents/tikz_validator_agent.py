@@ -24,4 +24,5 @@ TikZValidatorAgent = Agent(
     name="tikz_validator_agent",
     description="Validates TikZ code compilation.",
     instruction=TIKZ_VALIDATOR_AGENT_PROMPT,
+    output_key="tikz_validation_report",  # State management: outputs to state.tikz_validation_report
 ) 

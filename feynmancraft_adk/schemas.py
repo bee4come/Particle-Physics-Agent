@@ -22,15 +22,18 @@ class PlanStep(str, Enum):
 class Plan(BaseModel):
     steps: List[PlanStep] = Field(default_factory=list)
     original_prompt: str
+    physics_process: Optional[str] = None
+    particles_involved: List[str] = Field(default_factory=list)
 
 class TikzSnippet(BaseModel):
     code: str
-    description: Optional[str]
+    description: Optional[str] = None
 
 class ValidationReport(BaseModel):
     ok: bool
     errors: List[str] = Field(default_factory=list)
     warnings: List[str] = Field(default_factory=list)
+    details: Optional[str] = None
 
 # --- New Schemas for Physics Validation ---
 
@@ -52,6 +55,7 @@ class FinalAnswer(BaseModel):
     tikz: TikzSnippet
     physics_report: PhysicsValidationReport
     compile_report: ValidationReport
+    summary: Optional[str] = None
 
 class DiagramGenerationInput(BaseModel):
     user_prompt: str
@@ -61,4 +65,42 @@ class DiagramGenerationInput(BaseModel):
 class FeedbackAgentInput(BaseModel):
     generated_snippet: TikzSnippet
     physics_report: PhysicsValidationReport
-    compile_report: ValidationReport 
+    compile_report: ValidationReport
+
+# NEW: Workflow State Management
+class WorkflowState(BaseModel):
+    """Central state object for agent-to-agent communication."""
+    
+    # Input
+    user_request: Optional[str] = None
+    style_hint: Optional[str] = None
+    
+    # Planning phase
+    plan: Optional[Plan] = None
+    
+    # Knowledge retrieval phase  
+    examples: Optional[List[TikzSnippet]] = Field(default_factory=list)
+    search_metadata: Optional[dict] = None
+    
+    # Generation phase
+    tikz_code: Optional[str] = None
+    generation_metadata: Optional[dict] = None
+    
+    # Validation phases
+    tikz_validation_report: Optional[ValidationReport] = None
+    physics_validation_report: Optional[PhysicsValidationReport] = None
+    
+    # Final synthesis
+    final_response: Optional[str] = None
+    
+    # System metadata
+    workflow_step: Optional[str] = None
+    errors: List[str] = Field(default_factory=list)
+    warnings: List[str] = Field(default_factory=list)
+
+class StateUpdate(BaseModel):
+    """Represents an update to the workflow state from an agent."""
+    agent_name: str
+    output_key: str
+    data: dict
+    metadata: Optional[dict] = None 

@@ -5,7 +5,52 @@ All notable changes to FeynmanCraft ADK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.2.1] - 2025-01-17 (Hotfix)
+## [0.3.1] - Project Optimization
+
+### Removed
+- **OrchestratorAgent**: Removed unused orchestration agent (root_agent handles orchestration directly)
+- **HarvestAgent**: Removed stub implementation for offline knowledge harvesting
+- **Unused Imports**: Cleaned up sub_agents module imports
+
+### Changed
+- **Agent System**: Streamlined to 6 core production agents only
+- **Documentation**: Updated README and project structure to reflect optimized codebase
+- **Codebase**: Removed unused code paths and simplified architecture
+
+### Technical Details
+- Focused architecture on the proven 6-agent workflow
+- Eliminated confusion between different orchestration approaches
+- Cleaner import structure in sub_agents module
+- Updated documentation to accurately reflect current system
+
+## [0.3.0] (MCP Integration & Workflow Enhancement)
+
+### Added
+- **MCP Integration**: Complete integration of Model Context Protocol physics tools into PhysicsValidatorAgent
+  - 20+ advanced particle physics tools automatically triggered during validation
+  - Enhanced particle search with comprehensive database (150+ particles)
+  - Advanced quantum number validation and decay analysis
+  - Intelligent unit conversion with physics context
+  - Comprehensive particle property validation with diagnostics
+- **Dual Validation System**: Internal tools + MCP tools cross-validation for enhanced accuracy
+- **Workflow Optimization**: Ensured complete sequential execution through all 6 agents
+- **Natural Language Enhancement**: Improved parsing of complex physics queries
+
+### Fixed
+- **Agent Routing**: Fixed workflow routing to prevent agents from bypassing sequential execution
+- **Template Variables**: Resolved template variable parsing issues in diagram generation
+
+### Changed
+- **PhysicsValidatorAgent**: Enhanced with full MCP toolkit integration
+- **Agent Prompts**: Updated all agent prompts to enforce sequential workflow execution
+- **Validation Strategy**: Implemented dual validation approach using both internal and MCP tools
+
+### Enhanced
+- **Physics Validation**: Now provides comprehensive particle analysis using MCP tools
+- **Error Diagnostics**: Intelligent particle lookup error diagnosis and suggestions
+- **Educational Context**: Enhanced educational explanations for complex physics processes
+
+## [0.2.1] -  (Hotfix)
 
 ### Fixed
 - **Import Error**: Fixed `ImportError: cannot import name 'language_models'` in physics_validator_agent.py and kb_retriever_agent.py
@@ -16,7 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unified embedding API usage across all components
 - Improved error handling for missing dependencies
 
-## [0.2.0] - 2025-01-17
+## [0.2.0] 
 
 ### Added
 - **Dual Knowledge Base System**: Support for both BigQuery and local storage
@@ -46,7 +91,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Search modes: `bigquery`, `local`, `hybrid` (configurable)
 - Supports multiple search strategies: semantic, keyword, particle-based
 
-## [0.1.0] - 2025-01-12
+## [0.1.0] 
 
 ### Initial Release
 - Basic ADK agent structure

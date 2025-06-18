@@ -15,169 +15,196 @@
 """
 Physics Validator Agent for FeynmanCraft ADK.
 
-This agent acts as a coordinator. It receives a physics process, finds
-relevant rules from a JSON database via semantic search, and orchestrates validation.
-For rules requiring computation, it delegates to a specialized CodeAgent.
+This agent acts as a coordinator for physics validation. It receives a physics process,
+finds relevant rules from a JSON database via semantic search, and orchestrates validation.
+For rules requiring computation, it delegates to specialized tools.
+
+Enhanced with ParticlePhysics MCP Server tools for comprehensive particle data validation.
+
+This agent has been refactored to use the centralized tools module for all data loading,
+embedding management, search functionality, and physics validation tools.
 """
 
-import json
-import os
-import asyncio
+import logging
 from typing import Dict, List, Any
 
 from google.adk.agents import Agent
-import numpy as np
-
-# Note: language_models import moved to where it's used
-# to avoid import errors when the module is not available
 
 from .. import MODEL
+from .physics_validator_agent_prompt import PROMPT as PHYSICS_VALIDATOR_AGENT_PROMPT
 
-# --- Globals for Physics Rules and Embeddings Cache ---
-PHYSICS_RULES: List[Dict[str, Any]] = []
-RULE_EMBEDDINGS_CACHE: Dict[int, List[float]] = {}
-MODEL_NAME = "text-embedding-004"
+# Import physics search functionality from tools
+from ..tools.physics.search import (
+    search_physics_rules,
+    search_rules_by_particles,
+    search_rules_by_process,
+    validate_process_against_rules
+)
 
-# --- Physics Rules Loading & Embedding ---
+# Import physics tools for enhanced particle validation
+from ..tools.physics import (
+    search_particle,
+    get_particle_properties,
+    validate_quantum_numbers,
+    get_branching_fractions,
+    compare_particles,
+    convert_units,
+    check_particle_properties,
+)
 
-def load_physics_rules() -> None:
-    """Loads physics rules from pprules.json and populates the global variable."""
-    global PHYSICS_RULES
-    if PHYSICS_RULES:
-        return
+# Import natural language physics parsing
+from ..tools.physics.physics_tools import (
+    parse_natural_language_physics
+)
 
-    try:
-        rules_path = os.path.join(
-            os.path.dirname(__file__), "..", "data", "pprules.json"
-        )
-        with open(rules_path, "r", encoding="utf-8") as f:
-            rules_data = json.load(f)
-        PHYSICS_RULES = rules_data.get("rules", [])
-    except (FileNotFoundError, json.JSONDecodeError) as e:
-        print(f"Error loading physics rules: {e}")
-        PHYSICS_RULES = []
+# Import MCP tools for comprehensive particle physics validation
+from ..tools.integrations import (
+    search_particle_mcp,
+    get_particle_properties_mcp,
+    validate_quantum_numbers_mcp,
+    get_branching_fractions_mcp,
+    compare_particles_mcp,
+    convert_units_mcp,
+    check_particle_properties_mcp,
+)
 
-async def _get_embedding(text: str) -> List[float]:
-    """Generates an embedding for a given text using Gemini API."""
-    try:
-        import google.generativeai as genai
-        
-        api_key = os.getenv("GOOGLE_API_KEY")
-        if not api_key:
-            raise ValueError("GOOGLE_API_KEY not found")
-        
-        genai.configure(api_key=api_key)
-        
-        def get_sync_embedding():
-            response = genai.embed_content(
-                model=f"models/{MODEL_NAME}",
-                content=text,
-                task_type="RETRIEVAL_DOCUMENT"
-            )
-            return response.get("embedding")
-        
-        embedding = await asyncio.to_thread(get_sync_embedding)
-        return embedding if embedding else []
-        
-    except Exception as e:
-        print(f"Failed to get embedding: {e}")
-        return []
+logger = logging.getLogger(__name__)
 
-async def _embed_and_cache_rules() -> None:
-    """Generates and caches embeddings for all physics rules."""
-    global RULE_EMBEDDINGS_CACHE
-    if RULE_EMBEDDINGS_CACHE:
-        return
 
-    print("Generating and caching embeddings for physics rules...")
-    
-    try:
-        for rule in PHYSICS_RULES:
-            rule_content = rule.get("content", "")
-            if rule_content:
-                embedding = await _get_embedding(rule_content)
-                if embedding:
-                    RULE_EMBEDDINGS_CACHE[rule["rule_number"]] = embedding
-        
-        print(f"Cached embeddings for {len(RULE_EMBEDDINGS_CACHE)} rules.")
-    except Exception as e:
-        print(f"Could not generate rule embeddings: {e}")
-
-def _cosine_similarity(v1: List[float], v2: List[float]) -> float:
-    """Computes cosine similarity between two vectors."""
-    vec1 = np.array(v1)
-    vec2 = np.array(v2)
-    norm_product = np.linalg.norm(vec1) * np.linalg.norm(vec2)
-    if norm_product == 0:
-        return 0.0
-    return np.dot(vec1, vec2) / norm_product
-
-async def search_physics_rules(query: str, top_k: int) -> List[Dict[str, Any]]:
-    """Finds the most relevant physics rules for a query using semantic search."""
-    load_physics_rules()
-    await _embed_and_cache_rules()
-
-    if not PHYSICS_RULES or not RULE_EMBEDDINGS_CACHE:
-        return [{"error": "Physics rules or embeddings are not available."}]
-
-    try:
-        query_embedding = await _get_embedding(query)
-    except Exception as e:
-        return [{"error": f"Failed to get query embedding: {e}"}]
-
-    similarities = []
-    for rule in PHYSICS_RULES:
-        rule_number = rule["rule_number"]
-        if rule_number in RULE_EMBEDDINGS_CACHE:
-            sim = _cosine_similarity(query_embedding, RULE_EMBEDDINGS_CACHE[rule_number])
-            similarities.append((sim, rule))
-
-    similarities.sort(key=lambda x: x[0], reverse=True)
-    return [rule for sim, rule in similarities[:top_k]]
-
-# --- Wrapper function for agent tool ---
+# --- Wrapper functions for agent tools ---
 
 async def search_physics_rules_wrapper(query: str) -> List[Dict[str, Any]]:
-    """Wrapper for search_physics_rules with default parameters."""
-    return await search_physics_rules(query, top_k=5)
+    """
+    Wrapper for search_physics_rules with default parameters.
+    
+    Args:
+        query: Natural language query about physics rules
+        
+    Returns:
+        List of relevant physics rules
+    """
+    try:
+        return await search_physics_rules(query, top_k=5)
+    except Exception as e:
+        logger.error(f"Error in search_physics_rules_wrapper: {e}")
+        return [{"error": f"Physics rules search failed: {str(e)}"}]
+
+
+def search_rules_by_particles_wrapper(particles: str) -> List[Dict[str, Any]]:
+    """
+    Wrapper for searching rules by particles.
+    
+    Args:
+        particles: Comma-separated list of particle names
+        
+    Returns:
+        List of relevant physics rules
+    """
+    try:
+        particle_list = [p.strip() for p in particles.split(',')]
+        return search_rules_by_particles(particle_list, top_k=10)
+    except Exception as e:
+        logger.error(f"Error in search_rules_by_particles_wrapper: {e}")
+        return [{"error": f"Particle rules search failed: {str(e)}"}]
+
+
+def search_rules_by_process_wrapper(process_description: str) -> List[Dict[str, Any]]:
+    """
+    Wrapper for searching rules by process description.
+    
+    Args:
+        process_description: Description of the physics process
+        
+    Returns:
+        List of relevant physics rules
+    """
+    try:
+        return search_rules_by_process(process_description, top_k=5)
+    except Exception as e:
+        logger.error(f"Error in search_rules_by_process_wrapper: {e}")
+        return [{"error": f"Process rules search failed: {str(e)}"}]
+
+
+def validate_process_wrapper(process_description: str, particles: str) -> Dict[str, Any]:
+    """
+    Wrapper for comprehensive process validation.
+    
+    Args:
+        process_description: Description of the physics process
+        particles: Comma-separated list of particles involved
+        
+    Returns:
+        Validation result
+    """
+    try:
+        particle_list = [p.strip() for p in particles.split(',')]
+        return validate_process_against_rules(process_description, particle_list)
+    except Exception as e:
+        logger.error(f"Error in validate_process_wrapper: {e}")
+        return {
+            "process": process_description,
+            "particles": particles,
+            "error": str(e),
+            "validation_status": "failed"
+        }
+
+
+def parse_natural_language_physics_wrapper(query: str) -> Dict[str, Any]:
+    """
+    Wrapper for parsing natural language physics queries.
+    
+    Args:
+        query: Natural language physics query
+        
+    Returns:
+        Parsed physics information
+    """
+    try:
+        result = parse_natural_language_physics(query)
+        return result
+    except Exception as e:
+        logger.error(f"Error in parse_natural_language_physics_wrapper: {e}")
+        return {
+            'status': 'error',
+            'message': str(e),
+            'original_query': query
+        }
+
 
 # --- Agent Definition ---
 
 PhysicsValidatorAgent = Agent(
-    name="physics_validator_agent",
     model=MODEL,
-    description=(
-        "Validates a physics process against a database of rules via semantic search. "
-        "Coordinates with a CodeAgent for computational checks."
-    ),
-    instruction="""You are a Physics Validator Agent, an expert in particle physics.
-Your primary function is to validate a given physics process by retrieving relevant rules and applying them.
-
-**Your Workflow:**
-
-1.  **Analyze User Input**: You will receive a physics process description (e.g., "muon-antimuon annihilation").
-
-2.  **Search for Relevant Rules**: Your first and most crucial step is to **call the `search_physics_rules` tool**. Use the user's process description as the `query`. This tool will perform a semantic search and return the most relevant rules from the knowledge base.
-
-3.  **Process Each Retrieved Rule**: For each rule returned by the search tool, perform one of the following actions:
-
-    a.  **Text-Based Validation (if `needs_code` is `false` or absent)**:
-        -   Read the rule's `content`. Based on your expert knowledge, determine if the user's process **obeys or violates** this rule and formulate a concise `pass_fail_reason`.
-
-    b.  **Computational Validation (if `needs_code` is `true`)**:
-        -   Examine the rule's `code_spec`. From the user's input, extract numerical values for the required `inputs`.
-        -   For now, use your physics knowledge to estimate the result since direct code execution is complex.
-        -   Formulate a `pass_fail_reason` that includes the inputs used and estimated result.
-
-4.  **Synthesize and Report**:
-    -   Aggregate the validation results for all retrieved rules into a `validation_report`.
-    -   Provide a final `overall_conclusion`.
-    -   **CRITICAL**: Structure your final output as a single JSON object.
-
-5.  **Transfer Back**: After completing the validation and providing your JSON report, immediately transfer control back to the root_agent by calling transfer_to_agent with agent_name="root_agent". Do not wait for further input.
-""",
-    tools=[search_physics_rules_wrapper],
+    name="physics_validator_agent",
+    description="Validates physics processes using comprehensive particle physics tools, MCP tools, and natural language processing. Uses centralized tools for all validation operations.",
+    instruction=PHYSICS_VALIDATOR_AGENT_PROMPT,
+    output_key="physics_validation_report",  # State management: outputs to state.physics_validation_report
+    tools=[
+        # Physics rules search tools
+        search_physics_rules_wrapper,
+        search_rules_by_particles_wrapper,
+        search_rules_by_process_wrapper,
+        validate_process_wrapper,
+        
+        # Internal physics tools
+        search_particle,
+        get_particle_properties,
+        validate_quantum_numbers,
+        get_branching_fractions,
+        compare_particles,
+        convert_units,
+        check_particle_properties,
+        
+        # MCP physics tools for comprehensive validation
+        search_particle_mcp,
+        get_particle_properties_mcp,
+        validate_quantum_numbers_mcp,
+        get_branching_fractions_mcp,
+        compare_particles_mcp,
+        convert_units_mcp,
+        check_particle_properties_mcp,
+        
+        # Natural language processing tools
+        parse_natural_language_physics_wrapper,
+    ],
 )
-
-# Load the rules when the module is imported to be ready for embedding.
-load_physics_rules() 
