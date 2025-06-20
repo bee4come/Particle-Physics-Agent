@@ -17,12 +17,83 @@
 from google.adk.agents import Agent
 
 from .. import MODEL
+from ..tools import validate_tikz_compilation
 from .tikz_validator_agent_prompt import PROMPT as TIKZ_VALIDATOR_AGENT_PROMPT
+
+
+def tikz_validator_tool(tikz_code: str, additional_packages: str = "") -> str:
+    """
+    Validate TikZ code compilation.
+    
+    Args:
+        tikz_code: TikZ code to validate
+        additional_packages: Additional LaTeX packages, comma-separated
+        
+    Returns:
+        Detailed validation report
+    """
+    # Parse additional packages
+    packages = []
+    if additional_packages.strip():
+        packages = [pkg.strip() for pkg in additional_packages.split(",") if pkg.strip()]
+    
+    # Use LaTeX compiler to validate code
+    result = validate_tikz_compilation(tikz_code, packages)
+    
+    # Generate detailed validation report
+    report = f"""
+# TikZ Code Validation Report
+
+## Compilation Status
+- **Compilation Success**: {'Yes' if result['success'] else 'No'}
+- **PDF Generated**: {'Yes' if result['pdf_generated'] else 'No'}
+- **Return Code**: {result.get('return_code', 'N/A')}
+
+## Analysis Results
+"""
+    
+    if 'analysis' in result:
+        analysis = result['analysis']
+        report += f"""
+- **Error Type**: {analysis.get('error_type', 'None')}
+- **Quality Score**: {analysis.get('quality_score', 0)}/100
+
+### Detected Errors
+"""
+        for error in analysis.get('errors', []):
+            report += f"- {error}\n"
+        
+        if not analysis.get('errors'):
+            report += "- No compilation errors\n"
+            
+        report += "\n### Warnings\n"
+        for warning in analysis.get('warnings', []):
+            report += f"- {warning}\n"
+            
+        if not analysis.get('warnings'):
+            report += "- No warnings\n"
+            
+        report += "\n### Suggestions\n"
+        for suggestion in analysis.get('suggestions', []):
+            report += f"- {suggestion}\n"
+    
+    # Add compilation output (if there are errors)
+    if not result['success'] and 'error' in result:
+        report += f"\n## Error Information\n```\n{result['error']}\n```\n"
+    
+    if result.get('stderr'):
+        report += f"\n## Standard Error Output\n```\n{result['stderr']}\n```\n"
+    
+    return report
+
 
 TikZValidatorAgent = Agent(
     model=MODEL,
     name="tikz_validator_agent",
-    description="Validates TikZ code compilation.",
+    description="Validates TikZ code compilation using local TeX Live.",
     instruction=TIKZ_VALIDATOR_AGENT_PROMPT,
+    tools=[
+        tikz_validator_tool,
+    ],
     output_key="tikz_validation_report",  # State management: outputs to state.tikz_validation_report
 ) 

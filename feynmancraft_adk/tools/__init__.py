@@ -117,6 +117,12 @@ from .integrations import (
     check_particle_properties_mcp,
 )
 
+# LaTeX compilation tools
+from .latex_compiler import (
+    LaTeXCompiler,
+    validate_tikz_compilation,
+)
+
 __all__ = [
     # KB embedding utilities
     "get_embedding",
@@ -187,4 +193,8 @@ __all__ = [
     "compare_particles_mcp",
     "convert_units_mcp",
     "check_particle_properties_mcp",
+    
+    # LaTeX compilation tools
+    "LaTeXCompiler",
+    "validate_tikz_compilation",
 ]
