@@ -7,7 +7,7 @@ from .planner_agent_prompt import PROMPT as PLANNER_AGENT_PROMPT
 PlannerAgent = Agent(
     model=MODEL,
     name="planner_agent",
-    description="Parses user prompt into a list of execution steps.",
+    description="Parses user prompt into a comprehensive execution plan with validation-correction loop support.",
     instruction=PLANNER_AGENT_PROMPT,
     output_key="plan",  # State management: outputs to state.plan
 )

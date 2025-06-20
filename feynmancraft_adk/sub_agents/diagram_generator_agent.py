@@ -15,14 +15,30 @@
 """Diagram Generator Agent for FeynmanCraft ADK."""
 
 from google.adk.agents import Agent
+from google.adk.tools import transfer_to_agent
 
 from .. import MODEL
 from .diagram_generator_agent_prompt import PROMPT as DIAGRAM_GENERATOR_AGENT_PROMPT
+
+
+def complete_diagram_generation() -> str:
+    """
+    Helper function to signal completion of diagram generation.
+    This ensures the agent knows it needs to transfer control back.
+    
+    Returns:
+        A message indicating the need to transfer control.
+    """
+    return "Diagram generation complete. You must now call transfer_to_agent(agent_name='root_agent') to continue the workflow."
+
 
 DiagramGeneratorAgent = Agent(
     model=MODEL,
     name="diagram_generator_agent",
     description="Generates TikZ Feynman diagrams from natural language descriptions.",
     instruction=DIAGRAM_GENERATOR_AGENT_PROMPT,
+    tools=[
+        complete_diagram_generation,
+    ],
     output_key="tikz_code",  # State management: outputs to state.tikz_code
 ) 
