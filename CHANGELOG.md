@@ -5,6 +5,49 @@ All notable changes to FeynmanCraft ADK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.4] - Docker Deployment & Build Infrastructure
+
+### Added
+- **Docker Support**: Complete containerization with comprehensive build and test infrastructure
+  - Full TeX Live 2022 installation with TikZ-Feynman support
+  - Multi-stage Docker build with optimized caching
+  - Production-ready Docker Compose configuration
+  - Automated health checks and service validation
+- **Build & Test Script**: Comprehensive validation pipeline (`scripts/build-and-test.sh`)
+  - Docker image build verification
+  - TeX Live installation testing
+  - TikZ packages compilation validation
+  - FeynmanCraft LaTeX compiler testing
+  - Feynman diagram compilation with quality scoring
+  - Service integration testing with health checks
+
+### Fixed
+- **Dependencies**: Resolved package version conflicts and build issues
+  - Fixed PDG package version from `>=0.3.0` to `>=0.2.0` (actual available version)
+  - Added build dependencies (`build-essential`, `gcc`, `g++`) for C++ package compilation
+  - Resolved Annoy package compilation issues in Docker environment
+- **ADK Command**: Corrected Docker startup command from `adk serve` to `adk web`
+- **String Escaping**: Fixed LaTeX content escaping in Python test scripts
+- **Documentation**: Removed emojis from all scripts per user preference
+
+### Enhanced
+- **Architecture Cleanup**: Streamlined MCP integration layer
+  - Removed unnecessary `tools/integrations/mcp.py` wrapper
+  - Updated import paths for direct MCP client usage
+  - Cleaned project structure and updated documentation
+- **Documentation Accuracy**: Comprehensive fact-checking and corrections
+  - Removed misleading BigQuery production claims
+  - Updated to accurately reflect local-only implementation
+  - Corrected knowledge base descriptions (Annoy vector search + JSON keyword matching)
+  - Simplified deployment documentation to remove non-functional components
+
+### Technical Details
+- Docker image: Python 3.11-slim with full TeX Live 2022
+- Build time: ~4 minutes with comprehensive dependency installation
+- All LaTeX compilation tests pass with quality validation
+- Production-ready containerized deployment
+- Clean MCP integration architecture without wrapper layers
+
 ## [0.3.3] - Workflow Enhancement & Documentation Update
 
 ### Changed
