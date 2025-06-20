@@ -29,32 +29,22 @@ cp .env.example .env
 # GOOGLE_API_KEY=your-api-key-here
 ```
 
-### 4. 选择知识库模式
+### 4. 设置知识库
 
-#### 选项 A: 本地模式（推荐初学者）
+#### 构建本地索引（推荐）
 ```bash
-# 在 .env 中设置
-KB_MODE=local
-
-# 构建本地索引（可选，用于向量搜索）
+# 构建向量索引用于语义搜索
 python feynmancraft_adk/scripts/build_local_index.py
+
+# 在 .env 中设置（可选）
+KB_MODE=local
 ```
 
-#### 选项 B: BigQuery 模式（生产环境）
-```bash
-# 在 .env 中设置
-KB_MODE=bigquery
-GOOGLE_CLOUD_PROJECT=your-project-id
-
-# 上传数据到 BigQuery
-python feynmancraft_adk/scripts/upload_to_bigquery.py
-```
-
-#### 选项 C: 混合模式（默认）
+#### 混合模式（默认）
 ```bash
 # 在 .env 中设置
 KB_MODE=hybrid
-# 系统会自动尝试 BigQuery，失败时回退到本地
+# 系统会自动结合向量搜索和关键词匹配
 ```
 
 ### 5. 运行系统
@@ -91,7 +81,7 @@ pip install google-adk
 # 检查 API key
 echo $GOOGLE_API_KEY
 
-# 对于 BigQuery，运行：
+# 对于其他 Google AI 服务，运行：
 gcloud auth application-default login
 ```
 
@@ -127,7 +117,7 @@ python test_system.py
 ## 🎯 下一步
 
 1. 阅读 [README.md](README.md) 了解完整功能概述
-2. 查看 [feynmancraft_adk/docs/bigquery_setup.md](feynmancraft_adk/docs/bigquery_setup.md) 进行生产环境设置
+2. 运行 `python feynmancraft_adk/scripts/build_local_index.py` 构建向量索引
 3. 探索 `feynmancraft_adk/sub_agents/` 了解各个代理的功能
 4. 尝试修改提示词以优化生成结果
 
@@ -140,10 +130,9 @@ python test_system.py
 - **智能诊断**: 粒子查找错误自动建议修正
 
 ### 🗃️ 知识库模式
-- **本地模式**: 适合开发和测试，包含向量搜索
-- **BigQuery模式**: 适合生产环境和大规模数据
-- **混合模式**: 自动故障转移，最佳可用性
-- **环境控制**: 使用 `KB_MODE` 环境变量轻松切换
+- **本地模式**: Annoy向量索引 + JSON关键词搜索
+- **混合模式**: 自动结合语义搜索和精确匹配，最佳检索效果
+- **环境控制**: 使用 `KB_MODE` 环境变量切换模式
 
 ### 🤖 工作流程
 - **完整序列**: 六个代理按序执行，确保全面验证

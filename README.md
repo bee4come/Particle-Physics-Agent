@@ -17,7 +17,7 @@ Particle Physics Agent 是一个基于 Google Agent Development Kit 构建的**�
 - 🧠 **双重验证架构**: 内部物理工具 + MCP工具交叉验证
 - 🔍 **MCP工具集成**: 20+专业粒子物理MCP工具自动触发
 - 🤖 **6代理协作系统**: 精简专业化代理分工协作
-- 📊 **混合知识库**: BigQuery + 本地向量搜索自动切换
+- 📊 **本地知识库**: Annoy向量搜索 + JSON关键词搜索混合检索
 - 🔬 **增强物理验证**: 150+粒子的详细物理属性验证
 - 🌐 **自然语言处理**: 支持中英文物理过程描述
 - ⚡ **智能路由决策**: 基于查询质量的自动路径选择
@@ -47,7 +47,7 @@ TikZ代码生成 → LaTeX编译验证 → 最终响应合成
 ### 核心代理 (6个)
 
 1. **PlannerAgent** - 自然语言解析和任务规划
-2. **KBRetrieverAgent** - BigQuery/本地知识库混合检索
+2. **KBRetrieverAgent** - 本地向量搜索和关键词检索
 3. **PhysicsValidatorAgent** - MCP增强的物理正确性验证
 4. **DiagramGeneratorAgent** - TikZ-Feynman代码生成专家
 5. **TikZValidatorAgent** - LaTeX编译验证
@@ -73,7 +73,7 @@ TikZ代码生成 → LaTeX编译验证 → 最终响应合成
 - Conda (推荐)
 - LaTeX (可选，用于本地编译验证)
 - Google AI API Key
-- Google Cloud Project (用于BigQuery)
+- 可选：Google Cloud Project (用于部署)
 
 ### 安装步骤
 
@@ -164,7 +164,7 @@ Particle-Physics-Agent/
 │   │       └── particle_name_mappings.py # 粒子名称映射
 │   ├── tools/                 # 工具函数
 │   │   ├── kb/                    # 知识库工具
-│   │   │   ├── bigquery.py            # BigQuery集成
+│   │   │   ├── bigquery.py            # BigQuery集成 (未使用)
 │   │   │   ├── local.py               # 本地向量搜索
 │   │   │   ├── search.py              # 统一搜索接口
 │   │   │   ├── data_loader.py         # 数据加载器
@@ -178,10 +178,10 @@ Particle-Physics-Agent/
 │   │   └── latex_compiler.py      # LaTeX编译器
 │   ├── docs/                  # 项目文档
 │   │   ├── AGENT_TREE.md          # 代理架构文档
-│   │   └── bigquery_setup.md      # BigQuery设置指南
+│   │   └── bigquery_setup.md      # BigQuery设置指南 (未使用)
 │   └── scripts/               # 部署和管理脚本
 │       ├── build_local_index.py   # 构建本地索引
-│       ├── upload_to_bigquery.py  # 上传到BigQuery
+│       ├── upload_to_bigquery.py  # 上传到BigQuery (未使用)
 │       └── release.py             # 发布脚本
 ├── requirements.txt           # Python依赖
 ├── docker-compose.yml         # Docker编排配置
@@ -258,10 +258,10 @@ Particle-Physics-Agent/
 3. **智能错误诊断**: 粒子查找失败时自动提供建议和修正
 4. **教育友好**: 对复杂物理过程提供深入的教育解释
 
-### 自适应知识架构
-1. **BigQuery生产级**: 高性能向量搜索和语义检索
-2. **本地开发模式**: Annoy向量索引的快速原型开发
-3. **智能降级**: 自动故障转移和混合搜索策略
+### 本地知识架构
+1. **向量语义搜索**: Annoy索引实现快速相似性搜索
+2. **关键词精确匹配**: JSON数据的文本和粒子搜索
+3. **混合检索策略**: 自动结合向量搜索和关键词匹配
 4. **持续学习**: 基于用户反馈的知识库扩充
 
 ### 工作流智能化

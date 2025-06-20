@@ -1,4 +1,4 @@
-# 🎯 FeynmanCraft ADK 开发计划 (Current State Update)
+# 🎯 Particle Physics Agent 开发计划 (Current State Update)
 
 ## 📊 项目现状分析
 - **当前时间**: 2025年6月19日
@@ -21,7 +21,7 @@ TikZ代码生成 → LaTeX编译验证 → 最终响应合成
 ```
 
 ### **知识库架构 (已实现)**
-- **混合搜索系统**: BigQuery + 本地向量搜索自动切换
+- **混合搜索系统**: 向量语义搜索 + 关键词精确匹配
 - **MCP工具集成**: 20+ 专业粒子物理验证工具
 - **双重验证**: 内部工具 + MCP工具交叉验证
 - **智能降级**: 自动故障转移机制
@@ -204,7 +204,7 @@ WebResearch产出 → 实时补充数据 (可信度: 70-85%)
 ### **核心交付**
 ```
 1. ✅ 完整的6代理系统 + WebResearchAgent
-2. ✅ BigQuery知识库 (含向量搜索)
+2. ✅ 本地知识库 (向量搜索 + 关键词匹配)
 3. ✅ 专业级TikZ-Feynman生成能力
 4. ✅ 物理正确性验证系统
 5. ✅ 智能网络搜索补充机制
@@ -227,7 +227,7 @@ WebResearch产出 → 实时补充数据 (可信度: 70-85%)
 ### ✅ **已完成 (85%)**
 - **✅ 完整6代理系统**: PlannerAgent, KBRetrieverAgent, PhysicsValidatorAgent, DiagramGeneratorAgent, TikZValidatorAgent, FeedbackAgent
 - **✅ MCP工具集成**: 20+ 专业粒子物理验证工具自动触发
-- **✅ 混合知识库**: BigQuery + 本地向量搜索自动切换
+- **✅ 混合知识库**: 向量语义搜索 + 关键词精确匹配自动切换
 - **✅ Web界面**: ADK Web UI (http://localhost:8000+)
 - **✅ LaTeX编译器**: 完整的TikZ编译验证系统
 - **✅ 双重验证**: 内部工具 + MCP工具交叉验证
