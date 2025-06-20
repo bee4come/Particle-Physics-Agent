@@ -167,13 +167,14 @@ Particle-Physics-Agent/
 │   │   │   ├── bigquery.py            # BigQuery集成
 │   │   │   ├── local.py               # 本地向量搜索
 │   │   │   ├── search.py              # 统一搜索接口
+│   │   │   ├── data_loader.py         # 数据加载器
 │   │   │   └── embedding_manager.py   # 嵌入管理
 │   │   ├── physics/               # 物理工具
 │   │   │   ├── physics_tools.py       # MCP物理工具
 │   │   │   ├── search.py              # 物理规则搜索
+│   │   │   ├── data_loader.py         # 物理数据加载
 │   │   │   └── embedding_manager.py   # 物理嵌入管理
-│   │   ├── integrations/          # 集成工具
-│   │   │   └── mcp.py                 # MCP集成
+│   │   ├── integrations/          # 集成工具接口 (直接使用../integrations/mcp)
 │   │   └── latex_compiler.py      # LaTeX编译器
 │   ├── docs/                  # 项目文档
 │   │   ├── AGENT_TREE.md          # 代理架构文档

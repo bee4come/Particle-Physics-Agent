@@ -2,7 +2,8 @@
 Third-party integrations for FeynmanCraft ADK.
 """
 
-from .mcp import (
+# Import directly from the integrations module
+from ...integrations.mcp import (
     search_particle_mcp,
     get_particle_properties_mcp,
     validate_quantum_numbers_mcp,

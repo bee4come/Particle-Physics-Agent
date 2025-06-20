@@ -7,7 +7,7 @@ All particle data comes from the external MCP server.
 
 import asyncio
 from typing import Dict, Any, List, Optional
-from ..integrations.mcp import (
+from ...integrations.mcp import (
     search_particle_mcp,
     get_particle_properties_mcp,
     validate_quantum_numbers_mcp,
