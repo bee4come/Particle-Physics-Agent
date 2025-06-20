@@ -2,7 +2,7 @@
 
 **智能多代理TikZ费曼图生成系统** - 基于Google Agent Development Kit (ADK) v1.0.0
 
-![Version](https://img.shields.io/badge/version-0.3.3-brightgreen)
+![Version](https://img.shields.io/badge/version-0.3.4-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT%2FApache--2.0-blue)
 ![ADK](https://img.shields.io/badge/ADK-1.0.0-green)
 ![Python](https://img.shields.io/badge/python-3.9%2B-blue)
@@ -70,17 +70,48 @@ TikZ代码生成 → LaTeX编译验证 → 最终响应合成
 
 - Python 3.9+
 - Google ADK 1.0.0+
-- Conda (推荐)
+- Conda (推荐) 或 Docker
 - LaTeX (可选，用于本地编译验证)
 - Google AI API Key
 - 可选：Google Cloud Project (用于部署)
 
-### 安装步骤
+### Docker 部署 (推荐)
+
+使用 Docker 可以快速部署完整的 TeX Live 环境和所有依赖：
+
+```bash
+# 1. 克隆项目
+git clone <repository-url>
+cd Particle-Physics-Agent
+
+# 2. 配置环境变量
+cp env.template .env
+# 编辑 .env 文件，添加你的 Google API Key
+
+# 3. 运行构建和测试脚本
+./scripts/build-and-test.sh
+
+# 4. 启动服务
+docker-compose up -d feynmancraft
+```
+
+访问 `http://localhost:8080` 开始使用！
+
+### 开发模式 (Docker)
+```bash
+# 开发模式启动 (支持热重载)
+docker-compose --profile dev up -d feynmancraft-dev
+# 访问 http://localhost:40000
+```
+
+### 本地安装步骤
+
+如果你选择本地安装而不使用 Docker：
 
 1. **克隆项目**
    ```bash
    git clone <repository-url>
-   cd feynmancraft-adk
+   cd Particle-Physics-Agent
    ```
 
 2. **创建Conda环境**
@@ -184,8 +215,11 @@ Particle-Physics-Agent/
 │       ├── upload_to_bigquery.py  # 上传到BigQuery (未使用)
 │       └── release.py             # 发布脚本
 ├── requirements.txt           # Python依赖
+├── scripts/                   # 构建和部署脚本
+│   └── build-and-test.sh         # Docker构建和测试管道
 ├── docker-compose.yml         # Docker编排配置
 ├── Dockerfile                 # Docker镜像构建
+├── env.template               # 环境变量模板
 ├── QUICKSTART.md             # 快速启动指南
 ├── DEVELOPMENTplan.md        # 开发计划
 ├── CHANGELOG.md              # 更新日志
@@ -213,6 +247,8 @@ Particle-Physics-Agent/
 - **pytest** - 测试框架
 - **GitHub Actions** - CI/CD
 - **Docker** - 容器化部署
+- **TeX Live 2022** - 完整的 LaTeX 环境
+- **Build Pipeline** - 自动化构建和测试基础设施
 
 ## 🎯 项目里程碑
 
@@ -221,13 +257,31 @@ Particle-Physics-Agent/
 - **第二阶段**: MCP工具集成和双重验证 ✅
 - **第三阶段**: 混合知识库和智能路由 ✅
 - **第四阶段**: 项目优化和代码清理 ✅
+- **第五阶段**: Docker部署和构建基础设施 ✅
 
 ### 🎯 下一步计划
 - **性能优化**: 提升响应速度和资源效率
 - **扩展测试**: 更多物理过程和边缘案例
-- **生产部署**: Docker容器化和云原生部署
+- **云原生部署**: Kubernetes支持和自动扩缩容
+- **监控和观测**: 添加应用性能监控和日志聚合
 
 ## 📦 最新版本
+
+### v0.3.4 - Docker 部署与构建基础设施版本
+- 🐳 **Docker 支持**：完整的容器化部署，包含 TeX Live 2022 和 TikZ-Feynman 支持
+- 🛠️ **构建和测试管道**：全面的验证流水线 (`scripts/build-and-test.sh`)
+  - Docker 镜像构建验证
+  - TeX Live 安装测试
+  - TikZ 包编译验证
+  - FeynmanCraft LaTeX 编译器测试
+  - 费曼图编译质量评分
+  - 服务集成测试和健康检查
+- 🔧 **依赖修复**：解决包版本冲突和构建问题
+  - 修复 PDG 包版本从 `>=0.3.0` 到 `>=0.2.0`
+  - 添加构建依赖工具用于 C++ 包编译
+  - 解决 Docker 环境中 Annoy 包编译问题
+- 📁 **架构清理**：精简 MCP 集成层，移除不必要的包装器
+- 📝 **文档准确性**：全面的事实核查和修正，移除误导性的 BigQuery 声明
 
 ### v0.3.3 - 工作流增强版本
 - 🔄 **分支管理优化**：将`hackathon`分支重命名为`main`，清理代码库结构
