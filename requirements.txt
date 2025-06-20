@@ -17,6 +17,7 @@ python-dotenv>=1.0.0
 
 # Scientific Computing
 numpy>=1.24.0
+scipy>=1.11.0
 
 # Vector Search and Embeddings
 annoy>=1.17.0
@@ -32,6 +33,12 @@ requests>=2.31.0
 beautifulsoup4>=4.12.0
 lxml>=4.9.0
 
+# Particle Physics Data
+PDG>=0.3.0
+
+# LaTeX Processing
+pylatex>=1.4.0
+
 # Web Framework (for production deployment)
 fastapi>=0.110.0
 uvicorn[standard]>=0.29.0
@@ -41,6 +48,9 @@ PyGithub>=2.3.0
 
 # Type Hints Support
 typing-extensions>=4.11.0
+
+# JSON handling
+orjson>=3.9.0
 
 # Development and Testing (optional)
 pytest>=8.2.0

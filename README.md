@@ -1,8 +1,8 @@
-# FeynmanCraft ADK
+# Particle Physics Agent
 
 **智能多代理TikZ费曼图生成系统** - 基于Google Agent Development Kit (ADK) v1.0.0
 
-![Version](https://img.shields.io/badge/version-0.3.2-brightgreen)
+![Version](https://img.shields.io/badge/version-0.3.3-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT%2FApache--2.0-blue)
 ![ADK](https://img.shields.io/badge/ADK-1.0.0-green)
 ![Python](https://img.shields.io/badge/python-3.9%2B-blue)
@@ -10,7 +10,7 @@
 
 ## 🎯 项目简介
 
-FeynmanCraft ADK 是一个基于 Google Agent Development Kit 构建的**自主学习智能研究助手**，能够从自然语言描述自动生成高质量的 TikZ 费曼图代码。该项目采用创新的**双重验证架构**，具备MCP增强的物理验证能力。
+Particle Physics Agent 是一个基于 Google Agent Development Kit 构建的**自主学习智能研究助手**，能够从自然语言描述自动生成高质量的 TikZ 费曼图代码。该项目采用创新的**双重验证架构**，具备MCP增强的物理验证能力。
 
 ### 🚀 核心创新
 
@@ -104,34 +104,47 @@ TikZ代码生成 → LaTeX编译验证 → 最终响应合成
    EOF
    ```
 
-5. **运行系统**
+5. **启动Web界面**
    ```bash
-   conda run -n fey adk run feynmancraft_adk
+   cd feynmancraft_adk
+   adk web . --port 8000
    ```
+   
+   打开浏览器访问 `http://localhost:8000` 开始使用
 
 ### 使用示例
 
-在 ADK Dev UI 中输入：
+**启动Web界面**：
+```bash
+cd feynmancraft_adk
+adk web . --port 8000
+```
 
+在Web界面中输入：
 ```
 请生成一个电子-正电子湮灭产生两个光子的费曼图
 ```
 
-系统将：
-1. 🔍 首先查询BigQuery知识库
-2. 🌐 如需要，进行网络搜索补充
-3. 🎨 生成高质量TikZ代码
-4. ✅ 进行物理和语法验证
-5. 📝 提供详细反馈和建议
+**系统工作流程**：
+1. 📋 **PlannerAgent** - 解析自然语言并制定执行计划
+2. 📚 **KBRetrieverAgent** - 搜索相关TikZ示例
+3. 🔬 **PhysicsValidatorAgent** - 使用MCP工具验证物理正确性
+4. 🎨 **DiagramGeneratorAgent** - 生成TikZ代码
+5. ✅ **TikZValidatorAgent** - LaTeX编译验证
+6. 📝 **FeedbackAgent** - 综合最终响应
 
 ## 📊 项目结构
 
 ```
-feynmancraft-adk/
+Particle-Physics-Agent/
 ├── feynmancraft_adk/           # 主包 (ADK标准结构)
 │   ├── __init__.py            # 模型配置和日志设置
 │   ├── agent.py               # root_agent定义
 │   ├── schemas.py             # Pydantic数据模型
+│   ├── data/                  # 知识库数据文件
+│   │   ├── feynman_kb.json        # 本地知识库
+│   │   ├── pprules.json           # 物理规则数据
+│   │   └── embeddings/            # 向量嵌入缓存
 │   ├── sub_agents/            # 6个核心代理实现
 │   │   ├── planner_agent.py           # 自然语言解析和规划
 │   │   ├── kb_retriever_agent.py      # 知识库检索
@@ -146,49 +159,38 @@ feynmancraft-adk/
 │   │   └── physics/               # 物理数据和工具
 │   ├── integrations/           # 外部服务集成
 │   │   └── mcp/                   # MCP工具集成
-│   └── tools/                 # 工具函数
-│       ├── bigquery_kb_tool.py    # BigQuery集成
-│       └── local_kb_tool.py       # 本地向量搜索
-├── feyncore/                  # 核心功能库
-│   ├── compilation/           # LaTeX编译器
-│   └── tikz_utils/           # TikZ工具函数
-├── feynmancraft_adk/         # 主要应用包
-│   ├── docs/                 # 项目文档
-│   ├── scripts/              # 部署和管理脚本
+│   │       ├── mcp_client.py          # MCP客户端
+│   │       ├── mcp_config.json        # MCP配置
+│   │       └── particle_name_mappings.py # 粒子名称映射
+│   ├── tools/                 # 工具函数
+│   │   ├── kb/                    # 知识库工具
+│   │   │   ├── bigquery.py            # BigQuery集成
+│   │   │   ├── local.py               # 本地向量搜索
+│   │   │   ├── search.py              # 统一搜索接口
+│   │   │   └── embedding_manager.py   # 嵌入管理
+│   │   ├── physics/               # 物理工具
+│   │   │   ├── physics_tools.py       # MCP物理工具
+│   │   │   ├── search.py              # 物理规则搜索
+│   │   │   └── embedding_manager.py   # 物理嵌入管理
+│   │   ├── integrations/          # 集成工具
+│   │   │   └── mcp.py                 # MCP集成
+│   │   └── latex_compiler.py      # LaTeX编译器
+│   ├── docs/                  # 项目文档
+│   │   ├── AGENT_TREE.md          # 代理架构文档
+│   │   └── bigquery_setup.md      # BigQuery设置指南
+│   └── scripts/               # 部署和管理脚本
+│       ├── build_local_index.py   # 构建本地索引
+│       ├── upload_to_bigquery.py  # 上传到BigQuery
+│       └── release.py             # 发布脚本
+├── requirements.txt           # Python依赖
+├── docker-compose.yml         # Docker编排配置
+├── Dockerfile                 # Docker镜像构建
+├── QUICKSTART.md             # 快速启动指南
+├── DEVELOPMENTplan.md        # 开发计划
+├── CHANGELOG.md              # 更新日志
+├── VERSION                   # 版本信息
 └── README.md                 # 本文档
 ```
-
-## 🎯 技术指标
-
-### 性能目标
-- ✅ TikZ代码编译成功率 ≥ 85%
-- ✅ 物理验证准确率 ≥ 90%
-- ✅ 知识库查询响应时间 ≤ 3秒
-- ✅ 端到端处理时间 ≤ 45秒 (含网络搜索)
-- ✅ 系统可用性 ≥ 95%
-
-### 智能化指标
-- ✅ 知识库命中率 ≥ 80%
-- ✅ 网络搜索成功率 ≥ 70%
-- ✅ 用户满意度 ≥ 90%
-- ✅ 知识库自动扩充率 ≥ 10条/天
-- ✅ 重复查询网络依赖下降率 ≥ 50%
-
-## 🔬 支持的物理过程
-
-### 当前支持 (基础版本)
-- ✅ 电子-正电子湮灭 → 双光子
-- ✅ 缪子衰变 → 电子 + 中微子
-- ✅ 质子-反质子散射
-- ✅ W/Z玻色子衰变
-- ✅ 康普顿散射
-
-### 扩展支持 (通过网络搜索)
-- 🔍 QCD过程 (胶子交换)
-- 🔍 希格斯机制相关过程
-- 🔍 超对称粒子过程
-- 🔍 中微子振荡
-- 🔍 暗物质相互作用
 
 ## 🛠️ 技术栈
 
@@ -196,7 +198,6 @@ feynmancraft-adk/
 - **Google ADK 1.0.0** - 多代理编排框架
 - **Google Gemini** - 语言模型 (gemini-2.0-flash)
 - **MCP (Model Context Protocol)** - 增强的工具通信协议
-- **BigQuery** - 知识库存储和向量搜索
 - **Pydantic** - 数据验证和序列化
 
 ### 专业工具
@@ -211,26 +212,6 @@ feynmancraft-adk/
 - **pytest** - 测试框架
 - **GitHub Actions** - CI/CD
 - **Docker** - 容器化部署
-
-## 📈 开发进度
-
-### ✅ 已完成 (90%)
-- **Core Architecture**: ADK框架完全就位，6代理工作流优化
-- **Data Models**: 完整的Pydantic数据模型
-- **Agent Framework**: 6个专业代理已配置并测试通过
-- **MCP Integration**: 20+物理工具集成和双重验证系统
-- **Knowledge Base**: BigQuery + 本地向量搜索混合系统
-- **Physics Validation**: 增强的物理验证与教育功能
-- **Documentation**: 完整的项目文档和使用指南
-
-### 🟡 进行中 (8%)
-- **Performance Optimization**: 响应时间和资源使用优化
-- **Extended Testing**: 边缘案例和错误处理完善
-- **User Experience**: 界面优化和用户反馈集成
-
-### ❌ 计划中 (2%)
-- **Web Interface**: 独立Web界面开发
-- **API Endpoints**: RESTful API接口开发
 
 ## 🎯 项目里程碑
 
@@ -247,25 +228,24 @@ feynmancraft-adk/
 
 ## 📦 最新版本
 
-### v0.3.2 (2025-01-18) - 项目重构版本
+### v0.3.3 - 工作流增强版本
+- 🔄 **分支管理优化**：将`hackathon`分支重命名为`main`，清理代码库结构
+- 📝 **文档完善**：更新README项目结构图，修正目录结构和文件列表
+- 🔧 **工作流分析**：识别并记录代理工作流执行不完整的问题
+- 🌐 **Web界面改进**：改进ADK web服务器部署和代理检测
+- 🛠️ **MCP工具调试**：调查并解决PDG包依赖和MCP连接问题
+
+### v0.3.2 - 项目重构版本
 - 📁 **项目结构优化**：将`docs/`和`scripts/`移入`feynmancraft_adk/`目录
 - 📄 **许可证合并**：将MIT和Apache 2.0双许可证合并为单一LICENSE文件
 - 🔧 **ADK兼容性修复**：修复ADK Web UI中的代理检测问题
 - 📝 **文档更新**：更新所有文档中的路径引用
 
-### v0.3.1 (2025-01-17) - 项目优化版本
+### v0.3.1 - 项目优化版本
 - 🗑️ **代码清理**：移除未使用的OrchestratorAgent和HarvestAgent
 - ⚡ **架构精简**：聚焦6个核心代理的生产级工作流
 - 📝 **文档更新**：更新README和项目结构反映优化后的代码库
 - 🔧 **导入优化**：清理sub_agents模块导入结构
-
-### v0.3.0 (2025-01-17) - MCP集成版本
-- 🔬 **MCP工具集成**：20+粒子物理MCP工具自动触发
-- 🎯 **双重验证系统**：内部工具 + MCP工具交叉验证
-- 🔍 **智能粒子搜索**：综合粒子数据库with诊断功能
-- 📊 **增强物理验证**：详细粒子属性、量子数、衰变分析
-- ⚙️ **工作流优化**：确保完整的六代理序列执行
-- 🔄 **混合知识库**：BigQuery + 本地向量搜索自动切换
 
 详见 [CHANGELOG.md](CHANGELOG.md)
 

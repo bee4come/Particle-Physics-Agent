@@ -7,10 +7,10 @@
 ### 1. 克隆项目
 ```bash
 git clone <repository-url>
-cd feynmancraft-adk
+cd Particle-Physics-Agent
 ```
 
-### 2. 设置环境
+### 2. 环境设置
 ```bash
 # 创建 Conda 环境
 conda create --name fey python=3.11 -y
@@ -59,20 +59,24 @@ KB_MODE=hybrid
 
 ### 5. 运行系统
 ```bash
-# 启动 ADK Dev UI
-adk run feynmancraft_adk
+# 导航到代理目录
+cd feynmancraft_adk
 
-# 浏览器会自动打开 http://localhost:40000
+# 启动 ADK Web UI
+adk web . --port 8000
+
+# 浏览器会打开 http://localhost:8000
+# 如果端口 8000 忙碌，请尝试端口 8001、8002 等
 ```
 
 ### 6. 测试示例
 
-在 ADK Dev UI 中输入：
+在 ADK Web UI 中输入：
 - "生成电子-正电子湮灭的费曼图"
 - "画一个 Z 玻色子衰变到轻子对的图"
 - "显示康普顿散射过程"
-- "muon decay diagram" (测试MCP工具)
-- "两个上夸克和一个下夸克" (测试自然语言解析)
+- "muon decay diagram"（测试MCP工具）
+- "两个上夸克和一个下夸克"（测试自然语言解析）
 
 ## 🔧 故障排除
 
@@ -100,8 +104,19 @@ ls feynmancraft_adk/data/feynman_kb.json
 python feynmancraft_adk/scripts/build_local_index.py
 ```
 
+### 问题：端口冲突
+```bash
+# 尝试不同端口
+adk web . --port 8001
+adk web . --port 8002
+# 等等
+```
+
 ## 📊 系统状态检查
 ```bash
+# 导航到项目根目录
+cd ..
+
 # 运行快速测试
 python quick_test.py
 
@@ -111,10 +126,10 @@ python test_system.py
 
 ## 🎯 下一步
 
-1. 阅读 [README.md](README.md) 了解完整功能
-2. 查看 [feynmancraft_adk/docs/bigquery_setup.md](feynmancraft_adk/docs/bigquery_setup.md) 设置生产环境
+1. 阅读 [README.md](README.md) 了解完整功能概述
+2. 查看 [feynmancraft_adk/docs/bigquery_setup.md](feynmancraft_adk/docs/bigquery_setup.md) 进行生产环境设置
 3. 探索 `feynmancraft_adk/sub_agents/` 了解各个代理的功能
-4. 尝试修改提示词优化生成效果
+4. 尝试修改提示词以优化生成结果
 
 ## 💡 提示与新功能
 
@@ -131,10 +146,18 @@ python test_system.py
 - **环境控制**: 使用 `KB_MODE` 环境变量轻松切换
 
 ### 🤖 工作流程
-- **完整序列**: 六代理按序执行，确保全面验证
+- **完整序列**: 六个代理按序执行，确保全面验证
 - **自然语言**: 支持中英文物理过程描述
 - **教育模式**: 对无法图示的过程提供教育解释
 
+### 🎨 六代理系统
+1. **PlannerAgent**: 自然语言解析和任务规划
+2. **KBRetrieverAgent**: 混合知识库搜索
+3. **PhysicsValidatorAgent**: MCP增强物理验证
+4. **DiagramGeneratorAgent**: TikZ代码生成
+5. **TikZValidatorAgent**: LaTeX编译验证
+6. **FeedbackAgent**: 最终响应合成
+
 ---
 
-遇到问题？查看 [GitHub Issues](https://github.com/your-username/feynmancraft-adk/issues) 或创建新 issue。
+遇到问题？查看 [GitHub Issues](https://github.com/your-username/Particle-Physics-Agent/issues) 或创建新 issue。

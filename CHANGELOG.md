@@ -5,6 +5,42 @@ All notable changes to FeynmanCraft ADK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.3] - Workflow Enhancement & Documentation Update
+
+### Changed
+- **Branch Management**: Renamed `hackathon` branch to `main` and cleaned up repository
+  - Consolidated all development into single `main` branch
+  - Removed multiple feature branches for cleaner repository structure
+  - Updated upstream tracking to `origin/main`
+- **Documentation**: Updated README.md project structure diagram
+  - Corrected project name from `feynmancraft-adk/` to `Particle-Physics-Agent/`
+  - Added missing directories: `data/`, `tools/kb/`, `tools/physics/`, `tools/integrations/`
+  - Removed non-existent directories: `feyncore/`, duplicate entries
+  - Added detailed sub-structures for MCP integration and LaTeX compilation
+  - Updated root-level file listings for accuracy
+
+### Fixed
+- **Workflow Orchestration**: Identified and documented incomplete agent workflow execution
+  - Root agent stopping prematurely after `DiagramGeneratorAgent`
+  - Missing `TikZValidatorAgent` execution for code compilation validation
+  - Missing `FeedbackAgent` execution for final response synthesis
+- **MCP Tools**: Investigated PDG package dependency issues
+  - Confirmed PDG package installation
+  - Identified transient MCP connection issues as cause of validation errors
+  - System properly falls back to internal tools when MCP unavailable
+
+### Enhanced
+- **Web Interface**: Improved ADK web server deployment
+  - Multiple port configurations (8002, 8003, 8004, 8005) for testing
+  - Proper directory-based agent serving
+  - Better agent detection and loading in web UI
+
+### Technical Details
+- Repository now uses single-branch development model
+- Documentation accurately reflects current codebase structure
+- Web ADK properly serves FeynmanCraft agent interface
+- Workflow orchestration issues documented for future improvement
+
 ## [0.3.2] - Project Restructuring
 
 ### Changed

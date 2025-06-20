@@ -1,192 +1,95 @@
-# 🎯 FeynmanCraft ADK 全面开发计划 (更新版)
+# 🎯 FeynmanCraft ADK 开发计划 (Current State Update)
 
 ## 📊 项目现状分析
-- **当前时间**: 6月13日
-- **项目截止**: 6月23日 (剩余10天)
-- **架构状态**: ADK框架已完成，6个代理已就位
-- **主要挑战**: 知识库迁移 + 核心功能完善
-- **tikz-hunter状态**: 离线数据采集系统已完成，产出高质量知识库数据
+- **当前时间**: 2025年6月19日
+- **项目阶段**: Production-Ready Beta (v0.3.3)
+- **架构状态**: 完整的6代理系统已实现并运行
+- **当前重点**: TexLive Docker集成 + 云端部署优化
+- **Web界面**: ADK Web UI已部署并正常运行
 
-## 📊 项目架构重新定位
+## 🏗️ 当前系统架构 (已实现)
 
-### **三层知识获取架构**
+### **完整6代理工作流系统**
 ```
-Layer 1: 静态知识库 (BigQuery) ← tikz-hunter 离线构建
-Layer 2: 动态网络搜索 (WebResearchAgent) ← 实时补充
-Layer 3: 智能生成 (DiagramGeneratorAgent) ← 创新合成
-```
-
-### **tikz-hunter 的正确定位**
-- **角色**: 离线知识库生产工厂
-- **工作模式**: 批处理，定期运行
-- **输出**: 高质量结构化数据 → BigQuery
-- **不参与**: 用户实时请求处理
-
-## 🚀 10天开发计划详细安排
-
-### **第1-2天: 知识库基础设施** 🗄️
-
-#### **BigQuery迁移 + tikz-hunter集成**
-```
-Day 1:
-- 设计BigQuery表结构 (feynman_kb.physics_diagrams)
-- 上传 feynman_kb_enhanced.json (tikz-hunter产出)
-- 创建基础查询工具包装器
-- 建立tikz-hunter → BigQuery的数据管道
-
-Day 2:
-- 实现文本+向量搜索功能
-- 集成到 KBRetrieverAgent
-- 测试知识库查询性能
-- 设计知识库更新机制
+PlannerAgent → KBRetrieverAgent → PhysicsValidatorAgent (MCP集成)
+     ↓               ↓                      ↓
+任务规划 → 混合知识库搜索 → MCP增强物理验证
+     ↓               ↓                      ↓
+DiagramGeneratorAgent → TikZValidatorAgent → FeedbackAgent
+     ↓                      ↓                   ↓
+TikZ代码生成 → LaTeX编译验证 → 最终响应合成
 ```
 
-#### **BigQuery表结构设计**
-```sql
-CREATE TABLE feynman_kb.physics_diagrams (
-  id STRING,
-  topic STRING,
-  reaction STRING,
-  particles ARRAY<STRING>,
-  description STRING,
-  tikz TEXT,
-  process_type STRING,
-  source STRING,
-  source_type STRING,
-  embedding ARRAY<FLOAT64>,  -- 用于向量搜索
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)
+### **知识库架构 (已实现)**
+- **混合搜索系统**: BigQuery + 本地向量搜索自动切换
+- **MCP工具集成**: 20+ 专业粒子物理验证工具
+- **双重验证**: 内部工具 + MCP工具交叉验证
+- **智能降级**: 自动故障转移机制
+
+## 🚀 当前开发重点
+
+### **阶段1: Docker化与TexLive集成** 🐳
+
+#### **TexLive Docker环境**
+```
+当前任务:
+- ✅ LaTeX编译器集成 (feynmancraft_adk/tools/latex_compiler.py)
+- 🔄 Docker镜像优化 (TexLive完整安装)
+- 🔄 TikZ-Feynman包依赖管理
+- 🔄 编译环境容器化测试
+
+技术细节:
+- 基于官方TexLive Docker镜像
+- 优化编译性能和资源使用
+- 容器内编译结果处理
+- 错误日志和调试信息改进
 ```
 
-### **第3-4天: 智能决策层构建** 🧠
+### **阶段2: 云端部署优化** ☁️
 
-#### **OrchestratorAgent 升级 + 决策逻辑**
+#### **Google Cloud Platform部署**
 ```
-Day 3:
-- 升级 OrchestratorAgent 为智能路由器
-- 实现知识库查询质量评估
-- 设计"查询失败"检测机制
-- 完善 DiagramGeneratorAgent 提示词
+部署架构:
+- 🔄 Cloud Run容器化部署
+- 🔄 Cloud Storage静态资源管理
+- 🔄 BigQuery知识库生产环境
+- 🔄 Cloud Build CI/CD流水线
 
-Day 4:
-- 实现多路径决策逻辑:
-  * 路径1: 知识库充足 → 直接生成
-  * 路径2: 知识库不足 → 触发网络搜索
-  * 路径3: 完全未知 → 创新生成
-- 测试决策准确性
-```
-
-#### **智能路由决策逻辑**
-```python
-# 决策树
-if kb_results.confidence > 0.8:
-    return "use_knowledge_base"
-elif kb_results.confidence > 0.3:
-    return "supplement_with_web_search"
-else:
-    return "creative_generation"
+性能优化:
+- 容器启动时间优化
+- 内存和CPU资源配置
+- 自动扩缩容配置
+- 监控和日志集成
 ```
 
-### **第5-6天: 动态网络研究能力** 🔍
-
-#### **WebResearchAgent 开发**
+#### **工作流完整性修复**
 ```
-Day 5:
-- 创建 WebResearchAgent (基于Gemini LangGraph模式)
-- 集成Google Search API
-- 实现针对性TikZ代码搜索
-- 设计搜索结果质量过滤
+已识别问题:
+- ❌ TikZValidatorAgent执行缺失
+- ❌ FeedbackAgent综合响应缺失
+- ❌ 工作流在DiagramGeneratorAgent后停止
 
-Day 6:
-- 实现实时网络内容解析
-- 添加搜索结果缓存机制
-- 集成到主工作流
-- 测试网络搜索→生成流程
+修复计划:
+- 🔄 增强root_agent工作流控制
+- 🔄 确保完整6代理序列执行
+- 🔄 改进agent间状态传递
+- 🔄 添加工作流监控和调试
 ```
 
-#### **WebResearchAgent 核心能力**
-```python
-# 搜索策略
-1. 物理过程关键词搜索
-2. TikZ-Feynman代码片段搜索  
-3. 学术论文图表搜索
-4. 在线物理教程搜索
+### **阶段3: MCP工具稳定性** 🔧
 
-# 质量控制
-1. 来源可信度评估
-2. 内容相关性打分
-3. TikZ代码语法预检
-4. 物理正确性初筛
+#### **MCP连接优化**
 ```
+当前问题:
+- PDG包依赖问题已解决
+- MCP服务器连接偶尔不稳定
+- 需要改进错误处理和重连机制
 
-### **第7天: 物理验证系统强化** 🔬
-
-#### **PhysicsValidatorAgent 升级为"事实核查员"**
-```
-目标: 处理来自不可信网络源的信息
-
-升级内容:
-- 强化守恒定律检查
-- 添加粒子相互作用规则验证
-- 实现"可信度评分"机制
-- 建立"需要人工审核"标记系统
-
-验证层级:
-Level 1: 基础语法检查 (TikZValidatorAgent)
-Level 2: 物理规律验证 (PhysicsValidatorAgent)  
-Level 3: 专业性评估 (新增评估逻辑)
-```
-
-#### **物理验证规则库**
-```python
-# 守恒定律检查
-- 电荷守恒: Σ(Q_initial) = Σ(Q_final)
-- 轻子数守恒: Σ(L_initial) = Σ(L_final)  
-- 重子数守恒: Σ(B_initial) = Σ(B_final)
-- 相互作用类型匹配验证
-```
-
-### **第8天: 系统集成与智能路由** 🔄
-
-#### **完整工作流集成**
-```
-智能工作流:
-用户请求 → PlannerAgent → OrchestratorAgent
-    ↓
-决策分支:
-├─ 知识库充足 → KBRetrieverAgent → DiagramGeneratorAgent
-├─ 知识库不足 → WebResearchAgent → 验证链 → DiagramGeneratorAgent  
-└─ 完全未知 → 创新生成模式 → 强化验证
-
-验证链: TikZValidator → PhysicsValidator → FeedbackAgent
-```
-
-### **第9天: 高级功能与优化** ⚡
-
-#### **智能缓存与学习机制**
-```
-实现内容:
-- 网络搜索结果智能缓存
-- 用户反馈学习机制
-- 动态知识库更新
-- 性能监控与优化
-
-学习循环:
-网络搜索结果 → 验证通过 → 自动加入知识库 → 
-减少未来相同查询的网络依赖
-```
-
-### **第10天: 测试与部署** 🚀
-
-#### **全面测试与交付准备**
-```
-测试矩阵:
-□ 知识库覆盖场景 (80%预期)
-□ 网络搜索补充场景 (15%预期)  
-□ 创新生成场景 (5%预期)
-□ 错误处理与降级
-□ 性能基准验证
+优化计划:
+- 🔄 MCP客户端连接池管理
+- 🔄 自动重连和故障转移
+- 🔄 连接状态监控和日志
+- 🔄 ParticlePhysics MCP Server版本固定
 ```
 
 ## 🏗️ 技术架构升级
@@ -321,22 +224,43 @@ WebResearch产出 → 实时补充数据 (可信度: 70-85%)
 
 ## 📈 当前进度状态
 
-### ✅ **已完成 (75%)**
-- **Core Architecture**: ADK框架完全就位
-- **Data Models**: 完整的Pydantic数据模型
-- **Agent Framework**: 6个专业代理已配置
-- **Basic Utilities**: TikZ编译、配置系统等
+### ✅ **已完成 (85%)**
+- **✅ 完整6代理系统**: PlannerAgent, KBRetrieverAgent, PhysicsValidatorAgent, DiagramGeneratorAgent, TikZValidatorAgent, FeedbackAgent
+- **✅ MCP工具集成**: 20+ 专业粒子物理验证工具自动触发
+- **✅ 混合知识库**: BigQuery + 本地向量搜索自动切换
+- **✅ Web界面**: ADK Web UI (http://localhost:8000+)
+- **✅ LaTeX编译器**: 完整的TikZ编译验证系统
+- **✅ 双重验证**: 内部工具 + MCP工具交叉验证
+- **✅ 项目结构**: 标准化目录结构和文档
 
-### 🟡 **进行中 (20%)**
-- **Knowledge Base**: 基础接口完成，需BigQuery迁移
-- **Agent Prompts**: 基础提示词需专业化优化
-- **Physics Validation**: 框架完成，需实现核心逻辑
+### 🟡 **进行中 (12%)**
+- **🔄 Docker集成**: TexLive完整环境容器化
+- **🔄 云端部署**: Google Cloud Platform部署优化
+- **🔄 工作流修复**: 确保完整6代理序列执行
+- **🔄 性能优化**: 编译性能和资源使用优化
 
-### ❌ **待开始 (5%)**
-- **WebResearchAgent**: 全新组件
-- **BigQuery Integration**: 知识库迁移
-- **Learning Mechanisms**: 自主学习能力
+### 🎯 **计划中 (3%)**
+- **📋 生产监控**: 系统监控和日志分析
+- **🔧 边缘案例**: 复杂物理过程处理优化
+- **📚 文档完善**: API文档和用户指南
+
+## 🎯 近期优先级
+
+### **立即进行**
+1. **Docker TexLive优化** - 完善LaTeX编译环境
+2. **工作流完整性** - 修复agent序列执行问题
+3. **Cloud Run部署** - 生产环境容器化部署
+
+### **短期目标**
+1. **性能基准测试** - 建立编译速度和准确率基线
+2. **错误处理改进** - 增强系统鲁棒性
+3. **监控系统** - 生产环境监控和告警
+
+### **中期规划**
+1. **扩展物理过程支持** - 更多复杂粒子物理过程
+2. **用户体验优化** - Web界面改进和响应优化
+3. **知识库扩展** - 自动学习和知识更新机制
 
 ---
 
-**这个更新后的计划将FeynmanCraft ADK从一个"静态专家系统"升级为一个"自主学习的智能研究助手"，具备了真正的知识发现和自我进化能力。**
+**当前的FeynmanCraft ADK已经是一个功能完整的生产级系统，具备完整的6代理协作工作流、MCP增强的物理验证、混合知识库搜索和LaTeX编译验证能力。重点转向部署优化和性能提升。**
