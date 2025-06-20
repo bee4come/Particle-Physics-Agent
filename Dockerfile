@@ -4,15 +4,26 @@ FROM python:3.11-slim
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies for LaTeX and compilation
+# Install system dependencies including TeX Live for TikZ compilation
 RUN apt-get update && apt-get install -y \
+    # Core TeX Live packages
     texlive-latex-base \
     texlive-latex-extra \
     texlive-fonts-recommended \
     texlive-fonts-extra \
+    # TikZ and Feynman diagram packages
+    texlive-pictures \
+    # Physics and science packages
+    texlive-science \
+    # Additional TeX Live packages for completeness
+    texlive-lang-greek \
+    # System utilities
     git \
     curl \
-    && rm -rf /var/lib/apt/lists/*
+    # Ruby, TCL, TK dependencies (installed by texlive packages)
+    && rm -rf /var/lib/apt/lists/* \
+    # Update TeX Live package database
+    && mktexlsr
 
 # Copy requirements first for better caching
 COPY requirements.txt .

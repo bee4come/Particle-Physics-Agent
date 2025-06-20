@@ -11,10 +11,17 @@ services:
       - MODEL_TEMPERATURE=0.7
       - DEFAULT_SEARCH_K=5
       - LOG_LEVEL=INFO
+      # TeX Live and TikZ validation settings
+      - TEXLIVE_ENABLED=true
+      - TIKZ_VALIDATION_ENABLED=true
+      - LATEX_COMPILER=pdflatex
+      - TEX_MAX_COMPILATION_TIME=30
     volumes:
       - ./data:/app/data:ro
       - ./logs:/app/logs
       - ./tmp:/app/tmp
+      # TikZ compilation workspace
+      - tikz-compile-cache:/tmp/tikz-compile
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
@@ -33,12 +40,40 @@ services:
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
       - ADK_PORT=40000
       - LOG_LEVEL=DEBUG
+      # TeX Live and TikZ validation settings
+      - TEXLIVE_ENABLED=true
+      - TIKZ_VALIDATION_ENABLED=true
+      - LATEX_COMPILER=pdflatex
+      - TEX_MAX_COMPILATION_TIME=30
     volumes:
       - .:/app
       - ./logs:/app/logs
+      - tikz-compile-cache:/tmp/tikz-compile
     command: ["adk", "run", "feynmancraft_adk", "--host", "0.0.0.0", "--port", "40000"]
     profiles:
       - dev
+
+  # Optional: Standalone TikZ validation service
+  tikz-validator:
+    build: .
+    environment:
+      - KB_MODE=local
+      - LOG_LEVEL=INFO
+      - TEXLIVE_ENABLED=true
+      - TIKZ_VALIDATION_ENABLED=true
+      - LATEX_COMPILER=pdflatex
+      - TEX_MAX_COMPILATION_TIME=30
+    volumes:
+      - tikz-compile-cache:/tmp/tikz-compile
+      - ./logs:/app/logs
+    command: ["python", "-m", "feynmancraft_adk.tools.latex_compiler"]
+    profiles:
+      - tikz-only
+
+volumes:
+  # Named volume for TikZ compilation cache
+  tikz-compile-cache:
+    driver: local
 
 networks:
   default:
