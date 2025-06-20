@@ -1,152 +1,152 @@
-# FeynmanCraft ADK 快速启动指南
+# FeynmanCraft ADK Quick Start Guide
 
-**增强版多代理系统 - 集成MCP物理验证工具**
+**Enhanced Multi-Agent System - Integrated with MCP Physics Validation Tools**
 
-## 🚀 5分钟快速开始
+## 🚀 5-Minute Quick Start
 
-### 1. 克隆项目
+### 1. Clone the Project
 ```bash
 git clone <repository-url>
 cd Particle-Physics-Agent
 ```
 
-### 2. 环境设置
+### 2. Environment Setup
 ```bash
-# 创建 Conda 环境
+# Create Conda environment
 conda create --name fey python=3.11 -y
 conda activate fey
 
-# 安装依赖
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-### 3. 配置环境变量
+### 3. Configure Environment Variables
 ```bash
-# 复制示例配置
+# Copy example configuration
 cp .env.example .env
 
-# 编辑 .env 文件，至少设置：
+# Edit .env file, at least set:
 # GOOGLE_API_KEY=your-api-key-here
 ```
 
-### 4. 设置知识库
+### 4. Set Up Knowledge Base
 
-#### 构建本地索引（推荐）
+#### Build Local Index (Recommended)
 ```bash
-# 构建向量索引用于语义搜索
+# Build vector index for semantic search
 python feynmancraft_adk/scripts/build_local_index.py
 
-# 在 .env 中设置（可选）
+# Set in .env (optional)
 KB_MODE=local
 ```
 
-#### 混合模式（默认）
+#### Hybrid Mode (Default)
 ```bash
-# 在 .env 中设置
+# Set in .env
 KB_MODE=hybrid
-# 系统会自动结合向量搜索和关键词匹配
+# System will automatically combine vector search and keyword matching
 ```
 
-### 5. 运行系统
+### 5. Run the System
 ```bash
-# 导航到代理目录
+# Navigate to agent directory
 cd feynmancraft_adk
 
-# 启动 ADK Web UI
+# Start ADK Web UI
 adk web . --port 8000
 
-# 浏览器会打开 http://localhost:8000
-# 如果端口 8000 忙碌，请尝试端口 8001、8002 等
+# Browser will open http://localhost:8000
+# If port 8000 is busy, try port 8001, 8002, etc.
 ```
 
-### 6. 测试示例
+### 6. Test Examples
 
-在 ADK Web UI 中输入：
-- "生成电子-正电子湮灭的费曼图"
-- "画一个 Z 玻色子衰变到轻子对的图"
-- "显示康普顿散射过程"
-- "muon decay diagram"（测试MCP工具）
-- "两个上夸克和一个下夸克"（测试自然语言解析）
+Enter in ADK Web UI:
+- "Generate Feynman diagram for electron-positron annihilation"
+- "Draw a Z boson decay to lepton pair diagram"
+- "Show Compton scattering process"
+- "muon decay diagram" (test MCP tools)
+- "two up quarks and one down quark" (test natural language parsing)
 
-## 🔧 故障排除
+## 🔧 Troubleshooting
 
-### 问题：找不到 adk 命令
+### Issue: adk command not found
 ```bash
-# 确保安装了 google-adk
+# Ensure google-adk is installed
 pip install google-adk
 ```
 
-### 问题：API 认证失败
+### Issue: API authentication failed
 ```bash
-# 检查 API key
+# Check API key
 echo $GOOGLE_API_KEY
 
-# 对于其他 Google AI 服务，运行：
+# For other Google AI services, run:
 gcloud auth application-default login
 ```
 
-### 问题：没有搜索结果
+### Issue: No search results
 ```bash
-# 检查知识库文件
+# Check knowledge base file
 ls feynmancraft_adk/data/feynman_kb.json
 
-# 重建本地索引
+# Rebuild local index
 python feynmancraft_adk/scripts/build_local_index.py
 ```
 
-### 问题：端口冲突
+### Issue: Port conflict
 ```bash
-# 尝试不同端口
+# Try different ports
 adk web . --port 8001
 adk web . --port 8002
-# 等等
+# etc.
 ```
 
-## 📊 系统状态检查
+## 📊 System Status Check
 ```bash
-# 导航到项目根目录
+# Navigate to project root directory
 cd ..
 
-# 运行快速测试
+# Run quick test
 python quick_test.py
 
-# 运行完整测试
+# Run full test
 python test_system.py
 ```
 
-## 🎯 下一步
+## 🎯 Next Steps
 
-1. 阅读 [README.md](README.md) 了解完整功能概述
-2. 运行 `python feynmancraft_adk/scripts/build_local_index.py` 构建向量索引
-3. 探索 `feynmancraft_adk/sub_agents/` 了解各个代理的功能
-4. 尝试修改提示词以优化生成结果
+1. Read [README.md](README.md) for complete feature overview
+2. Run `python feynmancraft_adk/scripts/build_local_index.py` to build vector index
+3. Explore `feynmancraft_adk/sub_agents/` to understand agent functionalities
+4. Try modifying prompts to optimize generation results
 
-## 💡 提示与新功能
+## 💡 Tips and New Features
 
-### 🔬 MCP物理验证
-- **自动触发**: 每次物理验证都会自动使用MCP工具
-- **双重验证**: 内部工具 + MCP工具交叉验证
-- **详细分析**: 150+粒子的专业物理数据
-- **智能诊断**: 粒子查找错误自动建议修正
+### 🔬 MCP Physics Validation
+- **Auto-trigger**: MCP tools are automatically used for every physics validation
+- **Dual validation**: Internal tools + MCP tools cross-validation
+- **Detailed analysis**: Professional physics data for 150+ particles
+- **Smart diagnostics**: Automatic correction suggestions for particle lookup errors
 
-### 🗃️ 知识库模式
-- **本地模式**: Annoy向量索引 + JSON关键词搜索
-- **混合模式**: 自动结合语义搜索和精确匹配，最佳检索效果
-- **环境控制**: 使用 `KB_MODE` 环境变量切换模式
+### 🗃️ Knowledge Base Modes
+- **Local mode**: Annoy vector index + JSON keyword search
+- **Hybrid mode**: Automatically combines semantic search and exact match for best retrieval results
+- **Environment control**: Use `KB_MODE` environment variable to switch modes
 
-### 🤖 工作流程
-- **完整序列**: 六个代理按序执行，确保全面验证
-- **自然语言**: 支持中英文物理过程描述
-- **教育模式**: 对无法图示的过程提供教育解释
+### 🤖 Workflow
+- **Complete sequence**: Six agents execute in order, ensuring comprehensive validation
+- **Natural language**: Supports Chinese and English physics process descriptions
+- **Educational mode**: Provides educational explanations for processes that cannot be diagrammed
 
-### 🎨 六代理系统
-1. **PlannerAgent**: 自然语言解析和任务规划
-2. **KBRetrieverAgent**: 混合知识库搜索
-3. **PhysicsValidatorAgent**: MCP增强物理验证
-4. **DiagramGeneratorAgent**: TikZ代码生成
-5. **TikZValidatorAgent**: LaTeX编译验证
-6. **FeedbackAgent**: 最终响应合成
+### 🎨 Six-Agent System
+1. **PlannerAgent**: Natural language parsing and task planning
+2. **KBRetrieverAgent**: Hybrid knowledge base search
+3. **PhysicsValidatorAgent**: MCP-enhanced physics validation
+4. **DiagramGeneratorAgent**: TikZ code generation
+5. **TikZValidatorAgent**: LaTeX compilation validation
+6. **FeedbackAgent**: Final response synthesis
 
 ---
 
-遇到问题？查看 [GitHub Issues](https://github.com/your-username/Particle-Physics-Agent/issues) 或创建新 issue。
+Having issues? Check [GitHub Issues](https://github.com/your-username/Particle-Physics-Agent/issues) or create a new issue.

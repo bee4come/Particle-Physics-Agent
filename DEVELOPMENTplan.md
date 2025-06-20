@@ -116,151 +116,151 @@ TikZ代码生成 → LaTeX编译验证 → 最终响应合成
 多层验证 → 质量评分 → 用户反馈 → 学习更新
 ```
 
-## 🎯 成功指标与验收标准
+## 🎯 Success Metrics and Acceptance Criteria
 
-### **技术指标**
+### **Technical Metrics**
 ```
-□ TikZ代码编译成功率 ≥ 85%
-□ 物理验证准确率 ≥ 90%
-□ 知识库查询响应时间 ≤ 3秒
-□ 端到端处理时间 ≤ 45秒 (含网络搜索)
-□ 系统可用性 ≥ 95%
-```
-
-### **智能化指标**
-```
-□ 知识库命中率 ≥ 80%
-□ 网络搜索成功率 ≥ 70%
-□ 用户满意度 ≥ 90%
-□ 知识库自动扩充率 ≥ 10条/天
-□ 重复查询网络依赖下降率 ≥ 50%
+□ TikZ code compilation success rate ≥ 85%
+□ Physics validation accuracy ≥ 90%
+□ Knowledge base query response time ≤ 3 seconds
+□ End-to-end processing time ≤ 45 seconds (including web search)
+□ System availability ≥ 95%
 ```
 
-### **功能覆盖**
+### **Intelligence Metrics**
 ```
-□ 支持15+种常见物理过程
-□ 完整的6代理协作流程
-□ 智能错误检测和修复
-□ 语义化知识库检索
-□ 动态网络知识补充
-□ 自主学习和知识更新
-```
-
-## 🔄 tikz-hunter 集成策略
-
-### **离线-在线协同**
-```
-离线 (tikz-hunter):
-- 定期全网爬取 (每周/每月)
-- 批量数据清洗和验证
-- 知识库批量更新
-
-在线 (WebResearchAgent):  
-- 针对性实时搜索
-- 单次查询优化
-- 即时结果验证
+□ Knowledge base hit rate ≥ 80%
+□ Web search success rate ≥ 70%
+□ User satisfaction ≥ 90%
+□ Knowledge base auto-expansion rate ≥ 10 entries/day
+□ Repeat query network dependency reduction rate ≥ 50%
 ```
 
-### **数据质量保证**
+### **Feature Coverage**
 ```
-tikz-hunter产出 → 高质量基础数据 (可信度: 95%)
-WebResearch产出 → 实时补充数据 (可信度: 70-85%)
-验证后合格数据 → 自动加入知识库 (可信度: 90%+)
-```
-
-## ⚠️ 风险控制策略
-
-### **时间风险缓解**
-```
-1. 并行开发: 知识库迁移与提示词优化同步进行
-2. MVP优先: 先保证基础功能，再优化高级特性
-3. 每日检查: 每天评估进度，及时调整优先级
-4. 应急方案: 准备简化版本作为备选
+□ Support 15+ common physics processes
+□ Complete 6-agent collaboration workflow
+□ Smart error detection and repair
+□ Semantic knowledge base retrieval
+□ Dynamic web knowledge supplementation
+□ Autonomous learning and knowledge updates
 ```
 
-### **技术风险应对**
+## 🔄 tikz-hunter Integration Strategy
+
+### **Offline-Online Collaboration**
 ```
-1. BigQuery迁移失败 → 保留原DuckDB作为备选
-2. 向量搜索性能不佳 → 降级到文本搜索
-3. 网络搜索API限制 → 实现多源搜索策略
-4. 物理验证复杂度过高 → 简化为基础规则检查
-```
+Offline (tikz-hunter):
+- Periodic web-wide crawling (weekly/monthly)
+- Batch data cleaning and validation
+- Knowledge base batch updates
 
-## 💡 创新亮点
-
-### **自适应智能系统**
-1. **知识边界感知**: 系统能识别自己的知识盲区
-2. **主动学习能力**: 遇到未知问题时主动搜索学习
-3. **质量自我监控**: 持续评估和改进输出质量
-4. **用户反馈驱动**: 基于用户反馈优化决策逻辑
-
-### **三层容错机制**
-1. **Layer 1**: 静态知识库 (最快，最可靠)
-2. **Layer 2**: 动态网络搜索 (中等速度，高覆盖)
-3. **Layer 3**: 创新生成 (最慢，但能处理全新问题)
-
-## 🏆 项目交付物
-
-### **核心交付**
-```
-1. ✅ 完整的6代理系统 + WebResearchAgent
-2. ✅ 本地知识库 (向量搜索 + 关键词匹配)
-3. ✅ 专业级TikZ-Feynman生成能力
-4. ✅ 物理正确性验证系统
-5. ✅ 智能网络搜索补充机制
-6. ✅ 自主学习和知识更新能力
-7. ✅ 端到端测试验证
+Online (WebResearchAgent):  
+- Targeted real-time search
+- Single query optimization
+- Instant result validation
 ```
 
-### **文档交付**
+### **Data Quality Assurance**
 ```
-1. 系统架构文档
-2. API使用说明
-3. 部署运维指南
-4. 测试报告
-5. 性能基准报告
-6. tikz-hunter集成指南
+tikz-hunter output → High-quality base data (Credibility: 95%)
+WebResearch output → Real-time supplementary data (Credibility: 70-85%)
+Validated qualified data → Auto-added to knowledge base (Credibility: 90%+)
 ```
 
-## 📈 当前进度状态
+## ⚠️ Risk Control Strategy
 
-### ✅ **已完成 (85%)**
-- **✅ 完整6代理系统**: PlannerAgent, KBRetrieverAgent, PhysicsValidatorAgent, DiagramGeneratorAgent, TikZValidatorAgent, FeedbackAgent
-- **✅ MCP工具集成**: 20+ 专业粒子物理验证工具自动触发
-- **✅ 混合知识库**: 向量语义搜索 + 关键词精确匹配自动切换
-- **✅ Web界面**: ADK Web UI (http://localhost:8000+)
-- **✅ LaTeX编译器**: 完整的TikZ编译验证系统
-- **✅ 双重验证**: 内部工具 + MCP工具交叉验证
-- **✅ 项目结构**: 标准化目录结构和文档
+### **Time Risk Mitigation**
+```
+1. Parallel Development: Knowledge base migration and prompt optimization proceed simultaneously
+2. MVP Priority: Ensure basic functionality first, then optimize advanced features
+3. Daily Check: Evaluate progress daily, adjust priorities timely
+4. Emergency Plan: Prepare simplified version as backup
+```
 
-### 🟡 **进行中 (12%)**
-- **🔄 Docker集成**: TexLive完整环境容器化
-- **🔄 云端部署**: Google Cloud Platform部署优化
-- **🔄 工作流修复**: 确保完整6代理序列执行
-- **🔄 性能优化**: 编译性能和资源使用优化
+### **Technical Risk Response**
+```
+1. BigQuery migration failure → Keep original DuckDB as backup
+2. Vector search poor performance → Downgrade to text search
+3. Web search API limits → Implement multi-source search strategy
+4. Physics validation too complex → Simplify to basic rule checking
+```
 
-### 🎯 **计划中 (3%)**
-- **📋 生产监控**: 系统监控和日志分析
-- **🔧 边缘案例**: 复杂物理过程处理优化
-- **📚 文档完善**: API文档和用户指南
+## 💡 Innovation Highlights
 
-## 🎯 近期优先级
+### **Adaptive Intelligent System**
+1. **Knowledge Boundary Awareness**: System can identify its knowledge blind spots
+2. **Active Learning Capability**: Actively searches and learns when encountering unknown problems
+3. **Quality Self-Monitoring**: Continuously evaluates and improves output quality
+4. **User Feedback Driven**: Optimizes decision logic based on user feedback
 
-### **立即进行**
-1. **Docker TexLive优化** - 完善LaTeX编译环境
-2. **工作流完整性** - 修复agent序列执行问题
-3. **Cloud Run部署** - 生产环境容器化部署
+### **Three-Layer Fault Tolerance Mechanism**
+1. **Layer 1**: Static knowledge base (Fastest, most reliable)
+2. **Layer 2**: Dynamic web search (Medium speed, high coverage)
+3. **Layer 3**: Creative generation (Slowest, but can handle entirely new problems)
 
-### **短期目标**
-1. **性能基准测试** - 建立编译速度和准确率基线
-2. **错误处理改进** - 增强系统鲁棒性
-3. **监控系统** - 生产环境监控和告警
+## 🏆 Project Deliverables
 
-### **中期规划**
-1. **扩展物理过程支持** - 更多复杂粒子物理过程
-2. **用户体验优化** - Web界面改进和响应优化
-3. **知识库扩展** - 自动学习和知识更新机制
+### **Core Deliverables**
+```
+1. ✅ Complete 6-agent system + WebResearchAgent
+2. ✅ Local knowledge base (vector search + keyword matching)
+3. ✅ Professional-grade TikZ-Feynman generation capability
+4. ✅ Physics correctness validation system
+5. ✅ Smart web search supplementation mechanism
+6. ✅ Autonomous learning and knowledge update capability
+7. ✅ End-to-end test validation
+```
+
+### **Documentation Deliverables**
+```
+1. System architecture documentation
+2. API usage guide
+3. Deployment and operations guide
+4. Test report
+5. Performance benchmark report
+6. tikz-hunter integration guide
+```
+
+## 📈 Current Progress Status
+
+### ✅ **Completed (85%)**
+- **✅ Complete 6-agent system**: PlannerAgent, KBRetrieverAgent, PhysicsValidatorAgent, DiagramGeneratorAgent, TikZValidatorAgent, FeedbackAgent
+- **✅ MCP tools integration**: 20+ professional particle physics validation tools auto-triggered
+- **✅ Hybrid knowledge base**: Vector semantic search + keyword exact match auto-switching
+- **✅ Web interface**: ADK Web UI (http://localhost:8000+)
+- **✅ LaTeX compiler**: Complete TikZ compilation validation system
+- **✅ Dual validation**: Internal tools + MCP tools cross-validation
+- **✅ Project structure**: Standardized directory structure and documentation
+
+### 🟡 **In Progress (12%)**
+- **🔄 Docker integration**: TexLive complete environment containerization
+- **🔄 Cloud deployment**: Google Cloud Platform deployment optimization
+- **🔄 Workflow fix**: Ensure complete 6-agent sequence execution
+- **🔄 Performance optimization**: Compilation performance and resource usage optimization
+
+### 🎯 **Planned (3%)**
+- **📋 Production monitoring**: System monitoring and log analysis
+- **🔧 Edge cases**: Complex physics process handling optimization
+- **📚 Documentation completion**: API documentation and user guide
+
+## 🎯 Near-term Priorities
+
+### **Immediate Actions**
+1. **Docker TexLive Optimization** - Complete LaTeX compilation environment
+2. **Workflow Integrity** - Fix agent sequence execution issues
+3. **Cloud Run Deployment** - Production environment containerized deployment
+
+### **Short-term Goals**
+1. **Performance Benchmarking** - Establish compilation speed and accuracy baseline
+2. **Error Handling Improvements** - Enhance system robustness
+3. **Monitoring System** - Production environment monitoring and alerts
+
+### **Mid-term Planning**
+1. **Extended Physics Process Support** - More complex particle physics processes
+2. **User Experience Optimization** - Web interface improvements and response optimization
+3. **Knowledge Base Expansion** - Automatic learning and knowledge update mechanism
 
 ---
 
-**当前的FeynmanCraft ADK已经是一个功能完整的生产级系统，具备完整的6代理协作工作流、MCP增强的物理验证、混合知识库搜索和LaTeX编译验证能力。重点转向部署优化和性能提升。**
+**The current FeynmanCraft ADK is already a feature-complete production-grade system with complete 6-agent collaborative workflow, MCP-enhanced physics validation, hybrid knowledge base search, and LaTeX compilation validation capabilities. Focus shifts to deployment optimization and performance improvements.**
