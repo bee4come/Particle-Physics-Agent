@@ -6,6 +6,10 @@ WORKDIR /app
 
 # Install system dependencies including TeX Live for TikZ compilation
 RUN apt-get update && apt-get install -y \
+    # Build dependencies for Python packages
+    build-essential \
+    gcc \
+    g++ \
     # Core TeX Live packages
     texlive-latex-base \
     texlive-latex-extra \
@@ -30,9 +34,6 @@ COPY requirements.txt .
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
-
-# Install ADK if not in requirements
-RUN pip install --no-cache-dir google-labs-adk
 
 # Copy application code
 COPY feynmancraft_adk/ ./feynmancraft_adk/
