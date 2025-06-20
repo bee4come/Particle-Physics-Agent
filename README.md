@@ -75,7 +75,23 @@ TikZ代码生成 → LaTeX编译验证 → 最终响应合成
 - Google AI API Key
 - 可选：Google Cloud Project (用于部署)
 
-### Docker 部署 (推荐)
+### 方式1: Google Cloud Run 部署 (生产环境推荐)
+
+一键部署到 Google Cloud Run，实现可扩展的无服务器费曼图生成：
+
+```bash
+# 设置环境变量
+export GOOGLE_CLOUD_PROJECT="your-gcp-project-id"
+export GOOGLE_CLOUD_LOCATION="us-central1"
+export GOOGLE_API_KEY="your-gemini-api-key"
+
+# 一键部署
+./scripts/deploy-cloud-run.sh
+```
+
+详细部署指南请参阅 [CLOUD_RUN_DEPLOYMENT.md](CLOUD_RUN_DEPLOYMENT.md)
+
+### 方式2: Docker 本地部署 (开发环境推荐)
 
 使用 Docker 可以快速部署完整的 TeX Live 环境和所有依赖：
 
@@ -260,10 +276,10 @@ Particle-Physics-Agent/
 - **第五阶段**: Docker部署和构建基础设施 ✅
 
 ### 🎯 下一步计划
-- **性能优化**: 提升响应速度和资源效率
-- **扩展测试**: 更多物理过程和边缘案例
-- **云原生部署**: Kubernetes支持和自动扩缩容
-- **监控和观测**: 添加应用性能监控和日志聚合
+- **云原生增强**: Kubernetes支持和高级自动扩缩容
+- **监控和观测**: 应用性能监控、日志聚合和分布式跟踪
+- **性能优化**: 进一步提升响应速度和资源效率
+- **扩展测试**: 更多物理过程和边缘案例覆盖
 
 ## 📦 最新版本
 
