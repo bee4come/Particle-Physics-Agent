@@ -37,7 +37,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY feynmancraft_adk/ ./feynmancraft_adk/
-COPY feynmancraft_adk/scripts/ ./feynmancraft_adk/scripts/
+# COPY feynmancraft_adk/scripts/ ./feynmancraft_adk/scripts/
 COPY VERSION ./
 COPY .env.example ./.env
 
