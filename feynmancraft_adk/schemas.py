@@ -93,6 +93,9 @@ class WorkflowState(BaseModel):
     # Final synthesis
     final_response: Optional[str] = None
     
+    # Context variable for framework compatibility
+    feynman: Optional[dict] = Field(default_factory=dict)
+    
     # System metadata
     workflow_step: Optional[str] = None
     errors: List[str] = Field(default_factory=list)

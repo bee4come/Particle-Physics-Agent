@@ -1,11 +1,19 @@
 # FeynmanCraft ADK Production Container
-FROM python:3.11-slim
+FROM ubuntu:22.04
 
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies including TeX Live for TikZ compilation
+# Avoid interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install system dependencies including Python 3.11 and TeX Live for TikZ compilation
 RUN apt-get update && apt-get install -y \
+    # Python 3.11 and pip
+    python3.11 \
+    python3.11-dev \
+    python3.11-distutils \
+    python3-pip \
     # Build dependencies for Python packages
     build-essential \
     gcc \
@@ -24,16 +32,21 @@ RUN apt-get update && apt-get install -y \
     # System utilities
     git \
     curl \
+    wget \
     # Ruby, TCL, TK dependencies (installed by texlive packages)
     && rm -rf /var/lib/apt/lists/* \
     # Update TeX Live package database
-    && mktexlsr
+    && mktexlsr \
+    # Create symlinks for python (only if they don't exist)
+    && ln -sf /usr/bin/python3.11 /usr/bin/python \
+    && ln -sf /usr/bin/python3.11 /usr/bin/python3
 
 # Copy requirements first for better caching
 COPY requirements.txt .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Upgrade pip and install Python dependencies
+RUN python3.11 -m pip install --upgrade pip \
+    && python3.11 -m pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY feynmancraft_adk/ ./feynmancraft_adk/
@@ -50,7 +63,7 @@ ENV KB_MODE=local
 ENV LOG_LEVEL=INFO
 ENV ADK_HOST=0.0.0.0
 ENV ADK_PORT=8080
-
+ENV OTEL_SDK_DISABLED=true
 # Expose port
 EXPOSE 8080
 

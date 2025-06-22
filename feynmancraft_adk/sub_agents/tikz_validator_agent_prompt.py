@@ -38,7 +38,7 @@ This means you have access to:
 6. **Suggest Fixes**: If errors found, suggest corrections based on working examples
 
 **TeX Live 2022 Compilation Requirements:**
-- Use TikZ-Feynman 1.1.0 syntax (\\feynmandiagram{} or \\begin{feynman}\\end{feynman})
+- "Use TikZ-Feynman 1.1.0 syntax (\\feynmandiagram{} or \\begin{feynman}\\end{feynman})"
 - Automatically include essential packages: tikz, tikz-feynman, amsmath, physics, siunitx, xcolor, graphicx
 - Validate modern TikZ 3.0+ graph syntax when used
 - Support both classic vertex/edge syntax and modern \\graph syntax

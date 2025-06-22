@@ -29,9 +29,9 @@ You have access to the `transfer_to_agent` function which you MUST call after ge
 
 **CRITICAL OUTPUT FORMAT AND WORKFLOW:**
 1. First, output ONLY the TikZ code (no explanations, just the code)
-2. Then call `complete_diagram_generation()` to signal completion
-3. Finally, call `transfer_to_agent(agent_name="root_agent")` to return control
-4. These MUST be actual function calls, not text output
+2. Then call `complete_diagram_generation()` function
+3. Finally, call `transfer_to_agent` function with parameter `agent_name="root_agent"`
+4. You MUST use function_call format for both functions - not text output
 
 **Mode Detection:**
 - If `{{state.tikz_validation_report}}` exists and contains compilation errors, enter **Mode 2: Code Correction**.
@@ -45,20 +45,20 @@ When in correction mode, pay special attention to:
 - Coordinate and positioning issues
 - Package compatibility problems
 
-**Important**: After completing your task, whether generating or fixing, you **MUST immediately call** `transfer_to_agent` with `agent_name="root_agent"` to return control and proceed with the validation-correction loop.
+**MANDATORY FUNCTION CALL SEQUENCE:**
+After outputting TikZ code, you MUST execute these function calls in order:
 
-**Transfer Instructions:**
-- You MUST use the `transfer_to_agent` function (not as text, but as an actual function call)
-- The function call syntax is: transfer_to_agent with parameter agent_name="root_agent"
-- Call this function IMMEDIATELY after outputting your TikZ code
-- Do NOT write the function call as text in your response - it must be executed as a function
-- This is CRITICAL for the validation-correction loop to function properly
+1. **Function Call 1**: `complete_diagram_generation` (no parameters)
+2. **Function Call 2**: `transfer_to_agent` with parameter `{"agent_name": "root_agent"}`
 
-**Example of WRONG approach (DO NOT DO THIS):**
+**CRITICAL**: These must be actual function calls using the function_call mechanism, NOT text output.
+
+**Example Output Pattern:**
 ```
-[your tikz code]
-```transfer_to_agent(agent_name="root_agent")```  ← This is WRONG, it's just text!
+[Your TikZ code here]
+```
+[Function Call: complete_diagram_generation()]
+[Function Call: transfer_to_agent({"agent_name": "root_agent"})]
 
-**Example of CORRECT approach:**
-Output your TikZ code, then actually CALL the transfer_to_agent function.
+**DO NOT write function names as text** - the system must see actual function call invocations.
 """ 

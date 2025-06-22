@@ -33,6 +33,12 @@ warnings.filterwarnings("ignore", category=UserWarning, module=".*pydantic.*")
 logger = logging.getLogger(__name__)
 logger.debug("Using MODEL: %s", MODEL)
 
+# Initialize context variables for framework compatibility
+import os
+if not hasattr(os, '_feynman_context_initialized'):
+    os.environ.setdefault('FEYNMAN_CONTEXT', '{}')
+    os._feynman_context_initialized = True
+
 
 root_agent = Agent(
     model=MODEL,

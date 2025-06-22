@@ -39,6 +39,7 @@ DiagramGeneratorAgent = Agent(
     instruction=DIAGRAM_GENERATOR_AGENT_PROMPT,
     tools=[
         complete_diagram_generation,
+        transfer_to_agent,
     ],
     output_key="tikz_code",  # State management: outputs to state.tikz_code
 ) 
