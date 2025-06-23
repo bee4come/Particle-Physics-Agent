@@ -1,0 +1,777 @@
+{
+  "metadata": {
+    "title": "Rules in Particle Physics",
+    "source": "Particle Physics, Fourth Edition, B.R. Martin and G. Shaw",
+    "total_rules": 106,
+    "computational_rules": 13,
+    "format_version": "1.1",
+    "creation_date": "2025-06-16",
+    "features": ["theoretical_rules", "computational_validation", "code_execution", "numerical_tolerance"]
+  },
+  "categories": [
+    "Standard Model", "QED", "QCD", "Weak Interactions", "Electroweak Theory", 
+    "Higgs Physics", "Neutrino Physics", "Flavor Physics", "Conservation Laws",
+    "Symmetries", "CP Violation", "Experimental Physics", "Grand Unification",
+    "Supersymmetry", "Units", "Kinematics", "Spectroscopy", "Beyond Standard Model"
+  ],
+  "rules": [
+    {
+      "rule_number": 1,
+      "title": "Particle-content rule",
+      "content": "The Standard Model contains three kinds of fields, all taken to be point-like: (i) spin-1/2 matter fields (leptons and quarks); (ii) spin-1 gauge bosons {γ, W±, Z⁰, g} that mediate forces; (iii) one spin-0 Higgs boson H.",
+      "category": "Standard Model"
+    },
+    {
+      "rule_number": 2,
+      "title": "Antiparticle rule",
+      "content": "Every relativistic charged field admits negative-energy solutions. Filling the Dirac sea predicts a distinct antiparticle of equal mass and opposite charge.",
+      "category": "Relativistic Quantum Mechanics"
+    },
+    {
+      "rule_number": 3,
+      "title": "QED vertex rule",
+      "content": "A valid electromagnetic vertex has one incoming and one outgoing fermion line with opposite arrow directions plus one photon. Electric charge, linear momentum and angular momentum are conserved at each vertex; diagrams that violate this (e.g. e⁻ → e⁺ + γ) are forbidden.",
+      "category": "QED"
+    },
+    {
+      "rule_number": 4,
+      "title": "Perturbative-order rule",
+      "content": "A Feynman diagram containing n QED vertices contributes an amplitude ∝ α^(n/2) and therefore a probability ∝ α^n, where α = e²/(4πε₀ℏc) ≈ 1/137. One-photon exchange (α²) dominates over two-photon exchange (α⁴), etc.",
+      "category": "QED",
+      "needs_code": true,
+      "code_spec": {
+        "inputs": ["n_vertices"],
+        "output": "probability_ratio",
+        "template": "alpha = 1/137.0\nprob_ratio = alpha**{n_vertices}\nprint(prob_ratio)"
+      },
+      "tolerance": 0.001
+    },
+    {
+      "rule_number": 5,
+      "title": "Range-mass (Yukawa) rule",
+      "content": "Exchange of a boson of mass M_X produces V(r) = -g²/(4π) × e^(-r/R)/r, where R = ℏ/(M_X c). Thus massless exchange (M_X = 0) yields infinite range (EM, gluons); massive exchange gives a finite-range force (R ~ 10⁻³ fm for W±, Z⁰).",
+      "category": "Force Range",
+      "needs_code": true,
+      "code_spec": {
+        "inputs": ["g_squared", "r_fm", "M_X_GeV"],
+        "output": "V_potential",
+        "template": "import math\nhbar_c = 0.1973  # GeV·fm\nR = hbar_c / {M_X_GeV} if {M_X_GeV} > 0 else float('inf')\nif R != float('inf'):\n    V = -{g_squared}/(4*math.pi) * math.exp(-{r_fm}/R) / {r_fm}\nelse:\n    V = -{g_squared}/(4*math.pi) / {r_fm}\nprint(V)"
+      },
+      "tolerance": 0.05
+    },
+    {
+      "rule_number": 6,
+      "title": "Zero-range (Fermi) limit",
+      "content": "When |q²| ≪ M_X² c², M(q²) → -G_F, where G_F = √2 g²/(8M_X² c⁴), so the weak interaction reduces to a four-fermion point coupling.",
+      "category": "Weak Interactions",
+      "needs_code": true,
+      "code_spec": {
+        "inputs": ["g_squared", "M_X_GeV"],
+        "output": "G_F_per_GeV2",
+        "template": "import math\nG_F = math.sqrt(2) * {g_squared} / (8 * {M_X_GeV}**2)\nprint(G_F)"
+      },
+      "tolerance": 0.01
+    },
+    {
+      "rule_number": 7,
+      "title": "Natural-units rule",
+      "content": "Throughout we set ℏ = c = 1. Hence [M] = [E], [L] = [E]⁻¹, [G_F] = [E]⁻². Conversion back to SI uses ℏc = 197.3 MeV·fm.",
+      "category": "Units"
+    },
+    {
+      "rule_number": 8,
+      "title": "Lepton-family conservation",
+      "content": "With L_e = N(e⁻) - N(e⁺) + N(νₑ) - N(ν̄ₑ), and analogously for L_μ, L_τ, every Standard-Model reaction satisfies ΔL_e = ΔL_μ = ΔL_τ = 0.",
+      "category": "Conservation Laws"
+    },
+    {
+      "rule_number": 9,
+      "title": "W± and Z⁰ vertices",
+      "content": "Charged-current vertices (e.g. W⁻ → e⁻ν̄ₑ) conserve the three lepton numbers; neutral-current (Z⁰) vertices carry zero lepton number.",
+      "category": "Weak Interactions"
+    },
+    {
+      "rule_number": 10,
+      "title": "Four-fermion weak Lagrangian",
+      "content": "For |q| ≪ M_W, L_eff = -G_F/√2 (ψ̄₁ γ_μ(1-γ₅)ψ₂)(ψ̄₃ γ^μ(1-γ₅)ψ₄), where G_F = 1.166×10⁻⁵ GeV⁻².",
+      "category": "Weak Interactions"
+    },
+    {
+      "rule_number": 11,
+      "title": "Universality of lepton weak interactions",
+      "content": "The weak coupling g_W (⇒ G_F) is identical for e,μ,τ. Consequently Γ(ℓ⁻ → e⁻ν̄ₑνₓ) = K G_F² m_ℓ⁵, and τ_τ/τ_μ = [B(τ→eν̄ν) / B(μ→eν̄ν)] (m_μ/m_τ)⁵.",
+      "category": "Weak Interactions",
+      "needs_code": true,
+      "code_spec": {
+        "inputs": ["m_tau_GeV", "m_mu_GeV", "B_tau_to_e", "B_mu_to_e"],
+        "output": "tau_lifetime_ratio",
+        "template": "tau_ratio = ({B_tau_to_e} / {B_mu_to_e}) * ({m_mu_GeV} / {m_tau_GeV})**5\nprint(tau_ratio)"
+      },
+      "tolerance": 0.1
+    },
+    {
+      "rule_number": 12,
+      "title": "Neutrino vacuum oscillations",
+      "content": "For two-state mixing, P(νₐ→νβ) = sin²(2θᵢⱼ) sin²(Δm²ᵢⱼ L / 4E), where L₀ = 4E/Δm²ᵢⱼ.",
+      "category": "Neutrino Physics",
+      "needs_code": true,
+      "code_spec": {
+        "inputs": ["E_GeV", "L_km", "delta_m2_eV2", "theta_rad"],
+        "output": "P_ab",
+        "template": "import math\nP=math.sin(2*{theta_rad})**2*math.sin(1.27*{delta_m2_eV2}*{L_km}/{E_GeV})**2\nprint(P)"
+      },
+      "tolerance": 0.02
+    },
+    {
+      "rule_number": 13,
+      "title": "Matter (MSW) effects",
+      "content": "Propagation through matter with electron density N_e: Δm²ᵢⱼ → C Δm²ᵢⱼ, sin(2θᵢⱼ) → sin(2θᵢⱼ)/C, where C = √[(cos(2θᵢⱼ)-A)² + sin²(2θᵢⱼ)], A = ±2√2 G_F N_e E/Δm²ᵢⱼ (+ for ν, - for ν̄).",
+      "category": "Neutrino Physics",
+      "needs_code": true,
+      "code_spec": {
+        "inputs": ["theta_rad", "G_F_per_GeV2", "N_e_per_cm3", "E_GeV", "delta_m2_eV2", "neutrino_sign"],
+        "output": "C_factor",
+        "template": "import math\nA = {neutrino_sign} * 2 * math.sqrt(2) * {G_F_per_GeV2} * {N_e_per_cm3} * {E_GeV} / ({delta_m2_eV2} * 1e-18)\ncos_2theta = math.cos(2 * {theta_rad})\nsin_2theta = math.sin(2 * {theta_rad})\nC = math.sqrt((cos_2theta - A)**2 + sin_2theta**2)\nprint(C)"
+      },
+      "tolerance": 0.05
+    },
+    {
+      "rule_number": 14,
+      "title": "Observed oscillation parameters",
+      "content": "Global fits give Δm²₂₁ ≈ 7.5×10⁻⁵ eV², Δm²₃₂ ≈ 2.0×10⁻³ eV², sin²(2θ₁₃) ≈ 0.093.",
+      "category": "Neutrino Physics"
+    },
+    {
+      "rule_number": 15,
+      "title": "Suppression of charged-lepton flavour violation",
+      "content": "Loop-induced decays such as τ→μγ satisfy B(τ→μγ) ~ 10⁻⁴⁸-10⁻⁵⁰, utterly negligible relative to current bounds (<4.4×10⁻⁸).",
+      "category": "Flavor Physics"
+    },
+    {
+      "rule_number": 16,
+      "title": "Quark generations",
+      "content": "Six flavours in three generations: (u,d), (c,s), (t,b) with charges +2/3 or -1/3 e; each quark carries baryon number B = 1/3.",
+      "category": "Quark Physics"
+    },
+    {
+      "rule_number": 17,
+      "title": "Minimal colour-singlet bound states",
+      "content": "In QCD the only colour-neutral combinations that must exist are baryons (qqq), antibaryons (q̄q̄q̄) and mesons (qq̄), all with integer electric charge and baryon numbers +1, -1, 0 respectively.",
+      "category": "QCD"
+    },
+    {
+      "rule_number": 18,
+      "title": "Internal quantum numbers",
+      "content": "Define the flavour counters S = -N_s, C = +N_c, B̃ = -N_b, T = +N_t. Together with electric charge Q and baryon number B these label every hadron.",
+      "category": "Quantum Numbers"
+    },
+    {
+      "rule_number": 19,
+      "title": "Conservation-law hierarchy",
+      "content": "Strong/EM interactions conserve each quark flavour separately (B,Q,S,C,B̃,T). Weak interactions conserve only total B and Q; quark flavour may change.",
+      "category": "Conservation Laws"
+    },
+    {
+      "rule_number": 20,
+      "title": "Associated production",
+      "content": "Because strangeness (or charm, bottom) is conserved by strong forces, strange quarks are produced in pairs so that the net S is zero (e.g. π⁻p → K⁰Λ with S: 0 0 → 1 -1).",
+      "category": "Hadron Production"
+    },
+    {
+      "rule_number": 21,
+      "title": "Lifetime bands",
+      "content": "Characteristic lifetimes cluster around τ_strong ~ 10⁻²⁴-10⁻²² s, τ_EM ~ 10⁻²¹-10⁻¹⁶ s, τ_weak ~ 10⁻¹³-10⁻⁷ s.",
+      "category": "Particle Lifetimes"
+    },
+    {
+      "rule_number": 22,
+      "title": "Allowed vs. exotic quantum numbers",
+      "content": "(qqq) and (qq̄) restrict (Q,B,S,C,B̃,T). Any other set is exotic; no firmly established exotic hadron exists.",
+      "category": "Quantum Numbers"
+    },
+    {
+      "rule_number": 23,
+      "title": "Resonance width-lifetime rule",
+      "content": "A state of lifetime τ has Breit-Wigner width Γ = 1/τ.",
+      "category": "Resonances"
+    },
+    {
+      "rule_number": 24,
+      "title": "Centre-of-mass energy",
+      "content": "Fixed target: E_CM = √(m_b² c⁴ + m_t² c⁴ + 2m_t c² E_L). Collider: E_CM = 2E_L.",
+      "category": "Kinematics",
+      "needs_code": true,
+      "code_spec": {
+        "inputs": ["m_beam_GeV", "m_target_GeV", "E_lab_GeV", "is_collider"],
+        "output": "E_CM_GeV",
+        "template": "import math\nif {is_collider}:\n    E_CM = 2 * {E_lab_GeV}\nelse:\n    E_CM = math.sqrt({m_beam_GeV}**2 + {m_target_GeV}**2 + 2 * {m_target_GeV} * {E_lab_GeV})\nprint(E_CM)"
+      },
+      "tolerance": 0.01
+    },
+    {
+      "rule_number": 25,
+      "title": "Reaction rate and luminosity",
+      "content": "W_r = L σ_r, integrated luminosity L_I = ∫ L dt.",
+      "category": "Experimental Physics",
+      "needs_code": true,
+      "code_spec": {
+        "inputs": ["luminosity_per_cm2_per_s", "cross_section_cm2"],
+        "output": "reaction_rate_per_s",
+        "template": "W_r = {luminosity_per_cm2_per_s} * {cross_section_cm2}\nprint(W_r)"
+      },
+      "tolerance": 0.01
+    },
+    {
+      "rule_number": 26,
+      "title": "Hadronic interaction lengths",
+      "content": "Collision length ℓ_c = 1/(n σ_tot); absorption length ℓ_a = 1/(n σ_inel).",
+      "category": "Experimental Physics"
+    },
+    {
+      "rule_number": 27,
+      "title": "Ionisation loss (Bethe-Bloch)",
+      "content": "-dE/dx = D (q² n_e/β²) [ln(2m_e c² β² γ²/I) - β² - δ(γ)/2]. Minimum specific ionisation: (1/ρ)(dE/dx)_min ≈ 3.5 Z/A MeV g⁻¹cm².",
+      "category": "Experimental Physics",
+      "needs_code": true,
+      "code_spec": {
+        "inputs": ["beta", "gamma", "Z", "A", "I_eV"],
+        "output": "dE_dx_MeV_per_g_cm2",
+        "template": "import math\nm_e_MeV = 0.511\nK = 0.307  # MeV cm²/g\nrho_factor = 1.0  # simplified\ndE_dx = K * {Z} / {A} * (1/{beta}**2) * (0.5 * math.log(2 * m_e_MeV * {beta}**2 * {gamma}**2 * 1e6 / {I_eV}) - {beta}**2)\nprint(dE_dx)"
+      },
+      "tolerance": 0.1
+    },
+    {
+      "rule_number": 28,
+      "title": "Radiative loss and radiation length",
+      "content": "-dE/dx = E/L_R with L_R⁻¹ = 4 Z(Z+1)α³ n_a ln(183 Z⁻¹/³)/m_e² c⁴. Hence E(x) = E₀ e^(-x/L_R).",
+      "category": "Experimental Physics",
+      "needs_code": true,
+      "code_spec": {
+        "inputs": ["E0_GeV", "x_cm", "Z", "A", "rho_g_per_cm3"],
+        "output": "E_after_GeV",
+        "template": "import math\nalpha = 1/137.0\nm_e_GeV = 0.000511\nN_A = 6.022e23\nn_a = N_A * {rho_g_per_cm3} / {A}\nL_R_inv = 4 * {Z} * ({Z} + 1) * alpha**3 * n_a * math.log(183 * {Z}**(-1/3)) / (m_e_GeV**2)\nL_R = 1 / L_R_inv\nE_after = {E0_GeV} * math.exp(-{x_cm} / L_R)\nprint(E_after)"
+      },
+      "tolerance": 0.05
+    },
+    {
+      "rule_number": 29,
+      "title": "Photon attenuation and pair production",
+      "content": "I(x) = I₀ e^(-x/λ), σ_pair = (7/9) 1/(n_a L_R).",
+      "category": "Experimental Physics"
+    },
+    {
+      "rule_number": 30,
+      "title": "Magnetic rigidity",
+      "content": "p [GeV/c] = 0.3 B [T] ρ [m].",
+      "category": "Experimental Physics",
+      "needs_code": true,
+      "code_spec": {
+        "inputs": ["B_tesla", "rho_meters"],
+        "output": "p_GeV_per_c",
+        "template": "p = 0.3 * {B_tesla} * {rho_meters}\nprint(p)"
+      },
+      "tolerance": 0.001
+    },
+    {
+      "rule_number": 31,
+      "title": "Translational invariance",
+      "content": "Spatial homogeneity ⇒ conservation of total momentum P = Σᵢ pᵢ.",
+      "category": "Symmetries"
+    },
+    {
+      "rule_number": 32,
+      "title": "Rotational invariance",
+      "content": "With [Ĥ,J] = 0 the total angular momentum J = L + S is conserved.",
+      "category": "Symmetries"
+    },
+    {
+      "rule_number": 33,
+      "title": "Parity P",
+      "content": "For a system with orbital L, P = (∏ᵢ Pᵢ)(-1)^L. Conventions: P_e⁻ = P_q = +1, P_γ = -1.",
+      "category": "Symmetries"
+    },
+    {
+      "rule_number": 34,
+      "title": "Charge conjugation C",
+      "content": "For a neutral ff̄ pair: C = (-1)^(L+S). C_γ = -1.",
+      "category": "Symmetries"
+    },
+    {
+      "rule_number": 35,
+      "title": "CP and J^PC labelling",
+      "content": "Strong/EM states can be classified by J^PC (e.g. π⁰: 0⁻⁺).",
+      "category": "Symmetries"
+    },
+    {
+      "rule_number": 36,
+      "title": "Time reversal T and detailed balance",
+      "content": "T invariance ⇒ equal amplitudes for a+b ↔ c+d when spins and momenta are reversed.",
+      "category": "Symmetries"
+    },
+    {
+      "rule_number": 37,
+      "title": "Positronium decays",
+      "content": "Parapositronium (C = +1) → 2γ; orthopositronium (C = -1) → 3γ; lifetime ratio τ₁¹S₀/τ₁³S₁ ≈ α.",
+      "category": "QED",
+      "needs_code": true,
+      "code_spec": {
+        "inputs": [],
+        "output": "lifetime_ratio",
+        "template": "alpha = 1/137.0\nlifetime_ratio = alpha\nprint(lifetime_ratio)"
+      },
+      "tolerance": 0.001
+    },
+    {
+      "rule_number": 38,
+      "title": "Isospin (flavour independence)",
+      "content": "Hypercharge Y = B + S + C + B̃ + T; I₃ = Q - Y/2. Light quarks form an isodoublet (u,d).",
+      "category": "Isospin"
+    },
+    {
+      "rule_number": 39,
+      "title": "Allowed meson and baryon multiplets",
+      "content": "For L = 0: two meson nonets (0⁻, 1⁻); baryon octet (1/2⁺) and decuplet (3/2⁺).",
+      "category": "Isospin"
+    },
+    {
+      "rule_number": 40,
+      "title": "Spin-symmetry rule for L=0 baryons",
+      "content": "Identical flavours must couple symmetrically in spin, giving the observed octet and decuplet patterns.",
+      "category": "Isospin"
+    },
+    {
+      "rule_number": 41,
+      "title": "Dirac-sum magnetic moments",
+      "content": "With L = 0, μ_B = Σᵢ eᵢ/2mᵢ.",
+      "category": "Magnetic Moments"
+    },
+    {
+      "rule_number": 42,
+      "title": "Hyperfine splitting",
+      "content": "ΔM = -κ Sᵢ·Sⱼ/(mᵢmⱼ); a single κ explains meson and baryon splittings.",
+      "category": "Spectroscopy"
+    },
+    {
+      "rule_number": 43,
+      "title": "Colour confinement",
+      "content": "Only colour singlets (3q)^p(qq̄)^n observable; forbids free quarks and fractionally-charged objects.",
+      "category": "QCD"
+    },
+    {
+      "rule_number": 44,
+      "title": "OZI suppression",
+      "content": "Decays requiring heavy QQ̄ annihilation/creation are strongly suppressed.",
+      "category": "QCD"
+    },
+    {
+      "rule_number": 45,
+      "title": "Heavy-quark potential",
+      "content": "V(r) = -a/r + br with a ≈ 0.30, b ≈ 0.23 GeV² explains charmonium/bottomonium spectra.",
+      "category": "QCD"
+    },
+    {
+      "rule_number": 46,
+      "title": "Radiative cascades in quarkonia",
+      "content": "Vector n³S₁ → (n-1)³Pⱼ + γ (E1); singlets via M1 or 2γ.",
+      "category": "QCD"
+    },
+    {
+      "rule_number": 47,
+      "title": "Colour-charge universality",
+      "content": "Gluons couple only to colour: strong force is flavour-independent.",
+      "category": "QCD"
+    },
+    {
+      "rule_number": 48,
+      "title": "Gluon self-interaction",
+      "content": "SU(3) gauge symmetry ⇒ three- and four-gluon vertices; basis of confinement and asymptotic freedom.",
+      "category": "QCD"
+    },
+    {
+      "rule_number": 49,
+      "title": "Running coupling / asymptotic freedom",
+      "content": "α_s(μ) = α_s(μ₀) / [1 + (33-2N_f)/(6π) α_s(μ₀) ln(μ/μ₀)].",
+      "category": "QCD",
+      "needs_code": true,
+      "code_spec": {
+        "inputs": ["alpha_s_mu0", "mu0_GeV", "mu_GeV", "N_f"],
+        "output": "alpha_s_mu",
+        "template": "import math\nbeta0 = (33 - 2*{N_f}) / (6 * math.pi)\nalpha_s = {alpha_s_mu0} / (1 + beta0 * {alpha_s_mu0} * math.log({mu_GeV}/{mu0_GeV}))\nprint(alpha_s)"
+      },
+      "tolerance": 0.005
+    },
+    {
+      "rule_number": 50,
+      "title": "Two-jet angular rule",
+      "content": "In e⁺e⁻ → qq̄, dσ/d cos θ ∝ 1 + cos² θ confirming quark spin 1/2.",
+      "category": "QCD"
+    },
+    {
+      "rule_number": 51,
+      "title": "Three-jet (gluon) rule",
+      "content": "Hard gluon emission gives three separated jets; angular distributions imply spin-1 gluon.",
+      "category": "QCD"
+    },
+    {
+      "rule_number": 52,
+      "title": "Colour-counting for R",
+      "content": "R = σ(e⁺e⁻ → hadrons)/σ(e⁺e⁻ → μ⁺μ⁻) = N_C Σₐ eₐ²(1 + α_s/π + ...).",
+      "category": "QCD",
+      "needs_code": true,
+      "code_spec": {
+        "inputs": ["N_C", "sum_ea_squared", "alpha_s"],
+        "output": "R_ratio",
+        "template": "import math\nR = {N_C} * {sum_ea_squared} * (1 + {alpha_s}/math.pi)\nprint(R)"
+      },
+      "tolerance": 0.05
+    },
+    {
+      "rule_number": 53,
+      "title": "Quark-gluon plasma criterion",
+      "content": "Lattice QCD: deconfinement above T_c ~ (150-200) MeV or ~ 5ρ_nuclear.",
+      "category": "QCD"
+    },
+    {
+      "rule_number": 54,
+      "title": "Elastic form factors",
+      "content": "Proton: G_E(0) = 1, G_M(0) = μ_p; r_E² = -6 dG_E/dQ² |_{Q²=0}.",
+      "category": "Form Factors"
+    },
+    {
+      "rule_number": 55,
+      "title": "Bjorken scaling variable",
+      "content": "x = Q²/(2Mν) in deep-inelastic scattering.",
+      "category": "Deep Inelastic Scattering"
+    },
+    {
+      "rule_number": 56,
+      "title": "Structure-function scaling",
+      "content": "At high Q², F₁,₂(x,Q²) ≈ F₁,₂(x).",
+      "category": "Deep Inelastic Scattering"
+    },
+    {
+      "rule_number": 57,
+      "title": "Callan-Gross relation",
+      "content": "Spin-1/2 partons ⇒ 2xF₁ = F₂.",
+      "category": "Deep Inelastic Scattering"
+    },
+    {
+      "rule_number": 58,
+      "title": "Parton distributions",
+      "content": "At Q² ~ 10 GeV² gluons carry slightly >50% of proton momentum.",
+      "category": "Parton Physics"
+    },
+    {
+      "rule_number": 59,
+      "title": "Scaling violation",
+      "content": "F₂(x,Q²) falls at large x, rises at small x with increasing Q².",
+      "category": "Deep Inelastic Scattering"
+    },
+    {
+      "rule_number": 60,
+      "title": "Charged-current neutrino rule",
+      "content": "σ_{ν(ν̄)N} ∝ G_F² E_ν at E_ν ≫ M.",
+      "category": "Neutrino Interactions"
+    },
+    {
+      "rule_number": 61,
+      "title": "Quark-charge confirmation",
+      "content": "Combined ep and νp data verify e_u = +2e/3, e_d = -e/3.",
+      "category": "Quark Physics"
+    },
+    {
+      "rule_number": 62,
+      "title": "Drell-Yan rule",
+      "content": "qq̄ → ℓ⁺ℓ⁻ gives lepton pairs with d²σ/dM dy ∝ Σₐ eₐ² fₐ(x₁) f_ā(x₂)/(Ms).",
+      "category": "Hadron Collisions"
+    },
+    {
+      "rule_number": 63,
+      "title": "Jet-production rule",
+      "content": "Hard parton scattering ij → kl gives multi-jet spectra scaling as α_s^n.",
+      "category": "Hadron Collisions"
+    },
+    {
+      "rule_number": 64,
+      "title": "Current vs. constituent quarks",
+      "content": "Low-Q²: three constituent quarks; high-Q²: massless current quarks + gluons + sea.",
+      "category": "Quark Physics"
+    },
+    {
+      "rule_number": 65,
+      "title": "Charged-current universality",
+      "content": "All lepton doublets couple to W± with the same strength g_W.",
+      "category": "Electroweak Theory"
+    },
+    {
+      "rule_number": 66,
+      "title": "Lepton-quark symmetry",
+      "content": "Replacing (νₑ,e⁻) → (u,d), (νμ,μ⁻) → (c,s), (ντ,τ⁻) → (t,b) yields the W-quark vertices with couplings g_W V_{αβ}.",
+      "category": "Electroweak Theory"
+    },
+    {
+      "rule_number": 67,
+      "title": "Cabibbo mixing",
+      "content": "For two generations: d' = d cos θ_C + s sin θ_C, etc.; Cabibbo-suppressed amplitudes carry sin θ_C.",
+      "category": "Flavor Physics"
+    },
+    {
+      "rule_number": 68,
+      "title": "CKM hierarchy",
+      "content": "Full 3-generation CKM matrix has small elements |V_{cb}| ~ 4×10⁻², |V_{ub}| ~ 4×10⁻³.",
+      "category": "Flavor Physics"
+    },
+    {
+      "rule_number": 69,
+      "title": "W decay branching ratios",
+      "content": "Neglecting masses: Γ(W → qq̄') = 3Γ(W → eνₑ); B(W → hadrons) ≈ 2/3.",
+      "category": "Electroweak Theory"
+    },
+    {
+      "rule_number": 70,
+      "title": "Semileptonic strangeness rule",
+      "content": "Single-W exchange imposes ΔS = 0 or ΔS = ΔQ = ±1.",
+      "category": "Weak Interactions"
+    },
+    {
+      "rule_number": 71,
+      "title": "Hadronic strangeness rule",
+      "content": "Two-W vertices allow ΔS = 0,±1 but forbid ΔS = ±2.",
+      "category": "Weak Interactions"
+    },
+    {
+      "rule_number": 72,
+      "title": "b-quark lifetime",
+      "content": "Suppressed |V_{ub}|, |V_{cb}| give τ_b ≈ 10⁻¹² s.",
+      "category": "Quark Physics"
+    },
+    {
+      "rule_number": 73,
+      "title": "Top-quark decay",
+      "content": "t → bW⁺ almost exclusively; τ_t ≈ 4×10⁻²⁵ s ≪ hadronisation time.",
+      "category": "Quark Physics"
+    },
+    {
+      "rule_number": 74,
+      "title": "Neutral currents",
+      "content": "Z⁰ couples flavour-diagonally; no tree-level dsZ⁰ or ucZ⁰.",
+      "category": "Electroweak Theory"
+    },
+    {
+      "rule_number": 75,
+      "title": "Unification condition",
+      "content": "e = g_W sin θ_W = g_Z cos θ_W.",
+      "category": "Electroweak Theory"
+    },
+    {
+      "rule_number": 76,
+      "title": "Boson-mass relations",
+      "content": "M_W = M_Z cos θ_W; M_W² = πα/(√2 G_F sin² θ_W).",
+      "category": "Electroweak Theory",
+      "needs_code": true,
+      "code_spec": {
+        "inputs": ["M_Z_GeV", "theta_W_rad"],
+        "output": "M_W_GeV",
+        "template": "import math\nM_W = {M_Z_GeV} * math.cos({theta_W_rad})\nprint(M_W)"
+      },
+      "tolerance": 0.01
+    },
+    {
+      "rule_number": 77,
+      "title": "Low-energy coupling ratio",
+      "content": "Four-fermion neutral-current strength: G_Z/G_F = sin² θ_W.",
+      "category": "Electroweak Theory"
+    },
+    {
+      "rule_number": 78,
+      "title": "e⁺e⁻ → μ⁺μ⁻ energy law",
+      "content": "σ ∝ α²/s at √s ≪ M_Z; near √s = M_Z Breit-Wigner resonance dominates.",
+      "category": "Electroweak Theory"
+    },
+    {
+      "rule_number": 79,
+      "title": "Higgs mechanism",
+      "content": "Scalar doublet with v ≠ 0 gives M_W = (1/2)g_W v, M_Z = (1/2)√(g_W² + g_Y²) v.",
+      "category": "Higgs Physics"
+    },
+    {
+      "rule_number": 80,
+      "title": "Higgs-fermion couplings",
+      "content": "g_{Hff} = √2 m_f/v; H → bb̄ dominant at M_H = 125 GeV.",
+      "category": "Higgs Physics"
+    },
+    {
+      "rule_number": 81,
+      "title": "Loop-induced Higgs decays",
+      "content": "H → gg (top loop) and H → γγ (top + W loops) important despite suppression.",
+      "category": "Higgs Physics"
+    },
+    {
+      "rule_number": 82,
+      "title": "Higgs production",
+      "content": "e⁺e⁻: Higgs-strahlung near threshold, WW fusion at high energy. Hadron colliders: gg → H via top loop largest.",
+      "category": "Higgs Physics"
+    },
+    {
+      "rule_number": 83,
+      "title": "Maximal parity violation",
+      "content": "Charged-current weak interactions couple only to L-handed fermions / R-handed antifermions.",
+      "category": "Parity Violation"
+    },
+    {
+      "rule_number": 84,
+      "title": "Charge-conjugation violation",
+      "content": "Weak amplitudes change under C (e.g. μ^± decay asymmetries).",
+      "category": "CP Violation"
+    },
+    {
+      "rule_number": 85,
+      "title": "CP conservation in purely leptonic weak decays",
+      "content": "Observed to high precision: τ_{μ⁻} = τ_{μ⁺} etc.",
+      "category": "CP Violation"
+    },
+    {
+      "rule_number": 86,
+      "title": "Chirality rule for neutrinos",
+      "content": "Only L-handed ν and R-handed ν̄ produced; opposite helicities suppressed by m²/E².",
+      "category": "Neutrino Physics"
+    },
+    {
+      "rule_number": 87,
+      "title": "Helicity suppression in π decay",
+      "content": "B(π⁺ → e⁺νₑ)/B(π⁺ → μ⁺νμ) = (mₑ/mμ)².",
+      "category": "Weak Interactions",
+      "needs_code": true,
+      "code_spec": {
+        "inputs": ["m_e_GeV", "m_mu_GeV"],
+        "output": "branching_ratio",
+        "template": "branching_ratio = ({m_e_GeV} / {m_mu_GeV})**2\nprint(branching_ratio)"
+      },
+      "tolerance": 0.001
+    },
+    {
+      "rule_number": 88,
+      "title": "Neutral-kaon mixing",
+      "content": "K_S (τ ≈ 0.09 ns) and K_L (τ ≈ 52 ns) nearly CP eigenstates.",
+      "category": "CP Violation"
+    },
+    {
+      "rule_number": 89,
+      "title": "Indirect CP violation parameter ε",
+      "content": "|ε| = 2.23×10⁻³ from K_L → ππ.",
+      "category": "CP Violation"
+    },
+    {
+      "rule_number": 90,
+      "title": "Direct CP violation parameter ε'",
+      "content": "Re(ε'/ε) ≈ 1.7×10⁻³.",
+      "category": "CP Violation"
+    },
+    {
+      "rule_number": 91,
+      "title": "CPT theorem",
+      "content": "Local Lorentz-invariant QFT conserves CPT; masses and lifetimes of particles/antiparticles equal.",
+      "category": "CPT Symmetry"
+    },
+    {
+      "rule_number": 92,
+      "title": "Flavour oscillations as interferometers",
+      "content": "Δm_K = 3.48×10⁻¹² MeV, Δm_B = 3.34×10⁻¹⁰ MeV.",
+      "category": "Flavor Physics"
+    },
+    {
+      "rule_number": 93,
+      "title": "B-meson CP violation",
+      "content": "In B⁰ → J/ψ K_S: sin 2β ≈ 0.68.",
+      "category": "CP Violation"
+    },
+    {
+      "rule_number": 94,
+      "title": "Three manifestations of CP violation",
+      "content": "Mixing (|q/p| ≠ 1), decay (|Ā/A| ≠ 1), and interference (Im λ ≠ 0) observed in K,D,B.",
+      "category": "CP Violation"
+    },
+    {
+      "rule_number": 95,
+      "title": "Grand-unification convergence",
+      "content": "Extrapolated couplings meet at M_X ~ 10¹⁵⁻¹⁶ GeV.",
+      "category": "Grand Unification"
+    },
+    {
+      "rule_number": 96,
+      "title": "Proton-decay inevitability",
+      "content": "X,Y gauge bosons mediate p → π⁰e⁺; τ_p > 10³⁴ yr.",
+      "category": "Grand Unification"
+    },
+    {
+      "rule_number": 97,
+      "title": "Charge quantisation",
+      "content": "GUT multiplets enforce ΣQᵢ = 0 within each family.",
+      "category": "Grand Unification"
+    },
+    {
+      "rule_number": 98,
+      "title": "Supersymmetry and the hierarchy",
+      "content": "TeV-scale sparticles cancel quadratic divergences in M_H.",
+      "category": "Supersymmetry"
+    },
+    {
+      "rule_number": 99,
+      "title": "R-parity and a stable LSP",
+      "content": "R = (-1)^(3(B-L)+2S) conserved ⇒ neutral LSP WIMP candidate.",
+      "category": "Supersymmetry"
+    },
+    {
+      "rule_number": 100,
+      "title": "WIMP relic density",
+      "content": "⟨σv⟩ ~ 3×10⁻²⁶ cm³s⁻¹ ⇒ Ω_χ h² ≈ 0.1.",
+      "category": "Beyond Standard Model"
+    },
+    {
+      "rule_number": 101,
+      "title": "Sakharov conditions",
+      "content": "Baryogenesis needs (i) B violation, (ii) C/CP violation, (iii) departure from equilibrium.",
+      "category": "Beyond Standard Model"
+    },
+    {
+      "rule_number": 102,
+      "title": "Electric-dipole moments",
+      "content": "Current limits |d_n| < 3×10⁻²⁶ e cm, |d_e| < 9×10⁻²⁹ e cm constrain new CP phases.",
+      "category": "Beyond Standard Model"
+    },
+    {
+      "rule_number": 103,
+      "title": "Axion solution to strong-CP puzzle",
+      "content": "Dynamical θ̄ → 0 gives light axion with 10⁹ < f_a < 10¹² GeV; dark-matter candidate.",
+      "category": "Beyond Standard Model"
+    },
+    {
+      "rule_number": 104,
+      "title": "See-saw neutrino masses",
+      "content": "Mixing Dirac m_D with heavy Majorana M_R gives m_ν ≈ m_D²/M_R.",
+      "category": "Beyond Standard Model"
+    },
+    {
+      "rule_number": 105,
+      "title": "Neutrinoless double-beta decay",
+      "content": "Observation (Z,A) → (Z+2,A) + 2e⁻ would establish Majorana neutrinos; present bound m_{ββ} ≲ 0.05 eV.",
+      "category": "Beyond Standard Model"
+    },
+    {
+      "rule_number": 106,
+      "title": "Inflation",
+      "content": "Exponential expansion at t ~ 10⁻³⁵ s solves horizon and flatness problems; seeds near-scale-invariant CMB.",
+      "category": "Beyond Standard Model"
+    }
+  ],
+  "validation_fields": {
+    "conservation_laws": ["energy", "momentum", "charge", "lepton number", "baryon number", "strangeness", "charm", "bottom", "top"],
+    "fundamental_constants": {
+      "fine_structure_constant": "α ≈ 1/137",
+      "fermi_constant": "G_F = 1.166×10⁻⁵ GeV⁻²",
+      "hbar_c": "ℏc = 197.3 MeV·fm"
+    },
+    "particle_categories": ["leptons", "quarks", "gauge_bosons", "scalar_bosons", "hadrons", "baryons", "mesons"],
+    "interactions": ["strong", "electromagnetic", "weak", "gravitational"]
+  }
+} 

@@ -1,0 +1,674 @@
+[
+  {
+    "topic": "Z boson decay",
+    "reaction": "Z^0 \\to l^+ l^-",
+    "particles": [
+      "Z^0",
+      "l^+",
+      "l^-"
+    ],
+    "description": "Decay of the Z boson to a lepton-antilepton pair.",
+    "tikz": "\\begin{tikzpicture}[thick]\\n  \\usetikzlibrary{arrows.meta}\\n  \\tikzset{>=Latex}\\n  \\coordinate (v) at (0,0);\\n  \\draw[boson] (-1.5,0) node[left] {$Z^0$} -- (v);\\n  \\draw[fermion] (v) -- (1.5,1) node[right] {$l^+$};\\n  \\draw[fermionbar] (v) -- (1.5,-1) node[right] {$l^-$};\\n  \\fill (v) circle (1.5pt);\\n\\end{tikzpicture}",
+    "source": "https://tikz.net/sm_z_decay/",
+    "process_type": "decay",
+    "source_type": "web"
+  },
+  {
+    "topic": "Quark-antiquark to W boson",
+    "reaction": "u \\bar{d} \\to W^+",
+    "particles": [
+      "u",
+      "\\bar{d}",
+      "W^+"
+    ],
+    "description": "Interaction vertex between an up quark and an anti-down quark producing a W+ boson.",
+    "tikz": "% TikZ code not yet available.\n% Process: u \\\\bar{d} \\\\to W^+",
+    "source": "https://www.kiragrogg.com/interests/commands/TikzFeynmanExamples.pdf",
+    "process_type": "vertex",
+    "source_type": "pdf"
+  },
+  {
+    "topic": "Electron-positron to W boson",
+    "reaction": "e^+ \\nu_e \\to W^+",
+    "particles": [
+      "e^+",
+      "\\nu_e",
+      "W^+"
+    ],
+    "description": "Interaction vertex between a positron and an electron neutrino producing a W+ boson.",
+    "tikz": "% TikZ code not yet available.\n% Process: e^+ \\\\nu_e \\\\to W^+",
+    "source": "https://www.kiragrogg.com/interests/commands/TikzFeynmanExamples.pdf",
+    "process_type": "vertex",
+    "source_type": "pdf"
+  },
+  {
+    "topic": "Quark-antiquark to Z boson",
+    "reaction": "u \\bar{u} \\to Z^0",
+    "particles": [
+      "u",
+      "\\bar{u}",
+      "Z^0"
+    ],
+    "description": "Interaction vertex between an up quark and an anti-up quark producing a Z boson.",
+    "tikz": "% TikZ code not yet available.\n% Process: u \\\\bar{u} \\\\to Z^0",
+    "source": "https://www.kiragrogg.com/interests/commands/TikzFeynmanExamples.pdf",
+    "process_type": "vertex",
+    "source_type": "pdf"
+  },
+  {
+    "topic": "Electron-positron to Z boson",
+    "reaction": "e^+ e^- \\to Z^0",
+    "particles": [
+      "e^+",
+      "e^-",
+      "Z^0"
+    ],
+    "description": "Interaction vertex between an electron and a positron producing a Z boson.",
+    "tikz": "% TikZ code not yet available.\n% Process: e^+ e^- \\\\to Z^0",
+    "source": "https://www.kiragrogg.com/interests/commands/TikzFeynmanExamples.pdf",
+    "process_type": "vertex",
+    "source_type": "pdf"
+  },
+  {
+    "topic": "W boson decay to quarks",
+    "reaction": "W^+ \\to u \\bar{d}",
+    "particles": [
+      "W^+",
+      "u",
+      "\\bar{d}"
+    ],
+    "description": "Decay of a W+ boson to an up quark and an anti-down quark.",
+    "tikz": "% TikZ code not yet available.\n% Process: W^+ \\\\to u \\\\bar{d}",
+    "source": "https://www.kiragrogg.com/interests/commands/TikzFeynmanExamples.pdf",
+    "process_type": "decay",
+    "source_type": "pdf"
+  },
+  {
+    "topic": "W boson decay to leptons",
+    "reaction": "W^+ \\to e^+ \\nu_e",
+    "particles": [
+      "W^+",
+      "e^+",
+      "\\nu_e"
+    ],
+    "description": "Decay of a W+ boson to a positron and an electron neutrino.",
+    "tikz": "% TikZ code not yet available.\n% Process: W^+ \\\\to e^+ \\\\nu_e",
+    "source": "https://www.kiragrogg.com/interests/commands/TikzFeynmanExamples.pdf",
+    "process_type": "decay",
+    "source_type": "pdf"
+  },
+  {
+    "topic": "Z boson decay to quarks",
+    "reaction": "Z^0 \\to u \\bar{u}",
+    "particles": [
+      "Z^0",
+      "u",
+      "\\bar{u}"
+    ],
+    "description": "Decay of a Z boson to an up quark and an anti-up quark.",
+    "tikz": "% TikZ code not yet available.\n% Process: Z^0 \\\\to u \\\\bar{u}",
+    "source": "https://www.kiragrogg.com/interests/commands/TikzFeynmanExamples.pdf",
+    "process_type": "decay",
+    "source_type": "pdf"
+  },
+  {
+    "topic": "Z boson decay to leptons (alternative)",
+    "reaction": "Z^0 \\to e^+ e^-",
+    "particles": [
+      "Z^0",
+      "e^+",
+      "e^-"
+    ],
+    "description": "Decay of a Z boson to an electron and a positron.",
+    "tikz": "% TikZ code not yet available.\n% Process: Z^0 \\\\to e^+ e^-",
+    "source": "https://www.kiragrogg.com/interests/commands/TikzFeynmanExamples.pdf",
+    "process_type": "decay",
+    "source_type": "pdf"
+  },
+  {
+    "topic": "W boson self-interaction (WWZ/WWgamma)",
+    "reaction": "W^+ W^- \\to Z^0 / \\gamma",
+    "particles": [
+      "W^+",
+      "W^-",
+      "Z^0",
+      "\\gamma"
+    ],
+    "description": "Self-interaction vertex for W bosons producing a Z boson or a photon.",
+    "tikz": "% TikZ code not yet available.\n% Process: W^+ W^- \\\\to Z^0 / \\\\gamma",
+    "source": "https://www.kiragrogg.com/interests/commands/TikzFeynmanExamples.pdf",
+    "process_type": "vertex",
+    "source_type": "pdf"
+  },
+  {
+    "topic": "W boson self-interaction (WWWW)",
+    "reaction": "W^+ W^- \\to W^+ W^-",
+    "particles": [
+      "W^+",
+      "W^-"
+    ],
+    "description": "Four-point self-interaction vertex for W bosons.",
+    "tikz": "% TikZ code not yet available.\n% Process: W^+ W^- \\\\to W^+ W^-",
+    "source": "https://www.kiragrogg.com/interests/commands/TikzFeynmanExamples.pdf",
+    "process_type": "vertex",
+    "source_type": "pdf"
+  },
+  {
+    "topic": "Quark-gluon interaction (color change)",
+    "reaction": "u_r g_{r\bar{b}} \to u_b",
+    "particles": [
+      "u_r",
+      "g_{r\bar{b}}",
+      "u_b"
+    ],
+    "description": "Interaction vertex between an up quark (red) and a gluon (red-antiblue) resulting in an up quark (blue), illustrating color charge flow.",
+    "tikz": "% TikZ code not yet available.\n% Process: u_r g_{r\bar{b}} \to u_b",
+    "source": "https://www.kiragrogg.com/interests/commands/TikzFeynmanExamples.pdf",
+    "process_type": "vertex",
+    "source_type": "pdf"
+  },
+  {
+    "topic": "Gluon self-interaction (ggg vertex)",
+    "reaction": "g \to g g",
+    "particles": [
+      "g"
+    ],
+    "description": "Three-gluon self-interaction vertex.",
+    "tikz": "% TikZ code not yet available.\n% Process: g \to g g",
+    "source": "https://www.kiragrogg.com/interests/commands/TikzFeynmanExamples.pdf",
+    "process_type": "vertex",
+    "source_type": "pdf"
+  },
+  {
+    "topic": "Gluon self-interaction (gggg vertex)",
+    "reaction": "g g \to g g",
+    "particles": [
+      "g"
+    ],
+    "description": "Four-gluon self-interaction vertex.",
+    "tikz": "% TikZ code not yet available.\n% Process: g g \to g g",
+    "source": "https://www.kiragrogg.com/interests/commands/TikzFeynmanExamples.pdf",
+    "process_type": "vertex",
+    "source_type": "pdf"
+  },
+  {
+    "topic": "Quark-antiquark annihilation (QCD)",
+    "reaction": "u \bar{u} \to g",
+    "particles": [
+      "u",
+      "\bar{u}",
+      "g"
+    ],
+    "description": "Annihilation of an up quark and an anti-up quark into a gluon (QCD process).",
+    "tikz": "% TikZ code not yet available.\n% Process: u \bar{u} \to g",
+    "source": "https://www.kiragrogg.com/interests/commands/TikzFeynmanExamples.pdf",
+    "process_type": "annihilation",
+    "source_type": "pdf"
+  },
+  {
+    "topic": "W+jets production (qg initial state)",
+    "reaction": "u g \to W^+ d \to e^+ \nu_e d",
+    "particles": [
+      "u",
+      "g",
+      "W^+",
+      "d",
+      "e^+",
+      "\nu_e"
+    ],
+    "description": "W+ boson production with a jet, starting from an up quark and a gluon, with W decaying leptonically.",
+    "tikz": "% TikZ code not yet available.\n% Process: u g \to W^+ d \to e^+ \nu_e d",
+    "source": "https://www.kiragrogg.com/interests/commands/TikzFeynmanExamples.pdf",
+    "process_type": "decay",
+    "source_type": "pdf"
+  },
+  {
+    "topic": "W+jets production (qqbar initial state)",
+    "reaction": "u \bar{d} \to W^+ g g \to e^+ \nu_e g g",
+    "particles": [
+      "u",
+      "\bar{d}",
+      "W^+",
+      "g",
+      "e^+",
+      "\nu_e"
+    ],
+    "description": "W+ boson production with two gluon jets, starting from an up quark and an anti-down quark, with W decaying leptonically.",
+    "tikz": "% TikZ code not yet available.\n% Process: u \bar{d} \to W^+ g g \to e^+ \nu_e g g",
+    "source": "https://www.kiragrogg.com/interests/commands/TikzFeynmanExamples.pdf",
+    "process_type": "decay",
+    "source_type": "pdf"
+  },
+  {
+    "topic": "Vector Boson Fusion Higgs Production",
+    "reaction": "q q' \to q q' H \to q q' W^+ W^- \to q q' e^+ \nu_e d \bar{u}",
+    "particles": [
+      "q",
+      "q'",
+      "H",
+      "W^+",
+      "W^-",
+      "e^+",
+      "\nu_e",
+      "d",
+      "\bar{u}"
+    ],
+    "description": "Higgs boson production via vector boson fusion, with Higgs decaying to W+W- and subsequent decays.",
+    "tikz": "% TikZ code not yet available.\n% Process: q q' \to q q' H \to q q' W^+ W^- \to q q' e^+ \nu_e d \bar{u}",
+    "source": "https://www.kiragrogg.com/interests/commands/TikzFeynmanExamples.pdf",
+    "process_type": "decay",
+    "source_type": "pdf"
+  },
+  {
+    "topic": "Compton scattering",
+    "reaction": "e^- \\gamma \\to e^- \\gamma",
+    "particles": [
+      "e^-",
+      "\\gamma"
+    ],
+    "description": "Scattering of a photon by a charged particle, usually an electron.",
+    "tikz": "% TikZ code not yet available.\n% Process: e^- \\\\gamma \\\\to e^- \\\\gamma",
+    "source": "https://en.wikipedia.org/wiki/Compton_scattering",
+    "process_type": "scattering",
+    "source_type": "wikipedia"
+  },
+  {
+    "topic": "Pair annihilation",
+    "reaction": "e^- e^+ \\to \\gamma \\gamma",
+    "particles": [
+      "e^-",
+      "e^+",
+      "\\gamma"
+    ],
+    "description": "Process that occurs when an electron and a positron collide and annihilate, producing two photons.",
+    "tikz": "% TikZ code not yet available.\n% Process: e^- e^+ \\\\to \\\\gamma \\\\gamma",
+    "source": "https://en.wikipedia.org/wiki/Electron%E2%80%93positron_annihilation",
+    "process_type": "annihilation",
+    "source_type": "wikipedia"
+  },
+  {
+    "topic": "Beta decay (neutron decay)",
+    "reaction": "n \\to p e^- \\bar{\\nu}_e",
+    "particles": [
+      "n",
+      "p",
+      "e^-",
+      "\\bar{\\nu}_e"
+    ],
+    "description": "A neutron decays into a proton, an electron, and an electron antineutrino.",
+    "tikz": "% TikZ code not yet available.\n% Process: n \\\\to p e^- \\\\bar{\\\\nu}_e",
+    "source": "https://en.wikipedia.org/wiki/Beta_decay",
+    "process_type": "decay",
+    "source_type": "wikipedia"
+  },
+  {
+    "topic": "Muon decay",
+    "reaction": "\\mu^- \\to e^- \\bar{\\nu}_e \\nu_\\mu",
+    "particles": [
+      "\\mu^-",
+      "e^-",
+      "\\bar{\\nu}_e",
+      "\\nu_\\mu"
+    ],
+    "description": "A muon decays into an electron, an electron antineutrino, and a muon neutrino.",
+    "tikz": "% TikZ code not yet available.\n% Process: \\\\mu^- \\\\to e^- \\\\bar{\\\\nu}_e \\\\nu_\\\\mu",
+    "source": "https://en.wikipedia.org/wiki/Muon_decay",
+    "process_type": "decay",
+    "source_type": "wikipedia"
+  },
+  {
+    "topic": "Higgs decay to W bosons",
+    "reaction": "H \\to W^+ W^-",
+    "particles": [
+      "H",
+      "W^+",
+      "W^-"
+    ],
+    "description": "Decay of a Higgs boson into a pair of W bosons.",
+    "tikz": "% TikZ code not yet available.\n% Process: H \\\\to W^+ W^-",
+    "source": "https://en.wikipedia.org/wiki/Higgs_boson",
+    "process_type": "decay",
+    "source_type": "wikipedia"
+  },
+  {
+    "topic": "Higgs decay to Z bosons",
+    "reaction": "H \\to Z^0 Z^0",
+    "particles": [
+      "H",
+      "Z^0"
+    ],
+    "description": "Decay of a Higgs boson into a pair of Z bosons.",
+    "tikz": "% TikZ code not yet available.\n% Process: H \\\\to Z^0 Z^0",
+    "source": "https://en.wikipedia.org/wiki/Higgs_boson",
+    "process_type": "decay",
+    "source_type": "wikipedia"
+  },
+  {
+    "topic": "Higgs decay to photons",
+    "reaction": "H \\to \\gamma \\gamma",
+    "particles": [
+      "H",
+      "\\gamma"
+    ],
+    "description": "Decay of a Higgs boson into a pair of photons (loop-induced).",
+    "tikz": "% TikZ code not yet available.\n% Process: H \\\\to \\\\gamma \\\\gamma",
+    "source": "https://en.wikipedia.org/wiki/Higgs_boson",
+    "process_type": "decay",
+    "source_type": "wikipedia"
+  },
+  {
+    "topic": "Top quark decay",
+    "reaction": "t \\to W^+ b",
+    "particles": [
+      "t",
+      "W^+",
+      "b"
+    ],
+    "description": "Dominant decay of a top quark into a W boson and a bottom quark.",
+    "tikz": "% TikZ code not yet available.\n% Process: t \\\\to W^+ b",
+    "source": "https://en.wikipedia.org/wiki/Top_quark",
+    "process_type": "decay",
+    "source_type": "wikipedia"
+  },
+  {
+    "topic": "Gluon splitting to quark-antiquark",
+    "reaction": "g \\to q \\bar{q}",
+    "particles": [
+      "g",
+      "q",
+      "\\bar{q}"
+    ],
+    "description": "A gluon splitting into a quark-antiquark pair.",
+    "tikz": "% TikZ code not yet available.\n% Process: g \\\\to q \\\\bar{q}",
+    "source": "https://en.wikipedia.org/wiki/Gluon_splitting",
+    "process_type": "splitting",
+    "source_type": "wikipedia"
+  },
+  {
+    "topic": "Electron-muon scattering (via virtual photon)",
+    "reaction": "e^- \\mu^- \\to e^- \\mu^-",
+    "particles": [
+      "e^-",
+      "\\mu^-"
+    ],
+    "description": "Scattering of an electron and a muon mediated by a virtual photon.",
+    "tikz": "% TikZ code not yet available.\n% Process: e^- \\\\mu^- \\\\to e^- \\\\mu^-",
+    "source": "physics.stackexchange.com or university notes",
+    "process_type": "scattering",
+    "source_type": "stackexchange"
+  },
+  {
+    "topic": "Neutrino oscillation",
+    "reaction": "\\nu_e \\leftrightarrow \\nu_\\mu",
+    "particles": [
+      "\\nu_e",
+      "\\nu_\\mu"
+    ],
+    "description": "Quantum mechanical phenomenon where a neutrino created with a specific lepton flavor can later be measured to have a different flavor.",
+    "tikz": "% TikZ code not yet available.\n% Process: \\\\nu_e \\\\leftrightarrow \\\\nu_\\\\mu",
+    "source": "https://en.wikipedia.org/wiki/Neutrino_oscillation",
+    "process_type": "oscillation_mixing",
+    "source_type": "wikipedia"
+  },
+  {
+    "topic": "Deep inelastic scattering (neutral current)",
+    "reaction": "e^- p \\to e^- X",
+    "particles": [
+      "e^-",
+      "p",
+      "X"
+    ],
+    "description": "Scattering of leptons off hadrons at high energies, where X represents the hadronic final state, mediated by a Z boson or photon.",
+    "tikz": "% TikZ code not yet available.\n% Process: e^- p \\\\to e^- X",
+    "source": "https://en.wikipedia.org/wiki/Deep_inelastic_scattering",
+    "process_type": "scattering",
+    "source_type": "wikipedia"
+  },
+  {
+    "topic": "Deep inelastic scattering (charged current)",
+    "reaction": "\\nu_e p \\to e^- X",
+    "particles": [
+      "\\nu_e",
+      "p",
+      "e^-",
+      "X"
+    ],
+    "description": "Scattering of neutrinos off hadrons at high energies, where X represents the hadronic final state, mediated by a W boson.",
+    "tikz": "% TikZ code not yet available.\n% Process: \\\\nu_e p \\\\to e^- X",
+    "source": "https://en.wikipedia.org/wiki/Deep_inelastic_scattering",
+    "process_type": "scattering",
+    "source_type": "wikipedia"
+  },
+  {
+    "topic": "Double beta decay (neutrinoless, hypothetical)",
+    "reaction": "(A, Z) \\to (A, Z+2) + 2e^-",
+    "particles": [
+      "(A,Z)",
+      "e^-"
+    ],
+    "description": "Hypothetical radioactive decay process in which two neutrons are simultaneously transformed into two protons, with the emission of two electrons and no neutrinos.",
+    "tikz": "% TikZ code not yet available.\n% Process: (A, Z) \\\\to (A, Z+2) + 2e^-",
+    "source": "https://en.wikipedia.org/wiki/Neutrinoless_double_beta_decay",
+    "process_type": "decay",
+    "source_type": "wikipedia"
+  },
+  {
+    "topic": "Yukawa interaction (Higgs-fermion coupling)",
+    "reaction": "H f \bar{f}",
+    "particles": [
+      "H",
+      "f",
+      "\\bar{f}"
+    ],
+    "description": "Interaction between a scalar field (Higgs boson) and a Dirac field (fermion).",
+    "tikz": "% TikZ code not yet available.\n% Process: H f \bar{f}",
+    "source": "https://en.wikipedia.org/wiki/Yukawa_interaction",
+    "process_type": "vertex",
+    "source_type": "wikipedia"
+  },
+  {
+    "topic": "Quark-gluon vertex",
+    "reaction": "q g q",
+    "particles": [
+      "q",
+      "g"
+    ],
+    "description": "Fundamental vertex describing the interaction between a quark and a gluon in QCD.",
+    "tikz": "% TikZ code not yet available.\n% Process: q g q",
+    "source": "Standard Model textbooks",
+    "process_type": "vertex",
+    "source_type": "textbook"
+  },
+  {
+    "topic": "Lepton-hadron scattering (general)",
+    "reaction": "l h \\to l' h'",
+    "particles": [
+      "l",
+      "h",
+      "l'",
+      "h'"
+    ],
+    "description": "General scattering process between a lepton and a hadron.",
+    "tikz": "% TikZ code not yet available.\n% Process: l h \\\\to l' h'",
+    "source": "Standard Model textbooks",
+    "process_type": "scattering",
+    "source_type": "textbook"
+  },
+  {
+    "topic": "Neutron-proton interaction (via pion exchange)",
+    "reaction": "n p \\to n p \\text{ (via } \\pi)",
+    "particles": [
+      "n",
+      "p",
+      "\\pi"
+    ],
+    "description": "Interaction between a neutron and a proton mediated by pion exchange (effective theory).",
+    "tikz": "% TikZ code not yet available.\n% Process: n p \\\\to n p \\\\text{ (via } \\\\pi)",
+    "source": "Nuclear physics textbooks",
+    "process_type": "vertex",
+    "source_type": "textbook"
+  },
+  {
+    "topic": "Virtual photon exchange (e.g., e-e scattering)",
+    "reaction": "e^- e^- \\to e^- e^- \\text{ (via } \\gamma^*)",
+    "particles": [
+      "e^-",
+      "\\gamma^*"
+    ],
+    "description": "Electron-electron scattering (Moller scattering) mediated by a virtual photon.",
+    "tikz": "% TikZ code not yet available.\n% Process: e^- e^- \\\\to e^- e^- \\\\text{ (via } \\\\gamma^*)",
+    "source": "https://en.wikipedia.org/wiki/M%C3%B8ller_scattering",
+    "process_type": "scattering",
+    "source_type": "wikipedia"
+  },
+  {
+    "topic": "Penguin diagram (e.g., b to s gamma)",
+    "reaction": "b \\to s \\gamma",
+    "particles": [
+      "b",
+      "s",
+      "\\gamma"
+    ],
+    "description": "A loop-level Feynman diagram in which a quark changes flavor via a W boson loop, and emits a gluon or photon.",
+    "tikz": "% TikZ code not yet available.\n% Process: b \\\\to s \\\\gamma",
+    "source": "https://en.wikipedia.org/wiki/Penguin_diagram",
+    "process_type": "unknown",
+    "source_type": "wikipedia"
+  },
+  {
+    "topic": "Triangle anomaly (e.g., axial vector current)",
+    "reaction": "\\partial_\\mu J^{\\mu 5} \\neq 0 \\text{ (in presence of gauge fields)}",
+    "particles": [
+      "fermions",
+      "gauge bosons"
+    ],
+    "description": "A quantum mechanical anomaly where a classical symmetry of the action is violated by quantization, often involving a fermion loop with three external gauge bosons or two gauge bosons and an axial vector current.",
+    "tikz": "% TikZ code not yet available.\n% Process: \\\\partial_\\\\mu J^{\\\\mu 5} \\\\neq 0 \\\\text{ (in presence of gauge fields)}",
+    "source": "https://en.wikipedia.org/wiki/Chiral_anomaly",
+    "process_type": "unknown",
+    "source_type": "wikipedia"
+  },
+  {
+    "topic": "CKM matrix interaction (quark flavor change)",
+    "reaction": "W q_i \bar{q}_j",
+    "particles": [
+      "W",
+      "q_i",
+      "q_j"
+    ],
+    "description": "Interaction vertex where a W boson couples to two quarks of different flavors, governed by the Cabibbo-Kobayashi-Maskawa (CKM) matrix elements.",
+    "tikz": "% TikZ code not yet available.\n% Process: W q_i \bar{q}_j",
+    "source": "https://en.wikipedia.org/wiki/Cabibbo%E2%80%93Kobayashi%E2%80%93Maskawa_matrix",
+    "process_type": "vertex",
+    "source_type": "wikipedia"
+  },
+  {
+    "topic": "Neutrino-electron scattering (elastic)",
+    "reaction": "\\nu_e e^- \\to \\nu_e e^-",
+    "particles": [
+      "\\nu_e",
+      "e^-"
+    ],
+    "description": "Elastic scattering of an electron neutrino off an electron, can occur via both charged current (W exchange) and neutral current (Z exchange).",
+    "tikz": "% TikZ code not yet available.\n% Process: \\\\nu_e e^- \\\\to \\\\nu_e e^-",
+    "source": "https://en.wikipedia.org/wiki/Neutrino-electron_scattering",
+    "process_type": "scattering",
+    "source_type": "wikipedia"
+  },
+  {
+    "topic": "Color charge exchange (quark-quark scattering via gluon)",
+    "reaction": "q_r q_b \\to q_b q_r \\text{ (via } g_{r\bar{b}})",
+    "particles": [
+      "q_r",
+      "q_b",
+      "g_{r\bar{b}}"
+    ],
+    "description": "Scattering of two quarks with exchange of a gluon, leading to an exchange of color charge.",
+    "tikz": "% TikZ code not yet available.\n% Process: q_r q_b \\\\to q_b q_r \\\\text{ (via } g_{r\bar{b}})",
+    "source": "QCD textbooks",
+    "process_type": "scattering",
+    "source_type": "textbook"
+  },
+  {
+    "topic": "Meson mixing (e.g., K0-K0bar)",
+    "reaction": "K^0 \\leftrightarrow \\bar{K}^0",
+    "particles": [
+      "K^0",
+      "\\bar{K}^0"
+    ],
+    "description": "Phenomenon where a neutral meson transforms into its antiparticle and vice versa, often via box diagrams involving W bosons and quarks.",
+    "tikz": "% TikZ code not yet available.\n% Process: K^0 \\\\leftrightarrow \\\\bar{K}^0",
+    "source": "https://en.wikipedia.org/wiki/Neutral_particle_oscillation",
+    "process_type": "oscillation_mixing",
+    "source_type": "wikipedia"
+  },
+  {
+    "topic": "Kaon decay (leptonic, e.g., K+ to mu+ nu_mu)",
+    "reaction": "K^+ \\to \\mu^+ \\nu_\\mu",
+    "particles": [
+      "K^+",
+      "\\mu^+",
+      "\\nu_\\mu"
+    ],
+    "description": "Leptonic decay of a charged kaon into a muon and a muon neutrino.",
+    "tikz": "% TikZ code not yet available.\n% Process: K^+ \\\\to \\\\mu^+ \\\\nu_\\\\mu",
+    "source": "https://en.wikipedia.org/wiki/Kaon",
+    "process_type": "decay",
+    "source_type": "wikipedia"
+  },
+  {
+    "topic": "Dark photon interaction (kinetic mixing)",
+    "reaction": "\\gamma \\leftrightarrow A'",
+    "particles": [
+      "\\gamma",
+      "A'"
+    ],
+    "description": "Hypothetical interaction where a dark photon (A') kinetically mixes with the Standard Model photon.",
+    "tikz": "% TikZ code not yet available.\n% Process: \\\\gamma \\\\leftrightarrow A'",
+    "source": "https://en.wikipedia.org/wiki/Dark_photon",
+    "process_type": "vertex",
+    "source_type": "wikipedia"
+  },
+  {
+    "topic": "Bhabha Scattering (electron-positron elastic)",
+    "reaction": "e^+ e^- \\to e^+ e^-",
+    "particles": [
+      "e^+",
+      "e^-"
+    ],
+    "description": "Electron-positron elastic scattering, involving both s-channel and t-channel photon/Z boson exchange.",
+    "tikz": "% TikZ code not yet available.\n% Process: e^+ e^- \\\\to e^+ e^-",
+    "source": "https://en.wikipedia.org/wiki/Bhabha_scattering",
+    "process_type": "scattering",
+    "source_type": "wikipedia"
+  },
+  {
+    "topic": "Tau lepton decay (leptonic)",
+    "reaction": "\\tau^- \\to e^- \\bar{\\nu}_e \\nu_\\tau",
+    "particles": [
+      "\\tau^-",
+      "e^-",
+      "\\bar{\\nu}_e",
+      "\\nu_\\tau"
+    ],
+    "description": "Leptonic decay of a tau lepton into an electron, an electron antineutrino, and a tau neutrino.",
+    "tikz": "% TikZ code not yet available.\n% Process: \\\\tau^- \\\\to e^- \\\\bar{\\\\nu}_e \\\\nu_\\\\tau",
+    "source": "https://en.wikipedia.org/wiki/Tau_(particle)",
+    "process_type": "decay",
+    "source_type": "wikipedia"
+  },
+  {
+    "topic": "Tau lepton decay (hadronic)",
+    "reaction": "\\tau^- \\to \\pi^- \\nu_\\tau",
+    "particles": [
+      "\\tau^-",
+      "\\pi^-",
+      "\\nu_\\tau"
+    ],
+    "description": "Hadronic decay of a tau lepton into a pion and a tau neutrino (example of one hadronic channel).",
+    "tikz": "% TikZ code not yet available.\n% Process: \\\\tau^- \\\\to \\\\pi^- \\\\nu_\\\\tau",
+    "source": "https://en.wikipedia.org/wiki/Tau_(particle)",
+    "process_type": "decay",
+    "source_type": "wikipedia"
+  }
+]

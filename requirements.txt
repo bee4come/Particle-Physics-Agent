@@ -1,0 +1,60 @@
+# FeynmanCraft ADK Requirements
+# Enhanced multi-agent system with MCP integration for particle physics diagram generation
+
+# Core ADK Framework and Google AI
+google-adk>=1.0.0
+google-generativeai>=0.8.0
+
+# Google Cloud Services removed - using local KB only
+
+# Data Models and Validation
+pydantic>=2.7.0
+
+# Environment Configuration
+python-dotenv>=1.0.0
+
+# Scientific Computing
+numpy>=1.24.0
+scipy>=1.11.0
+
+# Vector Search and Embeddings
+annoy>=1.17.0
+
+# MCP (Model Context Protocol) Support
+mcp>=1.0.0
+httpx>=0.27.0
+websockets>=12.0
+
+# Physics and Data Processing
+arxiv>=2.1.0
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+
+# Particle Physics Data
+PDG>=0.2.0
+
+# LaTeX Processing
+pylatex>=1.4.0
+
+# Web Framework (for production deployment)
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+
+# GitHub Integration (for knowledge harvesting)
+PyGithub>=2.3.0
+
+# Type Hints Support
+typing-extensions>=4.11.0
+
+# JSON handling
+orjson>=3.9.0
+
+# Development and Testing (optional)
+pytest>=8.2.0
+pytest-asyncio>=0.23.0
+black>=24.4.0
+flake8>=7.0.0
+
+# Production deployment
+gunicorn>=22.0.0 
